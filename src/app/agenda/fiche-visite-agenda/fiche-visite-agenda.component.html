@@ -1,0 +1,310 @@
+<div class="dialog-title">
+    <h2 mat-dialog-title>Fiche Visite</h2>
+    <mat-chip-list class="statut_visite" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+        <mat-chip *ngIf="itemVisite.code_statut_visite == 'ENAT'" class="statutEnAttente"> En attente
+        </mat-chip>
+        <mat-chip *ngIf="itemVisite.code_statut_visite == 'REAL'" class="statutRealisee"> Réalisée
+        </mat-chip>
+        <mat-chip *ngIf="itemVisite.code_statut_visite == 'ABSE'" class="statutAbsent"> Absent </mat-chip>
+        <mat-chip *ngIf="itemVisite.code_statut_visite == 'REPL'" class="statutReplanifiee">
+            Replanifiée </mat-chip>
+        <div *ngIf="itemVisite.code_type_partenaire" style="
+            background:white;
+            width:30px;
+            height:30px;
+            margin:0 4px 0 2px;
+            display:flex;
+            justify-content:center;
+            border-radius:50%;
+            flex-shrink:0;
+            box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 6px 10px 0px rgb(0 0 0 / 14%), 0px 1px 18px 0px rgb(0 0 0 / 12%);
+          ">
+
+            <mat-icon style="width: 16px;" class="pharmacie" *ngIf="itemVisite.code_type_partenaire == 'PHAR'"
+                svgIcon="pharmacie">
+            </mat-icon>
+            <mat-icon style="width: 16px;" class="medecin" *ngIf="itemVisite.code_type_partenaire == 'MEDE'"
+                svgIcon="medecin">
+            </mat-icon>
+
+        </div>
+        <button mat-raised-button color="primary" class="button-add-rapport" title="Ajouter rapport"
+            *ngIf="itemVisite.code_statut_visite == 'ENAT'"
+            (click)="openDialogModifierVisite('rapport',itemVisite.id_visite, itemVisite.id_partenaire,itemVisite.id_planification)"
+            [disabled]="!canAddRapport(itemVisite.date_visite)">
+            <mat-icon>add </mat-icon>
+            <!-- rapport -->
+        </button>
+        <button mat-raised-button color="primary" class="button-mod-rapport" title="Modifier rapport"
+            *ngIf="itemVisite.code_statut_visite &&  itemVisite.code_statut_visite != 'ENAT'"
+            (click)="openDialogModifierVisite('modifier',itemVisite.id_visite, itemVisite.id_partenaire,itemVisite.id_planification)"
+            [disabled]="!canModifyRapport(itemVisite.date_visite) || !itemVisite.id_visite">
+            <mat-icon>edit </mat-icon>
+            <!-- rapport -->
+        </button>
+    </mat-chip-list>
+
+    <button (click)="dialogRef.close()" mat-icon-button class="btn-close">
+        <!-- <i class="fas fa-times"></i> -->
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+
+    <div *ngIf="!isLoading" fxLayout="column" class="gene-form-wizard">
+
+        <div fxLayout="row wrap" [fxLayoutAlign]="'star'" [fxLayoutGap]="'3%'" style="margin-right: -3%;">
+            <div class="card-row" fxLayout="row wrap" [fxLayoutAlign]="'star'" [fxLayoutGap]="'3%'"
+                style="margin-right: -3%;">
+                <h4 fxLayoutAlign="start center" fxFLex="100" class="information_visite">
+                    Information Visite
+                </h4>
+                <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                    <mat-label>Délégué </mat-label>
+                    <input matInput type="text" readonly [value]="itemVisite.nom_utilisateur || '-'">
+                </mat-form-field>
+
+                <!-- <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                <mat-label>Nom compte </mat-label>
+                <!-- <div matSuffix style="
+              background:white;
+              width:30px;
+              height:30px;
+              margin:0 4px 0 2px;
+              display:flex;
+              justify-content:center;
+              border-radius:50%;
+              flex-shrink:0;
+              border:1px solid #333;
+              box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 6px 10px 0px rgb(0 0 0 / 14%), 0px 1px 18px 0px rgb(0 0 0 / 12%);
+            ">
+
+                    <mat-icon matSuffix style="width: 16px;" class="pharmacie"
+                        *ngIf="itemVisite.code_type_partenaire == 'PHAR'" svgIcon="pharmacie">
+                    </mat-icon>
+                    <mat-icon matSuffix style="width: 16px;" class="medecin"
+                        *ngIf="itemVisite.code_type_partenaire == 'MEDE'" svgIcon="medecin">
+                    </mat-icon>
+                </div> -->
+                <!-- <input matInput type="text" readonly [value]="itemVisite.nom_partenaire || '-'">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                <mat-label>Région </mat-label>
+                <input matInput type="text" readonly [value]="itemVisite.region_partenaire || '-'">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                <mat-label>Ville </mat-label>
+                <input matInput type="text" readonly [value]="itemVisite.ville_partenaire || '-'">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                <mat-label>Secteur </mat-label>
+                <input matInput type="text" readonly [value]="itemVisite.secteur_partenaire || '-'">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                <mat-label>Adresse </mat-label>
+                <input matInput type="text" readonly [value]="itemVisite.adresse_partenaire || '-'"
+                    [title]="itemVisite.adresse_partenaire || '-'">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                <mat-label>Téléphone 1 </mat-label>
+                <input matInput type="text" readonly [value]="itemVisite.tel1_partenaire || '-'">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                <mat-label>Téléphone 2 </mat-label>
+                <input matInput type="text" readonly [value]="itemVisite.tel12_partenaire || '-'">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                <mat-label>Spécialité </mat-label>
+                <input matInput type="text" readonly [value]="itemVisite.specialite || '-'">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                <mat-label>Potentiel </mat-label>
+                <input matInput type="text" readonly [value]="itemVisite.code_potentiel || '-'">
+            </mat-form-field> -->
+
+                <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                    <mat-label>Type visite </mat-label>
+                    <input matInput type="text" readonly [value]="itemVisite.type_visite || '-'">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                    <mat-label>Date Visite </mat-label>
+                    <input matInput type="text" readonly
+                        [value]="(itemVisite.date_visite| date:'dd/MM/yyyy HH:mm') + ' - ' + (getTime(itemVisite.heure_fin_visite) || addTminutes(itemVisite.date_visite))  || '-'">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                    <mat-label>Visiteur Accompagnée </mat-label>
+                    <input matInput type="text" readonly [value]="itemVisite.accompagnant || '-'">
+                </mat-form-field>
+                <!-- <mat-chip-list class="statut_visite" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-chip *ngIf="itemVisite.code_statut_visite == 'ENAT'" class="statutEnAttente"> En attente
+            </mat-chip>
+            <mat-chip *ngIf="itemVisite.code_statut_visite == 'REAL'" class="statutRealisee"> Réalisée
+            </mat-chip>
+            <mat-chip *ngIf="itemVisite.code_statut_visite == 'ABSE'" class="statutAbsent"> Absent </mat-chip>
+            <mat-chip *ngIf="itemVisite.code_statut_visite == 'REPL'" class="statutReplanifiee">
+                Replanifiée </mat-chip>
+        </mat-chip-list> -->
+
+                <mat-form-field *ngIf="itemVisite.code_statut_visite == 'REPL'" appearance="outline" fxFlex.gt-sm="47"
+                    fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                    <mat-label>Date Replanification</mat-label>
+                    <input matInput type="text" readonly
+                        [value]="(itemVisite.date_replanification | date:'dd/MM/yyyy HH:mm') || '-'">
+                </mat-form-field>
+            </div>
+            <div class="card-row partenaires">
+                <div id="card-list-tab-produit">
+                    <h4 fxLayoutAlign="start center">
+                        Les comptes visités
+                    </h4>
+                    <div class="flexbox full-wid">
+                        <div class="row">
+                            <!-- <div class="cell1 header">
+                        Gamme
+                    </div> -->
+                            <div class="cell2 header" style="width: 10%;min-width:auto">
+                            </div>
+                            <div class="cell2 header">
+                                Nom compte
+                            </div>
+                            <div class="cell2 header">
+                                Nom remplacement
+                            </div>
+                            <div class="cell3 header">
+                                Region <br />
+                                Ville
+                            </div>
+                            <div class="cell3 header">
+                                Specialite
+                            </div>
+                            <div class="cell3 header">
+                                Potentiel
+                            </div>
+                        </div>
+                        <div class="row card-row" *ngFor="let item of partenaires">
+                            <!-- <div class="cell1 cell">
+                        <h5 class="margin-none reveq-webkit text-center" [title]="item.gamme || '-'">
+                            {{item.gamme || '-'}}</h5>
+                    </div> -->
+                            <button mat-mini-fab mat-icon-button color="primary" class="margin-none button-table"
+                                [routerLink]="['/partenaires/fiche/'+item.id_partenaire]" (click)="dialogRef.close()"
+                                routerLinkActive="router-link-active" title="Fiche" href="javascript:void(0)">
+                                <mat-icon class="mat-icon-grey gene-text-lg">
+                                    visibility
+                                </mat-icon>
+                            </button>
+                            <div class="cell2 cell">
+                                <h5 class="margin-none reveq-webkit text-center" [title]="item.nom_partenaire || '-'">
+                                    {{item.nom_partenaire || '-'}}</h5>
+                            </div>
+                            <div class="cell2 cell">
+                                <h5 class="margin-none reveq-webkit text-center" [title]="item.nom_remplacent || '-'">
+                                    {{item.nom_remplacent || '-'}}</h5>
+                            </div>
+                            <div class="cell3 cell">
+                                <h5 class="margin-none reveq-webkit text-center"
+                                    [title]="item.region_partenaire || '-'">
+                                    <span>{{item.region_partenaire || '-'}}</span>
+
+                                </h5>
+                                <h5 class="margin-none reveq-webkit text-center" [title]="item.ville_partenaire || '-'">
+                                    <span>{{item.ville_partenaire || '-'}}</span>
+                                </h5>
+                            </div>
+                            <div class="cell3 cell">
+                                <h5 class="margin-none reveq-webkit text-center" [title]="item.specialite || '-'">
+                                    {{item.specialite || '-'}}</h5>
+                            </div>
+
+                            <div class="cell3 cell">
+                                <span class="potentiel margin-none text-center"
+                                    [ngStyle]="{'border':item.code_potentiel ?'1px solid':'',
+                            'color': item.code_potentiel == 'A' || item?.code_potentiel == 'A+'?'#13be00': item.code_potentiel == 'B'? '#e5ce00':item.code_potentiel == 'C'? '#e10000':''}">
+                                    {{item.code_potentiel || '-'}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- <mat-form-field *ngIf="itemVisite.flag_accompagnee == 'O'" appearance="outline" fxFlex.gt-sm="47"
+                fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                <mat-label>Visiteur Accompagnée</mat-label>
+                <input matInput type="text" readonly [value]="itemVisite.accompagnant || '-'">
+            </mat-form-field> -->
+
+                <!-- <mat-form-field id="description" *ngIf="itemVisite.code_statut_visite == 'ABSE'" appearance="outline"
+                fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxFlex.gt-md="100">
+                <mat-label>Commentaire </mat-label>
+                <textarea matInput type="text" readonly [value]="itemVisite.commentaire || '-'"
+                    style="resize: none; height: auto;" rows="5" cols="50">
+            </textarea>
+            </mat-form-field> -->
+            </div>
+        </div>
+        <div *ngIf="itemVisite.code_statut_visite == 'REAL'" id="card-list-tab-produit" class="card-row">
+            <h4 fxLayoutAlign="start center" style="margin-top: 10px;">
+                Les Produits Présentés
+            </h4>
+            <div class="flexbox full-wid">
+                <div class="row">
+                    <!-- <div class="cell1 header">
+                    Gamme
+                </div> -->
+                    <div class="cell2 header">
+                        Produit
+                    </div>
+                    <div class="cell3 header">
+                        Feedback
+                    </div>
+                    <div class="cell3 header">
+                        Nombre d'Echantillon
+                    </div>
+                </div>
+                <div class="row card-row" *ngFor="let item of listeProduits">
+                    <!-- <div class="cell1 cell">
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.gamme || '-'">
+                        {{item.gamme || '-'}}</h5>
+                </div> -->
+                    <div class="cell2 cell">
+                        <h5 class="margin-none reveq-webkit text-center" [title]="item.produit || '-'">
+                            {{item.produit || '-'}}</h5>
+                    </div>
+                    <div class="cell3 cell">
+                        <h5 class="margin-none reveq-webkit text-center" [title]="item.feedback || '-'">
+                            {{item.feedback || '-'}}</h5>
+                    </div>
+                    <div class="cell3 cell">
+                        <h5 class="margin-none reveq-webkit text-center" [title]="item.feedback || '-'">
+                            {{item.nbr_echantillon || 0}}</h5>
+                    </div>
+                </div>
+                <p *ngIf="listeProduits?.length == 0 ">
+                    Aucun résultat trouvé .
+                </p>
+            </div>
+        </div>
+        <mat-form-field id="description" class="commantaire" appearance="outline" fxFlex.gt-sm="100" fxFlex.gt-xs="100"
+            fxFlex="100" fxFlex.gt-md="100">
+            <mat-label>Commentaire </mat-label>
+            <textarea matInput type="text" maxlength="500" readonly [value]="itemVisite.commentaire || '-'"
+                style="resize: none; height: auto;" rows="5" cols="50">
+                </textarea>
+        </mat-form-field>
+    </div>
+    <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+        <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+        </mat-progress-spinner>
+    </div>
+</mat-dialog-content>

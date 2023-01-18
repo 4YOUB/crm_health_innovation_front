@@ -1,0 +1,55 @@
+<div class="dialog-title">
+    <h2 mat-dialog-title>{{date}}</h2>
+    <button (click)="dialogRef.close()" mat-icon-button class="btn-close">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content class="actions-dialog-content">
+    <div *ngIf="!isLoading" class="mrgn-x-md" fxLayout="row" fxLayoutAlign="center">
+        <mat-card-actions fxLayout="column" class="mat-action mat-pad-none margin-none">
+            <button [disabled]="!isPlanificationOK() || !isDateFree || heurePasse" mat-raised-button color="primary"
+                (click)="openPlanification()"
+                [ngStyle]="{'background-color':(!isPlanificationOK() || !isDateFree || heurePasse)?'#dddddd':'white','color':(!isPlanificationOK() || !isDateFree || heurePasse)?'gray':'black','border':(!isPlanificationOK() || !isDateFree || heurePasse)?'1px solid gray;':'1px solid black'}"
+                class="mrgn-t-xs" [queryParams]="{date_planif:dateParam}" *ngIf="!isLimited">
+                <mat-icon
+                    [ngStyle]="{'background-color':(!isPlanificationOK() || !isDateFree || heurePasse)?'gray':'var(--health-primary-color)'}">
+                    add </mat-icon>
+                <div>
+                    <h4>Planification</h4>
+                    <span>Ajouter un nouveau rendez-vous planifié</span>
+                </div>
+            </button>
+            <button [disabled]="!isVisiteOK() || !heurePasse" mat-raised-button color="primary"
+                (click)="openDialogAjouterVisite()"
+                [ngStyle]="{'background-color':(!isVisiteOK() || !heurePasse)?'#dddddd':'white','color':(!isVisiteOK() || !heurePasse)?'gray':'black','border':(!isVisiteOK() || !heurePasse)?'1px solid gray;':'1px solid black'}"
+                class="mrgn-t-xs" *ngIf="!isLimited">
+                <mat-icon
+                    [ngStyle]="{'background-color':(!isVisiteOK() || !heurePasse)?'gray':'var(--health-primary-color)'}">
+                    add </mat-icon>
+                <div>
+                    <h4>Visite hors planification</h4>
+                    <span>Ajouter une nouvelle visite effectuée et qui n'était pas planifiée</span>
+                </div>
+            </button>
+            <button mat-raised-button color="primary" (click)="openDialogAjouterEvenement()" class="mrgn-t-xs">
+                <mat-icon>add </mat-icon>
+                <div>
+                    <h4>Evénement personnel</h4>
+                    <span>Absence, Congé, Maladie</span>
+                </div>
+            </button>
+            <button mat-raised-button color="primary" (click)="openDialogAjouterEvenement('pro')" class="mrgn-t-xs">
+                <mat-icon>add </mat-icon>
+                <div>
+                    <h4>Evénement professionnel</h4>
+                    <span>Formation, Réunion Interne, Séminaire, ...</span>
+                </div>
+            </button>
+        </mat-card-actions>
+    </div>
+
+    <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+        <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+        </mat-progress-spinner>
+    </div>
+</mat-dialog-content>

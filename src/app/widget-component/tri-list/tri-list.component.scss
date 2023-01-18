@@ -1,0 +1,29 @@
+.tri-click {
+    color: #4e73df;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.tri-click:hover {
+    color: #224abe;
+    // text-decoration: underline;
+}
+
+.tri-click:visited {
+    color: #3f51b5;
+}
+
+.tri-click:link {
+    color: #1a0dab;
+}
+
+.tri-webkit {
+    cursor: pointer;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

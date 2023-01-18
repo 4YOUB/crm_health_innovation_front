@@ -1,0 +1,274 @@
+<div fxLayout="column">
+    <div class="mrgn-x-md" fxLayoutAlign="end center">
+        <mat-card-actions class="mat-pad-none margin-none">
+            <button color="accent" *ngIf="userItem.flag_export == 'O' && userItem.export_visites == 'O'"
+                [disabled]="isExporting" mat-raised-button (click)="exportVisites()" class="mrgn-t-xs">
+                <mat-progress-spinner style="display:inline-block;margin-right:2px;" *ngIf="isExporting" color="primary"
+                    diameter="20" strokeWidth="3" mode="indeterminate">
+                </mat-progress-spinner>
+                <mat-icon *ngIf="!isExporting">download </mat-icon>
+                Exporter visites
+            </button>
+            <button mat-raised-button color="primary" (click)="openDialogAjouterVisite()"
+                [disabled]="userItem.role == 'ADMI'" class="mrgn-t-xs">
+                <mat-icon>add </mat-icon>
+                Ajouter visite
+            </button>
+        </mat-card-actions>
+    </div>
+    <mat-expansion-panel class="mrgn-all-md" id="mat-card-list-visite" hideToggle="true" #panel>
+        <mat-expansion-panel-header collapsedHeight="50px" expandedHeight="50px">
+            <mat-panel-title fxLayout="row" fxLayoutAlign="space-between center">
+                <h4 fxLayoutAlign="start center" class="margin-none">
+                    <mat-icon class="">filter_alt
+                    </mat-icon>
+                    Filtrer
+                </h4>
+                <mat-icon>{{
+                    panel.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+                    }}</mat-icon>
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="filter-dash">
+            <form [formGroup]="form" fxLayoutAlign="center">
+                <section class="example-section second-grid-checkbox ">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Nom compte </mat-label>
+                        <input matInput type="text" formControlName="nom_partenaire">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Type compte </mat-label>
+                        <mat-select (openedChange)="onChangeTypePartenaire()" formControlName="type_partenaire">
+                            <mat-option [value]="null">--</mat-option>
+                            <mat-option [value]="'PHAR'"> Pharmacie </mat-option>
+                            <mat-option [value]="'MEDE'"> Médecin </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Spécialité </mat-label>
+                        <mat-select formControlName="code_specialite" multiple>
+                            <mat-option *ngFor="let item of listeSpecialites" [value]="item.code_codification">
+                                {{item.libelle_codification}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Potentiel </mat-label>
+                        <mat-select formControlName="code_potentiel" multiple>
+                            <mat-option [value]="'A+'"> A+ </mat-option>
+                            <mat-option [value]="'A'"> A </mat-option>
+                            <mat-option [value]="'B'"> B </mat-option>
+                            <mat-option [value]="'C'"> C </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Date Visite </mat-label>
+                        <mat-date-range-input [rangePicker]="picker">
+                            <input matStartDate formControlName="date_debut_visite" placeholder="Date de début">
+                            <input matEndDate formControlName="date_fin_visite" placeholder="Date de fin">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+
+                        <mat-error *ngIf="form.controls.date_debut_visite.hasError('matStartDateInvalid')">
+                            Date de début invalide </mat-error>
+                        <mat-error *ngIf="form.controls.date_fin_visite.hasError('matEndDateInvalid')">
+                            Date de fin invalide </mat-error>
+                    </mat-form-field>
+                    <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.id_utilisateur"
+                        [smartList]="listeUtilisateurs" nomInput="Visiteur">
+                    </ms-select-autocomplete-code>
+                    <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_region"
+                        [smartList]="listeRevis" nomInput="Région" (optionSelected)="selectVille($event)">
+                    </ms-select-autocomplete-code>
+                    <!-- <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_ville"
+                        [smartList]="listeVilles" nomInput="Ville" (optionSelected)="selectSecteur($event)"
+                        [disabled]="form.value.code_region ? false : true">
+                    </ms-select-autocomplete-code>
+                    <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_secteur"
+                        [smartList]="listeSecteurs" nomInput="Secteur"
+                        [disabled]="form.value.code_ville ? false : true">
+                    </ms-select-autocomplete-code> -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Statut </mat-label>
+                        <mat-select formControlName="code_statut_visite">
+                            <mat-option [value]="null">--</mat-option>
+                            <mat-option [value]="'ENAT'"> En attente </mat-option>
+                            <mat-option [value]="'REAL'"> Réalisée(s) </mat-option>
+                            <mat-option [value]="'ABSE'"> Absent </mat-option>
+                            <mat-option [value]="'REPL'"> Replanifiée(s) </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </section>
+            </form>
+            <div class="second-button" fxLayout="column" fxLayoutAlign="end center">
+                <button class="mrgn-b-sm " mat-button mat-raised-button type="button" color="Default" (click)="reset()">
+                    Réinitialiser </button>
+                <button mat-button mat-raised-button (click)="filtrer()" type="button"
+                    color="primary">Rechercher</button>
+            </div>
+        </div>
+    </mat-expansion-panel>
+    <mat-card id="mat-card-list-visite">
+        <!-- <div>
+        <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 15, 20]" [length]="totalPartenaires"
+          (page)="getNextPage($event)" showFirstLastButtons></mat-paginator>
+        <mat-divider></mat-divider>
+      </div> -->
+        <div class="flexbox full-wid">
+            <div class="row">
+                <div class="cell1 header">
+                    Fiche
+                </div>
+                <div class="cell2 header">
+                    <!-- Type -->
+                </div>
+                <div class="cell3 header">
+                    <ms-tri-list [nom_tri]="'Compte'" [nom_order_by]="'nom_partenaire'" [type_tri]="type_tri"
+                        [order_by]="order_by" (optionTri)="optionTri($event)"></ms-tri-list>
+                </div>
+                <div class="cell3-4 header">
+                    Potentiel
+                </div>
+                <div class="cell4 header">
+                    Type visite
+                </div>
+                <div class="cell5 header">
+                    <ms-tri-list [nom_tri]="'Date visite'" [nom_order_by]="'date_visite'" [type_tri]="type_tri"
+                        [order_by]="order_by" (optionTri)="optionTri($event)"></ms-tri-list>
+                </div>
+                <div class="cell5 header">
+                    Heure visite
+                </div>
+                <div class="cell6 header">
+                    <ms-tri-list [nom_tri]="'Visiteur'" [nom_order_by]="'nom_utilisateur'" [type_tri]="type_tri"
+                        [order_by]="order_by" (optionTri)="optionTri($event)"></ms-tri-list>
+                </div>
+                <div class="cell7 header">
+                    Accompagnée
+                </div>
+                <div class="cell8 header">
+                    Nombre produits
+                </div>
+                <div class="cell8 header">
+                    Nombre d'Echantillon
+                </div>
+                <div class="cell9 header">
+                    Statut
+                </div>
+                <div class="cell10 header">
+
+                </div>
+            </div>
+            <div class="row card-row" *ngFor="let item of listeVisites">
+                <div class="cell1 cell">
+                    <div fxLayout="row" fxLayoutAlign="center">
+                        <button mat-mini-fab mat-icon-button color="primary" class="margin-none button-table"
+                            (click)="openDialogFicheVisite(item.id_visite)" title="Fiche" href="javascript:void(0)">
+                            <mat-icon class="mat-icon-grey gene-text-lg">
+                                visibility
+                            </mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="cell2 cell">
+                    <span class="type_partenaire_svg">
+                        <mat-icon class="pharmacie" *ngIf="item.code_type_partenaire == 'PHAR'" svgIcon="pharmacie">
+                        </mat-icon>
+                        <mat-icon class="medecin" *ngIf="item.code_type_partenaire == 'MEDE'" svgIcon="medecin">
+                        </mat-icon>
+                    </span>
+                </div>
+                <div class="cell3 cell">
+                    <h5 class="margin-none text-center type-webkit" [title]="item.nom_partenaire || '-'">
+                        {{item.nom_partenaire ||
+                        '-'}} <span style="color: var(--statut-Replanifiee-color);cursor:pointer"
+                            (click)="openPartenairesModal(item.id_visite)">{{item.autrePartenaires > 0 ?
+                            '
+                            +'+item.autrePartenaires:''}}</span>
+                        <br />
+                        <span [title]="item.nom_remplacent" *ngIf="item.nom_remplacent">
+                            ({{item.nom_remplacent}})
+                        </span>
+                    </h5>
+                    <h5 *ngIf="item.code_type_partenaire == 'MEDE'"
+                        class="medecin margin-none mrgn-t-xs text-center reveq-webkit" [title]="item.specialite || '-'">
+                        {{item.specialite || '-'}} </h5>
+                </div>
+                <div class="cell3-4 cell">
+                    <span class="potentiel margin-none text-center"
+                        [ngStyle]="{'border':item.code_potentiel ?'1px solid':'',
+                            'color': item.code_potentiel == 'A' || item?.code_potentiel == 'A+'?'#13be00': item.code_potentiel == 'B'? '#e5ce00':item.code_potentiel == 'C'? '#e10000':''}">
+                        {{item.code_potentiel || '-'}}
+                    </span>
+                </div>
+                <div class="cell4 cell">
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.type_visite || '-'">
+                        {{item.type_visite || '-'}}</h5>
+                </div>
+                <div class="cell5 cell">
+                    <h5 class="margin-none reveq-webkit text-center">{{item.date_visite | date:'dd/MM/yyyy'}}
+                    </h5>
+                </div>
+                <div class="cell5 cell">
+                    <h5 class="margin-none reveq-webkit text-center">{{(item.date_visite | date:'HH:mm') + ' - ' +
+                        (item.heure_fin_visite ? (('01/01/1000' + ' ' + item.heure_fin_visite) | date:'HH:mm') : '-')}}
+                    </h5>
+                </div>
+                <div class="cell6 cell">
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.nom_utilisateur || '-'">
+                        {{item.nom_utilisateur || '-'}}</h5>
+                </div>
+                <div class="cell7 cell">
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.accompagnant || '-'">
+                        {{item.accompagnant || '-'}}</h5>
+                </div>
+                <div class="cell8 cell">
+                    <h5 class="margin-none reveq-webkit text-center">{{item.nbr_produit}}</h5>
+                </div>
+                <div class="cell8 cell">
+                    <h5 class="margin-none reveq-webkit text-center">{{item.nbr_produit ? item.nbr_echantillon:'-'}}
+                    </h5>
+                </div>
+                <div class="cell9 cell">
+                    <mat-chip-list class="statut">
+                        <mat-chip *ngIf="item.code_statut_visite == 'ENAT'" class="statutEnAttente"> En attente
+                        </mat-chip>
+                        <mat-chip *ngIf="item.code_statut_visite == 'REAL'" class="statutRealisee"> Réalisée
+                        </mat-chip>
+                        <mat-chip *ngIf="item.code_statut_visite == 'ABSE'" class="statutAbsent"> Absent </mat-chip>
+                        <mat-chip *ngIf="item.code_statut_visite == 'REPL'" class="statutReplanifiee">
+                            Replanifiée </mat-chip>
+                    </mat-chip-list>
+                </div>
+                <div class="cell10 cell">
+                    <div fxLayout="row" fxLayoutAlign="center">
+                        <!-- [ngStyle]="{'visibility': userItem.id_utilisateur == item.id_utilisateur ? 'visible' : 'hidden'}" -->
+                        <button mat-mini-fab mat-icon-button color="primary"
+                            (click)="openDialogModifierVisite('modifier',item.id_visite, item.id_partenaire,item.id_planification)"
+                            [disabled]="item.code_statut_visite == 'ENAT' || userItem.id_utilisateur != item.id_utilisateur 
+                            || isDateVisiteOutRange(item.date_visite)" class="margin-none button-table"
+                            title="Modifier" href="javascript:void(0)">
+                            <mat-icon class="mat-icon-grey gene-text-lg">
+                                edit
+                            </mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <p *ngIf="listeVisites?.length == 0 && !isLoading">
+                Aucun résultat trouvé .
+            </p>
+        </div>
+
+        <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+            <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+            </mat-progress-spinner>
+        </div>
+        <div>
+            <mat-divider></mat-divider>
+            <mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 15, 20]"
+                [length]="totalVisites" (page)="getNextPage($event)" showFirstLastButtons></mat-paginator>
+        </div>
+    </mat-card>
+</div>

@@ -1,0 +1,127 @@
+#fiche-partenaire {
+    .statut {
+        // display: contents;
+        margin-top: 4px;
+
+        align-items: self-start;
+        display: grid;
+        grid-template-columns: auto 40px;
+        width: 100%;
+        margin-bottom: 25px;
+
+        ::ng-deep .mat-standard-chip {
+            border-radius: 5px;
+            // min-height: 32px;
+            // font-size: 12px;
+            font-weight: bold;
+            // width: 105px;
+            justify-content: center;
+            min-height: 40px;
+            margin: 0;
+            // border-top-right-radius: 0;
+            // border-bottom-right-radius: 0;
+            // font-size: 12px;
+        }
+    }
+
+    .statutEnAttente {
+        background-color: var(--statut-EnAttente-Partenaire-color);
+        color: white;
+    }
+
+    .statutMigré {
+        background-color: var(--statut-Migré-Partenaire-color);
+        color: white;
+    }
+
+    .statutRefuse {
+        background-color: var(--statut-Rejete-Partenaire-color);
+        color: white;
+    }
+
+    .statutValide {
+        background-color: var(--statut-Valide-Partenaire-color);
+        color: white;
+    }
+
+    .button-standardMenu {
+        margin: auto;
+        background-color: var(--princ-health-color);
+        color: whitesmoke;
+        padding-left: 0px;
+        padding-right: 0px;
+        line-height: 31px;
+        border: 1px solid var(--princ-health-color);
+        margin: 0;
+        max-width: 50px;
+        min-width: 40px;
+        height: 40px;
+        border-radius: 5px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        margin-left: -3px;
+        .mat-button-wrapper {
+            display: flex;
+            justify-content: center;
+            align-content: center;
+        }
+    }
+
+    .button-standardMenu:hover {
+        background-color: white;
+
+        i {
+            color: var(--princ-health-color) !important;
+        }
+
+        border: 1px solid var(--princ-health-color);
+    }
+
+    .type_partenaire ::ng-deep .mat-standard-chip {
+        border-radius: 5px;
+        // min-height: 32px;
+        // font-size: 12px;
+        font-weight: bold;
+        // width: 105px;
+        justify-content: center;
+        min-height: 40px;
+        margin: 0;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        // font-size: 12px;
+    }
+
+    .statutPharmacie {
+        background-color: var(--princ-pharmacie-color);
+        color: white;
+        border-radius: 5px !important;
+        width: 100%;
+        margin: 0px 4px 1.7em 4px !important;
+    }
+
+    .statutMedecin {
+        background-color: var(--princ-medecin-color);
+        color: white;
+        border-radius: 5px !important;
+        width: 100%;
+        margin: 0px 4px 1.7em 4px !important;
+    }
+
+
+    ::ng-deep .mat-form-field-wrapper {
+        padding-bottom: 1em !important;
+    }
+
+    ::ng-deep .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{
+        background-color: var(--princ-health-color);
+    }
+    ::ng-deep .mat-tab-label {
+        font-size: 1rem;
+        color: var(--princ-health-color);
+    }
+    
+    ::ng-deep .mat-tab-label.mat-tab-label-active {
+        opacity: 1 !important;
+        font-weight: 700;
+    }
+}

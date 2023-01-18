@@ -1,0 +1,63 @@
+<div class="dialog-title">
+    <h2 mat-dialog-title> Ajouter un document</h2>
+    <button (click)="dialogRef.close()" mat-icon-button class="btn-close">
+        <!-- <i class="fas fa-times"></i> -->
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<form [formGroup]="form" fxLayout="column" class="gene-form-wizard">
+    <!-- <mat-dialog-content> -->
+
+    <div fxLayout="column" [fxLayoutAlign]="'star'">
+
+        <mat-form-field appearance="outline">
+            <mat-label>Nom de fichier <span *ngIf="!isSubmitted">*</span></mat-label>
+            <input matInput type="text" maxlength="100" [required]='isSubmitted'
+                formControlName="nom_document">
+        </mat-form-field>
+        <label class="ajouterDocument" *ngIf="!selectedFiles?.inProgress">
+            <p class="labelPhoto">Téléchargez votre fichier</p>
+            <input type="file" accept=".jpeg,.png,.jpg,.pdf,.doc,.docx" (change)="selectFile($event)">
+            <mat-icon class="iconPhoto" svgIcon="cloudUploadAlt">
+            </mat-icon>
+        </label>
+        <div class="documentFile" *ngIf="selectedFiles?.inProgress">
+            <svg *ngIf="100 > selectedFiles.progress" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" class="svg_circle" width="225px" height="150px"
+                viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                <circle cx="50" cy="50" fill="none" stroke="var(--princ-health-color)" stroke-width="3" r="15"
+                    stroke-dasharray="61.26105674500097 22.420352248333657" transform="rotate(219.698 50 50)">
+                    <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s"
+                        values="0 50 50;360 50 50" keyTimes="0;1">
+                    </animateTransform>
+                </circle>
+            </svg>
+            <span *ngIf="100 > selectedFiles.progress" class="progress">
+                {{selectedFiles.progress + ' %'}}
+            </span>
+
+            <div class="icon_drive_file">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#000000">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path
+                        d="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z" />
+                </svg>
+                <span class="extension">{{extensionFile}}</span>
+            </div>
+            <a class="click text-center" href="{{imgUpload}}" target="_blank">{{nameFile}}</a>
+            <div class="deletePhoto">
+                <button (click)="removePhoto()">X</button>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <!-- </mat-dialog-content> -->
+    <mat-dialog-actions class="mrgn-b-xs pad-b-none" fxLayoutAlign="end">
+        <button type="button" mat-raised-button (click)="dialogRef.close()">Annuler</button>
+        <button type="submit" mat-raised-button (click)="save()" color="primary" class="label-form">
+            Enregistrer </button>
+    </mat-dialog-actions>
+</form>

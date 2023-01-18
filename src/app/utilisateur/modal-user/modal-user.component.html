@@ -1,0 +1,26 @@
+<div class="dialog-title">
+    <h2 mat-dialog-title>
+        Liste {{mode == 'REGI' ? 'Régions': 'Gammes'}}
+    </h2>
+    <button (click)="dialogRef.close()" mat-icon-button class="btn-close">
+        <!-- <i class="fas fa-times"></i> -->
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<div class="gene-form-wizard" fxLayout="column" id="card-list-tab-user">
+    <mat-form-field appearance="outline" fxFlex="100" >
+        <mat-label>Nom </mat-label>
+        <input matInput type="text" readonly [value]="nom_utilisateur || '-'">
+    </mat-form-field>
+    <div class="flexbox full-wid" fxFlex="100">
+        <div class="row card-row" *ngFor="let item of listeUser">
+            <div class="cell1 cell">
+                <h5 class="margin-none reveq-webkit text-center" [title]="item.libelle_codification || '-'">
+                    {{item.libelle_codification || '-'}}</h5>
+            </div>
+        </div>
+        <p *ngIf="listeUser?.length == 0 ">
+            Aucun résultat trouvé .
+        </p>
+    </div>
+</div>

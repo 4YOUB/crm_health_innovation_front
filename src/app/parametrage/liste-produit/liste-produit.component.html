@@ -1,0 +1,170 @@
+<div fxLayout="column">
+    <mat-expansion-panel class="mrgn-all-md" id="mat-card-list-produit" hideToggle="true" #panel>
+        <mat-expansion-panel-header collapsedHeight="50px" expandedHeight="50px">
+            <mat-panel-title fxLayout="row" fxLayoutAlign="space-between center">
+                <h4 fxLayoutAlign="start center" class="margin-none">
+                    <mat-icon>filter_alt</mat-icon>
+                    Filtrer
+                </h4>
+                <mat-icon>
+                    {{ panel.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
+                </mat-icon>
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="filter-dash">
+            <form [formGroup]="form" fxLayoutAlign="center">
+                <section class="example-section second-grid-checkbox ">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Identifiant </mat-label>
+                        <input matInput type="text" formControlName="id_produit">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Libellé produit</mat-label>
+                        <input matInput type="text" formControlName="libelle_produit">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Code gamme</mat-label>
+                        <input matInput type="text" formControlName="code_gamme">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Statut </mat-label>
+                        <mat-select formControlName="code_statut_produit">
+                            <mat-option [value]="null">--</mat-option>
+                            <mat-option [value]="'ACTI'"> Activé </mat-option>
+                            <mat-option [value]="'DESA'"> Désactivé </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </section>
+            </form>
+            <div class="second-button" fxLayout="column" fxLayoutAlign="end center">
+                <button class="mrgn-b-sm " mat-button mat-raised-button type="button" color="Default" (click)="reset()">
+                    Réinitialiser </button>
+                <button mat-button mat-raised-button (click)="filtrer()" type="button"
+                    color="primary">Rechercher</button>
+            </div>
+        </div>
+    </mat-expansion-panel>
+    <div class="mrgn-x-md  add-partenaire-btn" fxLayoutAlign="end center">
+        <mat-card-actions class="mat-pad-none margin-none">
+            <button mat-raised-button color="primary" routerLinkActive="active-link"
+                (click)="openDialogAjouterProduit()" class="mrgn-t-xs">
+                <mat-icon>add </mat-icon>
+                Ajouter Produit
+            </button>
+        </mat-card-actions>
+    </div>
+    <mat-card id="mat-card-list-produit">
+        <div class="flexbox full-wid">
+            <div class="row">
+                <div class="cell1 header">
+                    <ms-tri-list [nom_tri]="'Identifiant'" [nom_order_by]="'id_produit'" [type_tri]="type_tri"
+                        [order_by]="order_by" (optionTri)="optionTri($event)"></ms-tri-list>
+                </div>
+                <div class="cell2 header">
+                    <ms-tri-list [nom_tri]="'Produit'" [nom_order_by]="'libelle_produit'" [type_tri]="type_tri"
+                        [order_by]="order_by" (optionTri)="optionTri($event)"></ms-tri-list>
+                </div>
+                <div class="cell3 header">
+                    Gamme
+                </div>
+                <div class="cell5 header">
+                    <ms-tri-list [nom_tri]="'Ordre'" [nom_order_by]="'ordre_produit'" [type_tri]="type_tri"
+                        [order_by]="order_by" (optionTri)="optionTri($event)"></ms-tri-list>
+                </div>
+                <div class="cell6 header" fxLayout="column">
+                    <ms-tri-list [nom_tri]="'Date création'" [nom_order_by]="'date_creation'" [type_tri]="type_tri"
+                        [order_by]="order_by" (optionTri)="optionTri($event)"></ms-tri-list>
+                </div>
+                <div class="cell7 header" fxLayout="column">
+                    Statut
+                </div>
+                <div class="cell9 header">
+                    Activer<br>
+                    Désactiver
+                </div>
+                <div class="cell8 header">
+                    Modifier
+                </div>
+            </div>
+            <div class="row card-row" *ngFor="let item of listeProduits">
+                <div class="cell1 cell">
+                    <div fxLayout="row" fxLayoutAlign="center">
+                        <h5 class="margin-none text-center type-webkit" [title]="item.id_produit">
+                            {{item.id_produit}}</h5>
+                    </div>
+                </div>
+                <div class="cell2 cell">
+                    <h5 class="margin-none text-center type-webkit" [title]="item.libelle_produit || '-'">
+                        {{item.libelle_produit || '-'}}</h5>
+                </div>
+                <div class="cell3 cell">
+                    <h5 class="margin-none text-center type-webkit" >
+                        <ng-container *ngIf="item.gammes?.length; else elseTemplate">
+                            <a class="click reveq-webkit" (click)="openDialog(item.gammes,item.libelle_produit)">
+                                {{ item.gammes?.length }} Gamme(s)
+                            </a>
+                        </ng-container>
+                        <ng-template #elseTemplate>
+                            -
+                        </ng-template>
+                    </h5>
+                </div>
+                <div class="cell5 cell">
+                    <h5 class="margin-none text-center type-webkit" [title]="item.ordre_produit">
+                        {{item.ordre_produit}}</h5>
+                </div>
+                <div class="cell6 cell">
+                    <h5 class="reveq-webkit text-center">
+                        {{(item.date_creation | date:'dd/MM/yyyy') || '-'}} </h5>
+                </div>
+                <div class="cell7 cell">
+                    <mat-chip-list class="statut">
+                        <mat-chip *ngIf="item.code_statut_produit == 'ACTI'" class="statutActive"> Activé </mat-chip>
+                        <mat-chip *ngIf="item.code_statut_produit == 'DESA'" class="statutDesactive"> Désactivé
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+                <div class="cell9 cell">
+                    <button *ngIf="item.code_statut_produit == 'DESA'" mat-mini-fab mat-icon-button color="primary"
+                        class="margin-none button-table" title="Activer" href="javascript:void(0)"
+                        (click)="actionProduit('ACTI',item.id_produit)">
+                        <mat-icon class="mat-icon-grey gene-text-lg">
+                            done
+                        </mat-icon>
+                    </button>
+                    <button *ngIf="item.code_statut_produit == 'ACTI'" mat-mini-fab mat-icon-button color="primary"
+                        class="margin-none button-table" title="Désactiver" href="javascript:void(0)"
+                        (click)="actionProduit('DESA',item.id_produit)">
+                        <mat-icon class="mat-icon-grey gene-text-lg">
+                            remove
+                        </mat-icon>
+                    </button>
+                </div>
+                <div class="cell8 cell">
+                    <div fxLayout="row" fxLayoutAlign="center">
+                        <button mat-mini-fab mat-icon-button color="primary" class="margin-none button-table "
+                            title="Modifier" href="javascript:void(0)"
+                            (click)="openDialogModifierProduit('modifier',item.id_produit)">
+                            <mat-icon class="mat-icon-grey gene-text-lg">
+                                edit
+                            </mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <p *ngIf="listeProduits?.length == 0 && !isLoading">
+                Aucun résultat trouvé .
+            </p>
+        </div>
+
+        <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+            <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+            </mat-progress-spinner>
+        </div>
+        <div>
+            <mat-divider></mat-divider>
+            <mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 15, 20]"
+                [length]="totalProduits" (page)="getNextPage($event)" showFirstLastButtons></mat-paginator>
+        </div>
+    </mat-card>
+</div>

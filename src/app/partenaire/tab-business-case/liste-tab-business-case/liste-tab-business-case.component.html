@@ -1,0 +1,117 @@
+<div id="card-list-tab-business-case">
+    <div class="mrgn-all-md" fxLayoutAlign="end center">
+        <button mat-raised-button color="primary" class="mrgn-t-xs"
+        [disabled]="userItem.role == 'ADMI' || userItem.role == 'DEL' || statutPartenaire != 'VALI'"
+        (click)="openDialogAjouterBusinessCase()">
+            <mat-icon>add </mat-icon>
+            Ajouter un nouvel investissement
+        </button>
+    </div>
+    <div class="flexbox full-wid">
+        <div class="row">
+            <div class="cell1 header">
+                Fiche
+            </div>
+            <div class="cell2 header">
+                Date demande<br>
+                Demandeur
+            </div>
+            <div class="cell3 header">
+                Date validation<br>
+                Validateur
+            </div>
+            <div class="cell4 header">
+                Date réalisation<br>
+                Réalisateur
+            </div>
+            <div class="cell5 header">
+                Type investissement
+            </div>
+            <div class="cell6 header">
+                Document
+            </div>
+            <div class="cell7 header">
+                Statut
+            </div>
+            <div class="cell8 header">
+            </div>
+        </div>
+        <div class="row card-row" *ngFor="let item of listeBusinessCases">
+            <div class="cell1 cell">
+                <div fxLayout="row" fxLayoutAlign="center">
+                    <button mat-mini-fab mat-icon-button color="primary" class="margin-none button-table"
+                        (click)="openDialogFicheBusinessCase(item.id_business_case)" title="Fiche" href="javascript:void(0)">
+                        <mat-icon class="mat-icon-grey gene-text-lg">
+                            visibility
+                        </mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="cell2 cell">
+                <h5 class="margin-none reveq-webkit text-center">
+                    {{item.date_creation | date:'dd/MM/yyyy'}}</h5>
+                <h5 class="margin-none reveq-webkit text-center" [title]="item.nom_utilisateur || '-'">
+                    {{item.nom_utilisateur || '-'}}</h5>
+            </div>
+            <div class="cell3 cell">
+                <h5 class="margin-none reveq-webkit text-center">
+                    {{(item.date_validation | date:'dd/MM/yyyy') || '-'}} </h5>
+                <h5 class="margin-none reveq-webkit text-center" [title]="item.nom_validateur || '-'">
+                    {{item.nom_validateur || '-'}}</h5>
+            </div>
+            <div class="cell4 cell">
+                <h5 class="margin-none reveq-webkit text-center">
+                    {{(item.date_realisation | date:'dd/MM/yyyy') || '-'}} </h5>
+                <h5 class="margin-none reveq-webkit text-center" [title]="item.nom_realisateur || '-'">
+                    {{item.nom_realisateur || '-'}}</h5>
+            </div>
+            <div class="cell5 cell">
+                <h5 class="margin-none reveq-webkit text-center" [title]="item.type_investissement || '-'">
+                    {{item.type_investissement || '-'}}</h5>
+            </div>
+            <div class="cell6 cell">
+                <a class="click reveq-webkit" href="{{item.url_document}}" target="_blank">
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.nom_document  || '-'">
+                        {{item.nom_document || '-'}}
+                    </h5>
+                </a>
+            </div>
+            <div class="cell7 cell">
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <mat-chip-list class="statut">
+                        <mat-chip *ngIf="item.code_statut_bc == 'ENAT'" class="statutEnAttente"> En attente
+                        </mat-chip>
+                        <mat-chip *ngIf="item.code_statut_bc == 'REAL'" class="statutRealise"> Réalisé </mat-chip>
+                        <mat-chip *ngIf="item.code_statut_bc == 'REFU'" class="statutRefuse"> Refusé </mat-chip>
+                        <mat-chip *ngIf="item.code_statut_bc == 'VALI'" class="statutValide"> Validé </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+            <div class="cell8 cell">
+                <div fxLayout="row" fxLayoutAlign="center">
+                    <button mat-mini-fab mat-icon-button color="primary" class="margin-none button-table" title="Fiche"
+                        href="javascript:void(0)"
+                        [disabled]="userItem.id_utilisateur != item.id_utilisateur || item.code_statut_bc != 'ENAT'"
+                        (click)="openDialogModifierInvestissement('modifier',item.id_business_case)">
+                        <mat-icon class="mat-icon-grey gene-text-lg">
+                            edit
+                        </mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <p *ngIf="listeBusinessCases?.length == 0 && !isLoading">
+            Aucun résultat trouvé .
+        </p>
+    </div>
+
+    <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+        <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+        </mat-progress-spinner>
+    </div>
+    <div>
+        <mat-divider></mat-divider>
+        <mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 15, 20]" [length]="totalBusinessCases"
+            (page)="getNextPage($event)" showFirstLastButtons></mat-paginator>
+    </div>
+</div>

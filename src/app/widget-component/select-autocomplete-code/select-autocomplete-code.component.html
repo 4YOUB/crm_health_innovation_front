@@ -1,0 +1,25 @@
+<mat-form-field appearance="outline" fxFlex="100">
+    <mat-label *ngIf="!isRequiredOptional">{{nomInput}} <span *ngIf="!required && flag_obligatoire == 'O'">*</span></mat-label>
+    <mat-label *ngIf="isRequiredOptional">{{nomInput}}</mat-label>
+    <mat-select [required]="required" [formControl]="formControl">
+        <div class="box-search-sticky">
+            <div class="box-search">
+                <input #searchInput type="text" class="pl-1" (input)="filterItem(searchInput.value)"
+                    placeholder="Chercher..." />
+                <div class="box-search-icon" *ngIf="searchInput.value" (click)="filterItem(''); searchInput.value = ''">
+                    <button mat-icon-button class="search-button">
+                        <mat-icon class="mat-24" aria-label="Search icon">clear</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <mat-option *ngIf="showEmptyValue" [value]="null" (click)="onSelectionItem({})">--</mat-option>
+        <mat-option *ngFor="let item of filteredOptions" (click)="onSelectionItem(item)"
+            [value]="item.code_codification">
+            {{ item.libelle_codification }}
+            <ng-container *ngIf="item.role">
+                ({{item.role}})
+            </ng-container>
+        </mat-option>
+    </mat-select>
+</mat-form-field>

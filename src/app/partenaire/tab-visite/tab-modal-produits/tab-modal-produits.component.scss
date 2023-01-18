@@ -1,0 +1,106 @@
+.dialog-title {
+    position: relative;
+  }
+  
+  .btn-close {
+    outline: none;
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .btn-close:hover {
+    color: var(--princ-adr-color);
+  }
+
+  #card-list-tab-produit {
+
+    .flexbox {
+        // display: flex;
+        // flex-direction: column;
+        // align-items: center;
+        overflow: auto;
+
+        .row {
+            display: inline-flex;
+            // width: 100%;
+            min-width: -webkit-fill-available;
+        }
+
+        .card-row {
+            background: #f5f6f8;
+            border-radius: 10px;
+            margin: 10px 0;
+            // width: max-content;
+        }
+
+        .header {
+            font-size: 0.95rem;
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cell {
+            padding: 10px;
+            flex-direction: column;
+            box-sizing: border-box;
+            display: flex;
+            place-content: center;
+            align-items: center;
+        }
+
+        .cell1 {
+            width: 22%;
+            min-width: 130px;
+        }
+
+        .cell2 {
+            width: 55%;
+            min-width: 200px;
+        }
+
+        .cell3 {
+            width: 23%;
+            min-width: 130px;
+        }
+
+    }
+
+    .reveq-webkit {
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .type-webkit {
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    ::ng-deep .mat-form-field-wrapper {
+        padding-bottom: 0 !important;
+    }
+
+
+    @media screen and (max-width: 845px) {
+        .second-grid-checkbox {
+            max-width: none;
+        }
+    }
+
+}

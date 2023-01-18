@@ -1,0 +1,150 @@
+<div class="dialog-title">
+    <h2 mat-dialog-title> {{this.title}}</h2>
+    <button (click)="dialogRef.close()" mat-icon-button class="btn-close">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<form *ngIf="!isLoading" [formGroup]="form" fxLayout="column" class="gene-form-wizard">
+    <div fxLayout="row wrap" [fxLayoutAlign]="'star'" [fxLayoutGap]="'3%'" style="margin-right: -3%;">
+        <ng-container *ngIf="id_partenaire; else elseTemplate">
+            <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                <mat-label>Nom compte <span *ngIf="!isSubmitted">*</span></mat-label>
+                <input matInput type="text" readonly [value]="itemSelectPartenaire?.nom_partenaire">
+            </mat-form-field>
+        </ng-container>
+        <ng-template #elseTemplate>
+            <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                <mat-label>Nom Compte <span *ngIf="!isSubmitted">*</span></mat-label>
+                <mat-select [required]="isSubmitted" formControlName="id_partenaire" (openedChange)="openChange($event)">
+                    <div class="box-search-sticky">
+                        <div class="box-search">
+                            <input #searchInput type="text" class="pl-1" (input)="filterPartenaires(searchInput.value)"
+                                placeholder="Chercher..." />
+                            <div class="box-search-icon" *ngIf="searchInput.value"
+                                (click)="filterPartenaires(''); searchInput.value = ''">
+                                <button mat-icon-button class="search-button">
+                                    <mat-icon class="mat-24" aria-label="Search icon">clear</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <cdk-virtual-scroll-viewport itemSize="35" [style.height.px]=5*35>
+                        <mat-option *cdkVirtualFor="let item of filterelistePartenaires" [value]="item.id_partenaire"
+                            (click)="selectPartenaire(item)">
+                            <mat-icon class="pharmacie" *ngIf="item.code_type_partenaire == 'PHAR'" svgIcon="pharmacie"
+                                style="height: 24px;">
+                            </mat-icon>
+                            <mat-icon class="medecin" *ngIf="item.code_type_partenaire == 'MEDE'" svgIcon="medecin"
+                                style="height: 24px;">
+                            </mat-icon>
+                            {{ item.nom_partenaire }}
+                        </mat-option>
+                    </cdk-virtual-scroll-viewport>
+                </mat-select>
+            </mat-form-field>
+        </ng-template>
+
+        <div appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100"
+            fxFlex.gt-md="47">
+        </div>
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Type investissement <span *ngIf="!isSubmitted">*</span></mat-label>
+            <mat-select formControlName="code_type_investissement" [required]='isSubmitted' (openedChange)="onChangeTypeInvestissement()">
+                <mat-option *ngFor="let item of listeTypeInvestissement" [value]="item.code_codification">
+                    {{ item.libelle_codification }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-form-field appearance="outline" *ngIf="form.controls.code_type_investissement.value == 'IN0003'"
+                fxFlex="100">
+                <mat-label>Destination <span *ngIf="!isSubmitted">*</span></mat-label>
+                <input matInput type="text" formControlName="destination" [required]='isSubmitted'>
+            </mat-form-field>
+            <mat-form-field appearance="outline" *ngIf="form.controls.code_type_investissement.value == 'IN0002'"
+                fxFlex="100" >
+                <mat-label>Montant <span *ngIf="!isSubmitted">*</span></mat-label>
+                <input matInput type="text" mask="0*" maxlength="10" formControlName="budget" [required]='isSubmitted'>
+            </mat-form-field>
+            <mat-form-field appearance="outline" *ngIf="form.controls.code_type_investissement.value == 'IN0001'"
+                fxFlex="100">
+                <mat-label>Material <span *ngIf="!isSubmitted">*</span></mat-label>
+                <input matInput type="text" formControlName="objet_investissement" [required]='isSubmitted'>
+            </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47"
+        *ngIf="form.controls.code_type_investissement.value == 'IN0002'">
+            <mat-label>Nom bénéficiaire</mat-label>
+            <input matInput type="text" formControlName="nom_beneficiaire">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47"
+        *ngIf="form.controls.code_type_investissement.value == 'IN0002'">
+            <mat-label>RIB bénéficiaire</mat-label>
+            <input matInput type="tel" mask="0*" maxlength="24" formControlName="rib_beneficiaire">
+        </mat-form-field>
+
+        <mat-form-field id="description" appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100"
+            fxFlex.gt-md="47">
+            <mat-label>Commentaire </mat-label>
+            <textarea matInput type="text" maxlength="500" formControlName="description"
+                style="resize: none; height: 170px;" rows="10" cols="50">
+            </textarea>
+        </mat-form-field>
+
+        <div fxLayout="column" [fxLayoutAlign]="'star'" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100"
+            fxFlex.gt-md="47">
+            <mat-form-field appearance="outline">
+                <mat-label>Nom de fichier <span *ngIf="!isSubmitted && selectedFiles?.inProgress">*</span></mat-label>
+                <input matInput type="text" maxlength="100" [required]='isSubmitted && selectedFiles?.inProgress' formControlName="nom_document">
+            </mat-form-field>
+            <label class="ajouterPhoto" *ngIf="!selectedFiles?.inProgress">
+                <p class="labelPhoto">Téléchargez votre fichier</p>
+                <input type="file" accept=".jpeg,.png,.jpg,.pdf,.doc,.docx" (change)="selectFile($event)">
+                <mat-icon class="iconPhoto" svgIcon="cloudUploadAlt">
+                </mat-icon>
+            </label>
+            <div class="photoFile" *ngIf="selectedFiles?.inProgress">
+                <svg *ngIf="100 > selectedFiles.progress" xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink" class="svg_circle" width="225px" height="150px"
+                    viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                    <circle cx="50" cy="50" fill="none" stroke="var(--princ-health-color)" stroke-width="3" r="15"
+                        stroke-dasharray="61.26105674500097 22.420352248333657" transform="rotate(219.698 50 50)">
+                        <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s"
+                            values="0 50 50;360 50 50" keyTimes="0;1">
+                        </animateTransform>
+                    </circle>
+                </svg>
+                <span *ngIf="100 > selectedFiles.progress" class="progress">
+                    {{selectedFiles.progress + ' %'}}
+                </span>
+
+                <div class="icon_drive_file">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#000000">
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path
+                            d="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z" />
+                    </svg>
+                    <span class="extension">{{extensionFile}}</span>
+                </div>
+                <a class="click text-center" href="{{imgUpload}}" target="_blank">{{nameFile}}</a>
+                <div class="deletePhoto">
+                    <button (click)="removePhoto()">X</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <mat-dialog-actions class="mrgn-b-xs pad-b-none" fxLayoutAlign="end">
+        <button type="button" mat-raised-button (click)="dialogRef.close()">Annuler</button>
+        <button type="submit" mat-raised-button (click)="save()" color="primary" class="label-form">
+            Enregistrer </button>
+    </mat-dialog-actions>
+</form>
+<div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+    <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+    </mat-progress-spinner>
+</div>

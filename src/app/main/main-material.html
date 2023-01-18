@@ -1,0 +1,142 @@
+<div id = "main-app" class="app sidebar-color-dark header-color-dark" [dir]="layout" [ngClass]="{'app-dark': dark, 'collapsed-sidebar': coreService.collapseSidebar, 'compact-sidebar': compactSidebar, 'customizer-in': customizerIn}" [class.side-panel-opened]="coreService.sidenavOpen" [class.side-panel-closed]="!coreService.sidenavOpen">
+<mat-sidenav-container class="gene-container">
+   <mat-sidenav #sidenav [(mode)]="coreService.sidenavMode" [(opened)]="coreService.sidenavOpen" class="sidebar-area">
+      <ms-side-bar [menuList]="menuItems" [verticalMenuStatus] = true></ms-side-bar>
+   </mat-sidenav>
+   <mat-toolbar class="gene-header-toolbar">
+      <div class="gene-ham-icon" tourAnchor="start.tour" >
+         <button class="" mat-mini-fab color="primary" mat-card-icon (click)="toggleSidebar()">
+            <mat-icon>menu</mat-icon>
+         </button>
+      </div>
+      <a class="navbar-brand" >{{header}}</a>
+      <!-- <breadcrumb class="gene-breadcrumbs"></breadcrumb> -->
+      <!-- <span fxFlex></span> -->
+      <a href="javascript:void(0)" class="logo_Flex"  >
+         <img alt="health" class="logo_health" src="assets/img/logo-health.png" width="120">
+      </a>
+      <div class="secondary-menu">
+         <button fxHide="true" fxHide.gt-sm="false" mat-button class="fullscreen-toggle" (click)="toggleFullscreen()" tourAnchor="tour-full-screen">
+            <mat-icon *ngIf="!isFullscreen">fullscreen</mat-icon>
+            <mat-icon *ngIf="isFullscreen">fullscreen_exit</mat-icon>
+         </button>
+         <button class="user-button" mat-button [matMenuTriggerFor]="menu">
+            <div fxLayout="row" fxLayoutAlign="center center">
+               <mat-icon>account_circle</mat-icon>
+            </div>
+         </button>
+         <!-- <ms-language-drop-down></ms-language-drop-down> -->
+      </div>
+   </mat-toolbar>
+
+   <div class="gene-base-container" #scrollContainer>
+      <div class="inner-container" fxLayout="row wrap">
+         <div class="full-wid" fxFlex="100">
+            <router-outlet (activate)="onActivate($event, scrollContainer)"></router-outlet>
+            <ng-container>
+               <tour-step-template>
+                  <ng-template let-step="step">
+                     <div (click)="$event.stopPropagation()" class="popover bs-popover-bottom">
+                        <div class="popover-header">
+                           {{step?.title}}
+                        </div>
+                        <div class="popover-body">
+                           <p class="tour-step-content">
+                              {{step?.content}}
+                           </p>
+                        </div>
+                        <div class="tour-step-navigation">
+                           <button mat-icon-button [disabled]="!tourService.hasPrev(step)" (click)="tourService.prev()">
+                           <mat-icon>chevron_left</mat-icon>
+                           </button>
+                           <button mat-icon-button [disabled]="!tourService.hasNext(step)" (click)="tourService.next()">
+                           <mat-icon>chevron_right</mat-icon>
+                           </button>
+                           <button mat-button (click)="tourService.end()">End</button>
+                        </div>
+                     </div>
+                  </ng-template>
+               </tour-step-template>
+            </ng-container>
+         </div>
+         <!-- <div class="footer-wrap pad-t-none full-wid" fxFLex="100">
+            <ms-footer></ms-footer>
+         </div> -->
+      </div>
+   </div>
+</mat-sidenav-container>
+<!-- <div class="gene-customizer">
+   <button class="customizer-toggle" (click)="customizerFunction()">
+      <mat-icon class="fa-spin">settings</mat-icon>
+   </button>
+   <div class="settings-panel">
+      <mat-toolbar color="primary">
+         <span fxFlex>{{'Options'|translate}}</span>
+      </mat-toolbar>
+      <mat-card-content class="theme-options">
+         <h3>{{'Layout Options'| translate }}</h3>
+         <mat-divider></mat-divider>
+         <div class="collapse-option">
+            <mat-checkbox [(ngModel)]="coreService.collapseSidebar" (change)="collapseSidebar($event)" >{{'Collapsed Sidebar'| translate }}</mat-checkbox>
+         </div>
+         <div>
+            <mat-checkbox [(ngModel)]="dark" (change) = "addClassOnBody($event)" >{{'Dark Mode'| translate }}</mat-checkbox>
+         </div>
+         <div>
+            <mat-checkbox (change)="changeRTL($event.checked)" >{{'RTL'| translate }}</mat-checkbox>
+         </div>
+         <div>
+            <mat-select placeholder="Language" class="mt-1" [(ngModel)]="currentLang" #langSelect="ngModel" (ngModelChange)="translate.use(currentLang)">
+            <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">{{ lang }}</mat-option>
+            </mat-select>
+         </div>
+         <div class="inner-toolbar" fxHide fxShow.gt-md>
+            <div class="theme-color">
+               <div class="text-center mrgn-b-md">
+                  <h4>{{'Sidebar Filters'|translate}}</h4>
+               </div>
+               <div class="gene-list" fxLayoutAlign="center center">
+                  <div *ngFor = "let filter of sideBarFilterClass; let i=index">
+                     <a class="gene-list-link" (click)="sidebarFilter(filter)">
+                     <span [ngClass] = "{'radius-circle': i == 0 }" id = "{{filter.sideBarSelect}}"></span>
+                     </a>
+                  </div>
+               </div>
+            </div>
+            <div class="theme-color">
+               <div class="text-center mrgn-b-md">
+                  <h4 class="theme-light-color">{{'Header Filters'|translate}}</h4>
+               </div>
+               <div class="gene-list" fxLayoutAlign="center center">
+                  <div *ngFor = "let filter of headerFilterClass; let i=index">
+                     <a class="gene-list-link" (click)="headerFilter(filter)">
+                     <span [ngClass]="{'radius-active': i == 0 }" id="{{filter.headerSelect}}"></span>
+                     </a>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </mat-card-content>
+   </div>
+</div> -->
+
+</div>
+<mat-menu class="user-menu" x-position="before" y-position="below" #menu="matMenu">
+   <!-- <button mat-menu-item>
+      <mat-icon>account_circle</mat-icon>
+      <span>{{'Profile'|translate}}</span>
+   </button>
+   <button mat-menu-item>
+      <mat-icon>settings</mat-icon>
+      <span>{{'Settings'|translate}}</span>
+   </button> -->
+   <button [routerLink]="['/aide-pdf']" routerLinkActive="active-link" mat-menu-item>
+      <mat-icon>help</mat-icon>
+      <span>Aide</span>
+   </button>
+   <mat-divider></mat-divider>
+   <button (click)="logOut()" mat-menu-item>
+      <mat-icon>exit_to_app</mat-icon>
+      <span>Déconnexion</span>
+   </button>
+</mat-menu>

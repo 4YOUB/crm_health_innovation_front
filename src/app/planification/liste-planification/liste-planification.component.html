@@ -1,0 +1,190 @@
+<div fxLayout="column">
+    <div class="mrgn-x-md" fxLayoutAlign="end center">
+        <mat-card-actions class="mat-pad-none margin-none">
+            <button color="accent" 
+            *ngIf="userItem.flag_export == 'O' && userItem.export_planifications == 'O'" 
+            [disabled]="isExporting" mat-raised-button (click)="exportPlanifications()" class="mrgn-t-xs">
+                <mat-progress-spinner style="display:inline-block;margin-right:2px;" *ngIf="isExporting" color="primary" diameter="20" strokeWidth="3" mode="indeterminate">
+                </mat-progress-spinner>
+                <mat-icon *ngIf="!isExporting">download </mat-icon>
+                Exporter planifications
+            </button>
+            <button [disabled]="userItem.role == 'ADMI'" mat-raised-button color="primary"
+                [routerLink]="['/planifications/ajouter']" routerLinkActive="active-link" class="mrgn-t-xs">
+                <mat-icon>add </mat-icon>
+                Ajouter planification
+            </button>
+        </mat-card-actions>
+    </div>
+    <mat-expansion-panel class="mrgn-all-md" id="mat-card-liste-planification" hideToggle="true" #panel>
+        <mat-expansion-panel-header collapsedHeight="50px" expandedHeight="50px">
+            <mat-panel-title fxLayout="row" fxLayoutAlign="space-between center">
+                <h4 fxLayoutAlign="start center" class="margin-none">
+                    <mat-icon class="">filter_alt
+                    </mat-icon>
+                    Filtrer
+                </h4>
+                <mat-icon>{{
+                    panel.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+                    }}</mat-icon>
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="filter-dash">
+            <form [formGroup]="form" fxLayoutAlign="center">
+                <section class="example-section " fxLayout="row" fxLayoutGap="70px">
+                    <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Semaine </mat-label>
+                        <mat-select formControlName="liste_semaines">
+                            <mat-option *ngFor="let item of listeSemaines" [value]="item">
+                                Du {{item.date_debut | date:'dd/MM/yyyy'}} au {{item.date_fin | date:'dd/MM/yyyy'}}
+                                ({{item.num_semaine}})
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <ms-select-autocomplete-code class="form-field" ngDefaultControl
+                        [formControl]="form.controls.id_utilisateur" [smartList]="listeUtilisateurs"
+                        nomInput="Visiteur">
+                    </ms-select-autocomplete-code>
+                </section>
+            </form>
+            <div class="second-button" fxLayout="column" fxLayoutAlign="end center">
+                <button class="mrgn-b-sm " mat-button mat-raised-button type="button" color="Default" (click)="reset()">
+                    Réinitialiser </button>
+                <button mat-button mat-raised-button (click)="filtrer()" type="button"
+                    color="primary">Rechercher</button>
+            </div>
+        </div>
+    </mat-expansion-panel>
+
+    <mat-card id="mat-card-liste-planification">
+        <!-- <div>
+        <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 15, 20]" [length]="totalPartenaires"
+          (page)="getNextPage($event)" showFirstLastButtons></mat-paginator>
+        <mat-divider></mat-divider>
+      </div> -->
+        <div class="flexbox full-wid">
+            <div class="row">
+                <div class="cell1 header">
+                    Fiche
+                </div>
+                <div class="cell2 header">
+                    <ms-tri-list [nom_tri]="'Semaine'" [nom_order_by]="'date_deb_semaine'" [type_tri]="type_tri"
+                        [order_by]="order_by" (optionTri)="optionTri($event)"></ms-tri-list>
+                </div>
+                <div class="cell9 header">
+                    Modifier
+                </div>
+                <div class="cell3 header">
+                    <ms-tri-list [nom_tri]="'Visiteur'" [nom_order_by]="'nom_utilisateur'" [type_tri]="type_tri"
+                        [order_by]="order_by" (optionTri)="optionTri($event)"></ms-tri-list>
+                </div>
+                <div class="cell4 header">
+                    Total planifié
+                </div>
+                <div class="cell5 header">
+                    Total en attente
+                </div>
+                <div class="cell6 header">
+                    Total absent
+                </div>
+                <div class="cell7 header">
+                    Total replanifié
+                </div>
+                <div class="cell8 header">
+                    Total réalisé
+                </div>
+                <div class="cell10 header">
+
+                </div>
+            </div>
+            <div class="row card-row" *ngFor="let item of listePlanification">
+                <div class="cell1 cell">
+                    <div fxLayout="row" fxLayoutAlign="center">
+                        <button mat-mini-fab mat-icon-button color="primary" class="margin-none button-table"
+                            [routerLink]="['/planifications/fiche/'+item.id_planification]" title="Fiche"
+                            href="javascript:void(0)">
+                            <mat-icon class="mat-icon-grey gene-text-lg">
+                                visibility
+                            </mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="cell2 cell">
+                    <h5 class="text-center reveq-webkit" [title]="item.date_deb_planification || '-'">
+                        Du {{(item.date_deb_planification | date:'dd/MM/yyyy') || '-'}}
+                    </h5>
+                    <h5 class="margin-none text-center reveq-webkit" [title]="item.date_fin_planification || '-'">
+                        Au {{(item.date_fin_planification | date:'dd/MM/yyyy') || '-'}}
+                    </h5>
+                </div>
+                <div class="cell9 cell">
+                    <div fxLayout="row" fxLayoutAlign="center center">
+                        <button mat-mini-fab mat-icon-button color="primary"
+                            [disabled]="item.flag_disponible == 'N' || userItem.id_utilisateur != item.id_utilisateur"
+                            [routerLink]="['/planifications/modifier/'+item.id_planification]"
+                            class="margin-none button-table" title="Modifier" href="javascript:void(0)">
+                            <mat-icon class="mat-icon-grey gene-text-lg">
+                                edit
+                            </mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="cell3 cell">
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.nom_utilisateur || '-'">
+                        {{item.nom_utilisateur || '-'}}</h5>
+                </div>
+                <div class="cell4 cell">
+                    <h3 style="font-size: 1.2rem;" class="margin-none text-center">
+                        {{item.total_planifies}}
+                    </h3>
+                </div>
+                <div class="cell5 cell">
+                    <h3 style="font-size: 1.2rem;color: var(--statut-EnAttente-color);" class="margin-none text-center">
+                        {{item.total_en_attente}}
+                    </h3>
+                </div>
+                <div class="cell6 cell">
+                    <h3 style="font-size: 1.2rem;color: var(--statut-Absent-color);" class="margin-none text-center">
+                        {{(item.total_absent)}}
+                    </h3>
+                </div>
+                <div class="cell7 cell">
+                    <h3 style="font-size: 1.2rem;color: var(--statut-Replanifiee-color);"
+                        class="margin-none text-center">
+                        {{item.total_replanifies}}
+                    </h3>
+                </div>
+                <div class="cell8 cell">
+                    <h3 style="font-size: 1.2rem;color: var(--statut-Realisee-color);" class="margin-none text-center">
+                        {{item.total_realises}}
+                    </h3>
+                </div>
+                <div class="cell10 cell">
+                    <div fxLayout="row" fxLayoutAlign="center center">
+                        <button mat-mini-fab mat-icon-button color="primary"
+                            [disabled]="item.date_deb_planification > date_jour || userItem.id_utilisateur != item.id_utilisateur "
+                            class="margin-none mrgn-r-xs button-table"
+                            [routerLink]="['/planifications/rapports/'+item.id_planification]"
+                            routerLinkActive="active-link" style="padding: 0 10px;margin-right: 0;"
+                            title="Ajouter rapport">
+                            <mat-icon class="mat-icon-grey gene-text-lg">add </mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <p *ngIf="listePlanification?.length == 0 && !isLoading">
+                Aucun résultat trouvé .
+            </p>
+        </div>
+
+        <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+            <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+            </mat-progress-spinner>
+        </div>
+        <div>
+            <mat-divider></mat-divider>
+            <mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 15, 20]"
+                [length]="totalPlanification" (page)="getNextPage($event)" showFirstLastButtons></mat-paginator>
+        </div>
+    </mat-card>
+</div>

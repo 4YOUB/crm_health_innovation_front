@@ -1,0 +1,42 @@
+<div class="dialog-title">
+    <h2 mat-dialog-title> {{this.title}}</h2>
+    <button (click)="dialogRef.close()" mat-icon-button class="btn-close">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<form *ngIf="!isLoading" [formGroup]="form" fxLayout="column" class="gene-form-wizard">
+    <div fxLayout="column" [fxLayoutAlign]="'star'">
+        <mat-form-field appearance="outline" fxFlex="100">
+            <mat-label>Libelle produit <span *ngIf="!isSubmitted">*</span></mat-label>
+            <input matInput type="text" formControlName="libelle_produit" [required]='isSubmitted'>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Gamme <span *ngIf="!isSubmitted">*</span></mat-label>
+            <mat-select formControlName="gammes" multiple [required]='isSubmitted'>
+                <mat-option *ngFor="let item of listeGammes" [value]="item.code_codification">
+                    {{ item.libelle_codification }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div appearance="outline">
+            <mat-form-field appearance="outline" fxFlex="100">
+                <mat-label>Ordre produit <span *ngIf="!isSubmitted">*</span></mat-label>
+                <input matInput type="text" mask="0*" maxlength="5" formControlName="ordre_produit"
+                    [required]='isSubmitted'>
+            </mat-form-field>
+        </div>
+
+    </div>
+
+    <mat-dialog-actions class="mrgn-b-xs pad-b-none" fxLayoutAlign="end">
+        <button type="button" mat-raised-button (click)="dialogRef.close()">Annuler</button>
+        <button type="submit" mat-raised-button (click)="save()" color="primary" class="label-form">
+            Enregistrer </button>
+    </mat-dialog-actions>
+</form>
+<div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+    <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+    </mat-progress-spinner>
+</div>

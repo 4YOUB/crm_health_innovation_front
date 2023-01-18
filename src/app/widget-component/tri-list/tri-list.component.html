@@ -1,0 +1,42 @@
+<a fxLayout="row" fxLayoutAlign="center center" class="tri-webkit"
+    [ngClass]="{'tri-click': type_tri && order_by == nom_order_by}" (click)="sort()">
+    {{nom_tri}}
+    <div fxLayout="column" fxLayoutAlign="center">
+        <ng-container *ngIf="type_tri && order_by == nom_order_by; else elseTemplateTri">
+            <!-- <mat-icon [ngStyle]="{'visibility': type_tri == 'ASC' ? 'hidden' :''}" style="margin: 0 -6px -8px -3px;">
+                arrow_drop_up
+            </mat-icon>
+            <mat-icon [ngStyle]="{'visibility': type_tri == 'DESC' ? 'hidden' :''}" style="margin: -8px -6px 0 -3px;">
+                arrow_drop_down
+            </mat-icon> -->
+            <svg [ngStyle]="{'visibility': type_tri == 'ASC' ? 'hidden' :''}" style="margin: 0 -6px -8px -3px;"
+                xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path d="M7 14l5-5 5 5z" />
+            </svg>
+            <svg [ngStyle]="{'visibility': type_tri == 'DESC' ? 'hidden' :''}" style="margin: -8px -6px 0 -3px;"
+                xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path d="M7 10l5 5 5-5z" />
+            </svg>
+        </ng-container>
+        <ng-template #elseTemplateTri>
+            <!-- <mat-icon style="margin: 0 -6px -8px -3px;">
+                arrow_drop_up
+            </mat-icon>
+            <mat-icon style="margin: -8px -6px 0 -3px;">
+                arrow_drop_down
+            </mat-icon> -->
+            <svg style="margin: 0 -6px -8px -3px;" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
+                width="24px" fill="#000000">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path d="M7 14l5-5 5 5z" />
+            </svg>
+            <svg style="margin: -8px -6px 0 -3px;" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
+                width="24px" fill="#000000">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path d="M7 10l5 5 5-5z" />
+            </svg>
+        </ng-template>
+    </div>
+</a>

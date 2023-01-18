@@ -1,0 +1,86 @@
+.dialog-title {
+    position: relative;
+}
+
+.btn-close {
+    outline: none;
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-close:hover {
+    color: var(--princ-adr-color);
+}
+
+.gene-form-wizard {
+    .card-row {
+        background: #f5f6f8;
+        border-radius: 10px;
+        // margin: 10px 0;
+        padding: 10px;
+        width: 100%;
+        // width: max-content;
+    }
+
+    .btn_lien-add {
+        height: 37px;
+        width: 37px;
+        margin: 0 !important;
+        background-color: var(--princ-add-color);
+    }
+
+    .btn_lien-delete {
+        height: 37px;
+        width: 37px;
+        margin: 0 !important;
+        margin-top: 5px !important;
+        background-color: var(--princ-remove-color)
+    }
+
+    .btn_lien-icon {
+        height: 37px;
+        width: 37px;
+        font-size: 25px !important;
+        color: white;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        line-height: normal !important;
+    }
+
+    .checkbox-accompagnee {
+        margin-top: 10px;
+        margin-right: 10px;
+    }
+
+    #description {
+        margin-right: 3%;
+
+        ::ng-deep .mat-form-field-flex {
+            align-items: start !important;
+            height: auto;
+
+            .mat-form-field-prefix {
+                top: 20px !important;
+            }
+        }
+    }
+    .selectSection {
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        // align-items: center;
+        height: 90px;
+    }
+    
+    .mat-radio-button {
+        margin: 0 20px;
+        padding: 5px
+    }
+}
+

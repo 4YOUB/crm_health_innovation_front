@@ -1,0 +1,47 @@
+<div class="dialog-title">
+    <h2 mat-dialog-title>
+        Historique Utilisateur
+    </h2>
+    <button (click)="dialogRef.close()" mat-icon-button class="btn-close">
+        <!-- <i class="fas fa-times"></i> -->
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<div class="gene-form-wizard" fxLayout="column" id="card-list-historique-user">
+    <mat-form-field appearance="outline" fxFlex="100" >
+        <mat-label>Nom </mat-label>
+        <input matInput type="text" readonly [value]="nom_utilisateur || '-'">
+    </mat-form-field>
+    <div class="flexbox full-wid" fxFlex="100">
+        <div class="row">
+            <div class="cell1 header">
+                Commentaire
+            </div>
+            <div class="cell2 header">
+                Date
+            </div>
+        </div>
+        <div class="row card-row" *ngFor="let item of listeHistoriqueUser">
+            <div class="cell1 cell" style="align-items: flex-start;">
+                <h5 class="margin-none type-webkit text-left" [title]="item.commentaire || '-'">
+                    {{item.commentaire || '-'}}</h5>
+            </div>
+            <div class="cell2 cell">
+                <h5 class="margin-none reveq-webkit text-center">{{item.date_creation | date:'dd/MM/yyyy - HH:mm'}}
+                </h5>
+            </div>
+        </div>
+        <p *ngIf="listeHistoriqueUser?.length == 0 && !isLoading">
+            Aucun résultat trouvé .
+        </p>
+    </div>
+    <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+        <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+        </mat-progress-spinner>
+    </div>
+    <div>
+        <mat-divider></mat-divider>
+        <mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10]" [length]="totalHistoriqueUser"
+            (page)="getNextPage($event)" showFirstLastButtons></mat-paginator>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="dialog-title">
+    <h2 mat-dialog-title>
+        Liste Partenaires
+    </h2>
+    <button (click)="dialogRef.close()" mat-icon-button class="btn-close">
+        <!-- <i class="fas fa-times"></i> -->
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<div id="card-list-tab-partenaires">
+    <div class="flexbox full-wid">
+        <div class="row">
+            <div class="cell2 header">
+                Nom compte
+            </div>
+            <div class="cell3 header">
+                Specialite
+            </div>
+            <div class="cell3 header">
+                Potentiel
+            </div>
+        </div>
+        <div class="row card-row" *ngFor="let item of partenaires">
+            <div class="cell2 cell">
+                <h5 class="margin-none reveq-webkit text-center" [title]="item.produit || '-'">
+                    {{item.nom_partenaire|| '-'}}</h5>
+            </div>
+            <div class="cell3 cell">
+                <h5 *ngIf="item.code_type_partenaire == 'MEDE'"
+                    class="medecin margin-none mrgn-t-xs text-center reveq-webkit" [title]="item.specialite || '-'">
+                    {{item.specialite || '-'}} </h5>
+            </div>
+            <div class="cell3 cell">
+                <span class="potentiel margin-none text-center"
+                    [ngStyle]="{'border':item.code_potentiel ?'1px solid':'',
+                            'color': item.code_potentiel == 'A' || item?.code_potentiel == 'A+'?'#13be00': item.code_potentiel == 'B'? '#e5ce00':item.code_potentiel == 'C'? '#e10000':''}">
+                    {{item.code_potentiel || '-'}}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

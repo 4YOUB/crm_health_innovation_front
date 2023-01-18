@@ -1,0 +1,65 @@
+<div *ngIf="!isLoading" class="dialog-title" fxLayout="row" fxLayoutAlign="space-between">
+    <div class="name-container" fxLayout="row" fxLayoutAlign="start center">
+        <mat-icon>
+            person
+        </mat-icon>
+        <h2 mat-dialog-title [title]="itemEvenement.nom_utilisateur">
+            {{itemEvenement.nom_utilisateur}}
+        </h2>
+    </div>
+    <div class="action-btns" fxLayout="row" fxLayoutAlign="end center">
+        <div *ngIf="isCanEdit">
+            <button mat-icon-button title="modifier" 
+            (click)="openDialogAjouterEvenement()">
+                <mat-icon>
+                    edit
+                </mat-icon>
+            </button>
+            <button mat-icon-button title="supprimer" (click)="deleteEvenement()">
+                <mat-icon>
+                    delete
+                </mat-icon>
+            </button>
+        </div>
+        <button (click)="dialogRef.close()" title="annuler" mat-icon-button>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+</div>
+<mat-dialog-content>
+    <section *ngIf="!isLoading">
+        <p class="type-evenement" [ngStyle]="{'background-color': listStatusColors[itemEvenement.code_evenement]}">
+            {{itemEvenement.libelle_code_evenement}}</p>
+        <h3 class="titre-evenement">{{itemEvenement.titre}}</h3>
+        <div [title]="'Période'" class="periode" fxLayout="row" fxLayoutAlign="start center">
+            <mat-icon matSuffix>schedule</mat-icon>
+            <div class="date-evenement">
+                {{itemEvenement.date_deb_evenement + " - " + itemEvenement.date_fin_evenement}}
+            </div>
+        </div>
+        <div [title]="'Lieu'"
+        *ngIf="itemEvenement.lieu" 
+        class="lieu-evenement" fxLayout="row" fxLayoutAlign="start start">
+            <mat-icon class="material-icons-outlined">
+                my_location
+            </mat-icon>
+            <div class="text">
+                {{itemEvenement.lieu || '-'}}
+            </div>
+        </div>
+        <div [title]="'Commentaire'"
+        *ngIf="itemEvenement.commentaire" 
+        class="comment-evenement" fxLayout="row" fxLayoutAlign="start start">
+            <mat-icon class="material-icons-outlined">
+                comment
+            </mat-icon>
+            <div class="text">
+                {{itemEvenement.commentaire || '-'}}
+            </div>
+        </div>
+    </section>
+    <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+        <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+        </mat-progress-spinner>
+    </div>
+</mat-dialog-content>

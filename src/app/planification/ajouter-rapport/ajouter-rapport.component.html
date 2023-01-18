@@ -1,0 +1,245 @@
+<div class="dialog-title">
+    <h2 mat-dialog-title> Ajouter Rapport</h2>
+    <button (click)="dialogRef.close()" mat-icon-button class="btn-close">
+        <!-- <i class="fas fa-times"></i> -->
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<form [formGroup]="form" fxLayout="column" class="gene-form-wizard">
+    <!-- <mat-dialog-content> -->
+
+    <div fxLayout="row wrap" [fxLayoutAlign]="'star center'" [fxLayoutGap]="'3%'" style="margin-right: -3%;">
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Nom compte </mat-label>
+            <input matInput type="text" readonly [value]="itemRapport.nom_partenaire">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Date Planification </mat-label>
+            <input matInput readonly 
+            [value]="itemRapport.date_visite | date:'dd/MM/yyyy'"
+            >
+        </mat-form-field>
+
+        <div
+        fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47"
+        fxLayoutGap="6%"
+        *ngIf="form.controls.code_statut_visite.value != 'REPL'" 
+        >
+            <mat-form-field appearance="outline" 
+            *ngIf="form.controls.code_statut_visite.value != 'REPL'" 
+            fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                <mat-label>Heure Début Visite <span *ngIf="!isSubmitted">*</span></mat-label>
+                <mat-select formControlName="time_visite" [required]="isSubmitted">
+                <mat-option *ngFor="let hour of listHours" [value]="hour">
+                    {{hour}}
+                </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" 
+            *ngIf="form.controls.code_statut_visite.value != 'REPL'" 
+            fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                <mat-label>Heure Fin Visite <span *ngIf="!isSubmitted">*</span></mat-label>
+                <mat-select formControlName="time_fin_visite" [required]="isSubmitted">
+                <mat-option *ngFor="let hour of listHours" [value]="hour">
+                    {{hour}}
+                </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+
+        <!-- <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Heure Début Visite </mat-label>
+            <input matInput readonly [value]="itemRapport.date_visite | date:'HH:mm'"
+            >
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" 
+        *ngIf="form.controls.code_statut_visite.value == 'ABSE' || form.controls.code_statut_visite.value == 'REAL'" 
+        fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Heure Fin Visite <span *ngIf="!isSubmitted">*</span></mat-label>
+            <mat-select formControlName="time_fin_visite" [required]="isSubmitted">
+            <mat-option *ngFor="let hour of listHours" [value]="hour">
+                {{hour}}
+            </mat-option>
+            </mat-select>
+        </mat-form-field> -->
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Statut <span *ngIf="!isSubmitted">*</span></mat-label>
+            <mat-select formControlName="code_statut_visite" (openedChange)="onChangeStatutVisite()"
+                [required]='isSubmitted'>
+                <mat-option [value]="'REAL'"> Réalisée </mat-option>
+                <mat-option [value]="'ABSE'"> Absent </mat-option>
+                <mat-option [value]="'REPL'"> Replanifiée </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <!-- <div class="selectSection" *ngIf="form.controls.code_statut_visite.value != 'REPL'" appearance="outline"
+            fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47"> -->
+            <!-- <mat-label>Potentiel : </mat-label>
+            <mat-radio-group formControlName="code_potentiel">
+                <mat-radio-button class="mat-radio-button" [value]="'A'" color="">
+                    <span class="potentiel margin-none text-center" style="color: #13be00;border:1px solid;">
+                        A
+                    </span>
+                </mat-radio-button>
+                <mat-radio-button class="mat-radio-button" [value]="'B'">
+                    <span class="potentiel margin-none text-center" style="color: #e5ce00;border:1px solid;">
+                        B
+                    </span>
+                </mat-radio-button>
+                <mat-radio-button class="mat-radio-button" [value]="'C'">
+                    <span class="potentiel margin-none text-center" style="color: #e10000;border:1px solid;">
+                        C
+                    </span>
+                </mat-radio-button>
+            </mat-radio-group> -->
+        <!-- </div> -->
+        <mat-form-field id="description" *ngIf="form.controls.code_statut_visite.value == 'ABSE'" appearance="outline"
+            fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxFlex.gt-md="100">
+            <mat-label>Commentaire </mat-label>
+            <textarea matInput type="text" maxlength="500" formControlName="commentaire"
+                style="resize: none; height: auto;" rows="5" cols="50">
+        </textarea>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="form.controls.code_statut_visite.value == 'REPL'" appearance="outline" fxFlex.gt-sm="47"
+            fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Date Replanification <span *ngIf="!isSubmitted">*</span></mat-label>
+            <input matInput type="date" min="{{minDate}}" formControlName="date_replanification"
+                [required]='isSubmitted'>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="form.controls.code_statut_visite.value == 'REPL'" appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Heure Replanification <span *ngIf="!isSubmitted">*</span></mat-label>
+            <mat-select formControlName="time_replanification" [required]="isSubmitted">
+              <mat-option *ngFor="let hour of listHours" [value]="hour">
+                {{hour}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+    </div>
+
+    <div class="card-row" fxLayout="column" *ngIf="form.controls.code_statut_visite.value == 'REAL'">
+        <h4 fxLayoutAlign="start center">
+            Les Produits Planifiés
+        </h4>
+        <div fxLayout="row wrap" fxLayoutAlign="space-between start" fxFlex="100%"
+            *ngFor="let produit of produits; let i = index;" class="mrgn-b-sm">
+            <div fxFlex.gt-sm="{{ mediafxFlex }}" fxFlex.gt-xs="{{ mediafxFlex }}" fxFlex="100"
+                fxFlex.gt-md="{{ mediafxFlex }}" fxLayout="row" fxLayoutAlign="center center">
+                <mat-form-field appearance="outline" fxFlex="100" (click)="filterItemGamme(i,true)">
+                    <mat-label>Gamme <span *ngIf="!isSubmitted">*</span></mat-label>
+                    <mat-select [required]="isSubmitted" [(ngModel)]="produit.gamme"
+                        [ngModelOptions]="{standalone: true}">
+                        <div class="box-search-sticky">
+                            <div class="box-search">
+                                <input [(ngModel)]="produit.searchGamme" [ngModelOptions]="{standalone: true}"
+                                    type="text" class="pl-1" (input)="filterItemGamme(i,false)"
+                                    placeholder="Chercher..." />
+                                <div class="box-search-icon" *ngIf="produit.searchGamme"
+                                    (click)="filterItemGamme(i,true); produit.searchGamme = ''">
+                                    <button mat-icon-button class="search-button">
+                                        <mat-icon class="mat-24" aria-label="Search icon">clear</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <mat-option *ngFor="let item of produit.filtereGammes" (click)="selectGamme(item,i)"
+                            [value]="item.code_codification">
+                            {{ item.libelle_codification }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div fxFlex.gt-sm="{{ mediafxFlex }}" fxFlex.gt-xs="{{ mediafxFlex }}" fxFlex="100"
+                fxFlex.gt-md="{{ mediafxFlex }}" fxLayout="row" fxLayoutAlign="center center">
+                <mat-form-field appearance="outline" fxFlex="100" (click)="filterItemProduit(i,true)">
+                    <mat-label>Produit <span *ngIf="!isSubmitted">*</span></mat-label>
+                    <mat-select [required]="isSubmitted" [disabled]="produit.gamme ? false : true"
+                        [(ngModel)]="produit.produit" [ngModelOptions]="{standalone: true}">
+                        <div class="box-search-sticky">
+                            <div class="box-search">
+                                <input [(ngModel)]="produit.searchProduit" [ngModelOptions]="{standalone: true}"
+                                    type="text" class="pl-1" (input)="filterItemProduit(i,true)"
+                                    placeholder="Chercher..." />
+                                <div class="box-search-icon" *ngIf="produit.searchProduit"
+                                    (click)="filterItemProduit(i,true); produit.searchProduit = ''">
+                                    <button mat-icon-button class="search-button">
+                                        <mat-icon class="mat-24" aria-label="Search icon">clear</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <mat-option *ngFor="let item of produit.filtereProduits" [value]="item.id_produit">
+                            {{ item.libelle_produit }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div *ngIf="itemRapport.code_type_partenaire == 'MEDE'" fxFlex.gt-sm="{{ mediafxFlex }}"
+                fxFlex.gt-xs="{{ mediafxFlex }}" fxFlex="100" fxFlex.gt-md="{{ mediafxFlex }}" fxLayout="row"
+                fxLayoutAlign="center center">
+                <mat-form-field appearance="outline" fxFlex="100">
+                    <mat-label>Feedback <span *ngIf="!isSubmitted">*</span></mat-label>
+                    <mat-select [required]="isSubmitted" [(ngModel)]="produit.feedback"
+                        [ngModelOptions]="{standalone: true}">
+                        <mat-option *ngFor="let item of listeFeedbacks" [value]="item.code_codification">
+                            {{ item.libelle_codification }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="center start">
+                <button [disabled]="!(produits.length > 1)" mat-icon-button class="mrgn-r-xs btn_lien-delete"
+                    (click)="removeLine(i)" type="button">
+                    <mat-icon class="mat-icon-grey gene-text-xl btn_lien-icon">delete</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div fxLayout="row wrap" fxLayoutAlign="space-between start" fxFlex="100%" class="mrgn-b-sm">
+            <div fxFlex.gt-sm="{{ mediafxFlex }}" fxFlex.gt-xs="{{ mediafxFlex }}" fxFlex="100"
+                fxFlex.gt-md="{{ mediafxFlex }}" fxLayout="row" fxLayoutAlign="center center">
+
+            </div>
+            <div fxFlex.gt-sm="{{ mediafxFlex }}" fxFlex.gt-xs="{{ mediafxFlex }}" fxFlex="100"
+                fxFlex.gt-md="{{ mediafxFlex }}" fxLayout="row" fxLayoutAlign="center center">
+
+            </div>
+            <div *ngIf="itemRapport.code_type_partenaire == 'MEDE'" fxFlex.gt-sm="{{ mediafxFlex }}"
+                fxFlex.gt-xs="{{ mediafxFlex }}" fxFlex="100" fxFlex.gt-md="{{ mediafxFlex }}" fxLayout="row"
+                fxLayoutAlign="center center">
+
+            </div>
+            <div fxLayout="row" fxLayoutAlign="center start">
+                <button mat-icon-button class="mrgn-r-xs btn_lien-add" (click)="addLineProduits()" type="button">
+                    <mat-icon class="mat-icon-grey gene-text-xl btn_lien-icon">add</mat-icon>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div *ngIf="form.controls.code_statut_visite.value != 'REPL'" fxLayout="row wrap" [fxLayoutAlign]="'star'"
+        [fxLayoutGap]="'1.3%'" style="margin-right: -1.3%;" class="mrgn-all-md">
+        <mat-checkbox class="checkbox-accompagnee" formControlName="flag_accompagnee" (change)="accompagneeVisite()">
+            Visite accompagnée avec :</mat-checkbox>
+        <span [hidden]="!form.value.flag_accompagnee">
+            <ms-select-autocomplete-code ngDefaultControl [flag_obligatoire]="'O'"
+                [required]="form.value.flag_accompagnee ? isSubmitted : false" [formControl]="form.controls.id_visiteur"
+                [smartList]="listeUtilisateurs" nomInput="Visiteur">
+            </ms-select-autocomplete-code>
+        </span>
+    </div>
+
+    <!-- </mat-dialog-content> -->
+    <mat-dialog-actions class="mrgn-b-xs pad-b-none" fxLayoutAlign="end">
+        <button type="button" mat-raised-button (click)="dialogRef.close()">Annuler</button>
+        <button type="submit" mat-raised-button (click)="save()" color="primary" class="label-form">
+            Enregistrer </button>
+    </mat-dialog-actions>
+</form>

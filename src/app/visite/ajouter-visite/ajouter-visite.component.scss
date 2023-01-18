@@ -1,0 +1,126 @@
+.dialog-title {
+  position: relative;
+}
+
+.addLinePartenaire{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  padding-bottom:10px;
+}
+
+.btn-close {
+  outline: none;
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-close:hover {
+  color: var(--princ-adr-color);
+}
+.informationVisite{
+  display: block !important;
+  margin-right:3% !important;
+  .inputs{
+    display: flex;
+    width:100;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap !important
+  }
+}
+.gene-form-wizard {
+  .card-row {
+    background: #f5f6f8;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    padding: 10px;
+    width: 100%;
+    // width: max-content;
+  }
+
+  .btn_lien-add {
+    height: 37px;
+    width: 37px;
+    margin: 0 !important;
+    background-color: var(--princ-add-color);
+  }
+
+  .btn_lien-delete {
+    height: 37px;
+    width: 37px;
+    margin: 0 !important;
+    margin-top: 5px !important;
+    background-color: var(--princ-remove-color)
+  }
+
+  .btn_lien-icon {
+    height: 37px;
+    width: 37px;
+    font-size: 25px !important;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    line-height: normal !important;
+  }
+  .checkbox-accompagnee{
+    margin: 10px 0px 0 0 !important;
+    width: 25%;
+
+  }
+  #description {
+    margin-right: 3%;
+    ::ng-deep .mat-form-field-flex {
+        align-items: start !important;
+        height: auto;
+
+        .mat-form-field-prefix {
+            top: 20px !important;
+        }
+    }
+}
+.selectSection {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  // align-items: center;
+  height: 90px;
+}
+
+.mat-radio-button {
+  margin: 0 10px;
+  padding: 5px
+}
+}
+
+.mat-select-panel.virtual-scroll {
+  max-height: 100% !important;
+  overflow: inherit !important;
+}
+.mat-select-panel .cdk-virtual-scroll-viewport {
+ max-height: 240px !important;
+}
+
+.mat-select-panel .cdk-virtual-scroll-content-wrapper {
+  position: inherit !important;  
+  top: inherit !important;  
+  left: 0; 
+}
+
+.typeVisite{
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+.compteVisites{
+ margin-right: 3% !important; 
+}

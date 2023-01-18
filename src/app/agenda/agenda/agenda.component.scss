@@ -1,0 +1,87 @@
+mat-card {
+  overflow: auto;
+}
+
+full-calendar {
+  min-width: 800px;
+  min-height: 800px;
+}
+
+.agenda-filters {
+  min-height: 50px;
+  min-width: max-content;
+}
+
+.types-section {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+}
+
+.mat-radio-button {
+  margin: 0 5px 0 0 !important;
+  padding: 0 5px 0 0 !important;
+}
+
+.mat-checkbox {
+  margin-right: 5px;
+}
+
+:host ::ng-deep .agenda-filters {
+  .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+}
+
+.form-section {
+  width: 250px;
+  margin-left: 10px;
+}
+
+.colors-info-section {
+  // min-height: 45px;
+  // max-height: 50px;
+  overflow-y: auto;
+  gap: 5px;
+  height: 4rem;
+  .color-info {
+    min-width: 95px;
+    // max-width: 120px;
+    font-size: 15px;
+    .color {
+      width: 15px;
+      height: 15px;
+      border-radius: 20px;
+      flex-shrink: 0;
+    }
+
+    .status {
+      margin-left: 5px;
+      white-space: nowrap;
+    }
+  }
+  & > div {
+    gap: 10px;
+  }
+}
+
+.filtre-status{
+  margin-bottom: 10px;
+  // height: 2.5rem;
+  h4{
+    margin: 0;
+    font-size: 15px;
+    margin-top: 2px;
+  }
+
+  .mat-radio-button {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.bottom-section {
+  .mat-card {
+    padding: 10px;
+  }
+}

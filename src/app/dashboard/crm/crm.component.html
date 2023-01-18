@@ -1,0 +1,309 @@
+<div id="mat-card-crm" fxLayout="column">
+    <mat-card>
+        <h4 fxLayoutAlign="start center" class="margin-none">
+            <mat-icon class="">filter_alt
+            </mat-icon>
+            Filtrer :
+        </h4>
+        <ng-container *ngIf="userItem.role != 'ACH' && userItem.role != 'DEL'">
+            <ms-select-autocomplete-code ngDefaultControl class="mrgn-t-sm" style="max-width: 300px;"
+                [smartList]="listeUtilisateurs" nomInput="Délégué" (optionSelected)="optionSelectedDelegue($event)">
+            </ms-select-autocomplete-code>
+        </ng-container>
+        <mat-radio-group [(ngModel)]="nameFilterModel">
+            <div class="mat-radio-group-div-dash" *ngFor="let sort of someName; let i=index">
+                <span class="mat-radio-label-content">
+                    {{sort.name}} :</span>
+                <div class="radio-label-button" *ngFor="let section of sort.data">
+                    <mat-radio-button [value]="section.name" (click)="sectionSearchDate(section.value,section.momentd)">
+                        {{section.name}}
+                    </mat-radio-button>
+                </div>
+            </div>
+            <div class="mat-radio-group-div-dash">
+                <span class="mat-radio-label-content">
+                    Autre :</span>
+                <div class="radio-label-button">
+                    <mat-radio-button [value]="'Totalité'" (click)="sectionSearchDate()">Totalité
+                    </mat-radio-button>
+                </div>
+
+                <mat-radio-button value="Période" (click)="sectionSearchDate('3')">
+                    Période </mat-radio-button>
+
+                <mat-form-field appearance="outline" class="mrgn-r-sm">
+                    <mat-label>Date debut </mat-label>
+                    <input matInput type="date" lang="fr-FR" [(ngModel)]="date_debut"
+                        [disabled]="is_enabledPeriod ? false : true">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="mrgn-r-sm">
+                    <mat-label>Date fin </mat-label>
+                    <input matInput type="date" lang="fr-FR" [(ngModel)]="date_fin"
+                        [disabled]="is_enabledPeriod ? false : true">
+                </mat-form-field>
+
+                <button mat-button mat-raised-button (click)="getStatistiquesDashboard()" style="height: 40px;"
+                    [disabled]="is_enabledPeriod ? false : true" type="button" color="primary">Rechercher</button>
+
+            </div>
+        </mat-radio-group>
+    </mat-card>
+
+    <mat-card *ngIf="userItem.role != 'ACH'">
+        <mat-tab-group (selectedTabChange)="tabChange($event)">
+            <mat-tab label="Visites planifiées">
+                <ng-template mat-tab-label>
+                    <!-- <h4 fxLayoutAlign="start center" class="margin-none"> -->
+                    Visites planifiées
+                    ({{this.statistiques?.nbr_total_visites_planifiees}})
+                    <!-- </h4> -->
+                </ng-template>
+                <!--  -->
+                <div *ngIf="chartTab" class="gene-card-content" fxLayout="row wrap" fxLayoutAlign="center start">
+                    <div class="div-chart" fxLayout="column" fxLayoutAlign="center"
+                        *ngIf="(doughnutChartData1[0] + doughnutChartData1[1]) != 0">
+                        <h5 class="text-center">Par types de comptes</h5>
+                        <canvas width="300" height="200" baseChart [plugins]="doughnutChartPlugin"
+                            [data]="doughnutChartData1" [labels]="doughnutChartLabels1" [options]="PieChartOptions"
+                            [chartType]="doughnutChartType"></canvas>
+                        <div class="chart-specs">
+                            <div fxLayout="row" *ngFor="let item of doughnutChartLabels1; let i = index;">
+                                <div class="color-wrapper">
+                                    <div class="color-ref" [ngStyle]="{background: backgroundColor[i]}"></div>
+                                </div>
+                                <div class="label-ref">
+                                    {{ item }} : {{doughnutChartData1[i]}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="div-chart" fxLayout="column" fxLayoutAlign="center"
+                        *ngIf="(doughnutChartData3[0] + doughnutChartData3[1]) != 0">
+                        <h5 class="text-center">Accompagnées ou non</h5>
+                        <canvas width="300" height="200" baseChart [plugins]="doughnutChartPlugin"
+                            [data]="doughnutChartData3" [labels]="doughnutChartLabels3" [options]="PieChartOptions"
+                            [chartType]="doughnutChartType"></canvas>
+                        <div class="chart-specs">
+                            <div fxLayout="row" *ngFor="let item of doughnutChartLabels3; let i = index;">
+                                <div class="color-wrapper">
+                                    <div class="color-ref" [ngStyle]="{background: backgroundColor[i]}"></div>
+                                </div>
+                                <div class="label-ref">
+                                    {{ item }} : {{doughnutChartData3[i]}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="div-chart" fxLayout="column" fxLayoutAlign="center"
+                        *ngIf="(doughnutChartData2[0] + doughnutChartData2[1]) != 0">
+                        <h5 class="text-center">Par types d'établissements de médecins</h5>
+                        <canvas width="300" height="200" baseChart [plugins]="doughnutChartPlugin"
+                            [data]="doughnutChartData2" [labels]="doughnutChartLabels2" [options]="PieChartOptions"
+                            [chartType]="doughnutChartType"></canvas>
+                        <div class="chart-specs">
+                            <div fxLayout="row" *ngFor="let item of doughnutChartLabels2; let i = index;">
+                                <div class="color-wrapper">
+                                    <div class="color-ref" [ngStyle]="{background: backgroundColor[i]}"></div>
+                                </div>
+                                <div class="label-ref">
+                                    {{ item }} : {{doughnutChartData2[i]}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="div-chart" fxLayout="column" fxLayoutAlign="center"
+                        *ngIf="statistiques?.nbr_total_gammes_visites_planifiees != 0">
+                        <h5 class="text-center">Par gammes de médecins</h5>
+                        <canvas width="300" height="200" baseChart [plugins]="doughnutChartPlugin"
+                            [data]="doughnutChartData4" [labels]="doughnutChartLabels4" [options]="PieChartOptions"
+                            [chartType]="doughnutChartType" [colors]="pieChartColors"></canvas>
+                        <div class="chart-specs">
+                            <div fxLayout="row" *ngFor="let item of doughnutChartLabels4; let i = index;">
+                                <div class="color-wrapper">
+                                    <div class="color-ref" [ngStyle]="{background: backgroundColor[i]}"></div>
+                                </div>
+                                <div class="label-ref">
+                                    {{ item }} : {{doughnutChartData4[i]}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!chartTab" fxLayoutAlign="center center" class="mrgn-all-lg">
+                    <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+                    </mat-progress-spinner>
+                </div>
+            </mat-tab>
+            <mat-tab label="Visites hors planification">
+                <ng-template mat-tab-label>
+                    <!-- <h4 fxLayoutAlign="start center" class="margin-none"> -->
+                    Visites hors planification
+                    ({{this.statistiques?.nbr_total_visites_non_planifiees}})
+                    <!-- </h4> -->
+                </ng-template>
+                <div *ngIf="chartTab" class="gene-card-content" fxLayout="row wrap" fxLayoutAlign="center start">
+                    <div class="div-chart" fxLayout="column" fxLayoutAlign="center"
+                        *ngIf="(doughnutChartDataHP1[0] + doughnutChartDataHP1[1]) != 0">
+                        <h5 class="text-center">Par types de comptes</h5>
+                        <canvas width="300" height="200" baseChart [plugins]="doughnutChartPlugin"
+                            [data]="doughnutChartDataHP1" [labels]="doughnutChartLabelsHP1" [options]="PieChartOptions"
+                            [chartType]="doughnutChartType"></canvas>
+                        <div class="chart-specs">
+                            <div fxLayout="row" *ngFor="let item of doughnutChartLabelsHP1; let i = index;">
+                                <div class="color-wrapper">
+                                    <div class="color-ref" [ngStyle]="{background: backgroundColor[i]}"></div>
+                                </div>
+                                <div class="label-ref">
+                                    {{ item }} : {{doughnutChartDataHP1[i]}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="div-chart" fxLayout="column" fxLayoutAlign="center"
+                        *ngIf="(doughnutChartDataHP3[0] + doughnutChartDataHP3[1]) != 0">
+                        <h5 class="text-center">Accompagnées ou non</h5>
+                        <canvas width="300" height="200" baseChart [plugins]="doughnutChartPlugin"
+                            [data]="doughnutChartDataHP3" [labels]="doughnutChartLabelsHP3" [options]="PieChartOptions"
+                            [chartType]="doughnutChartType"></canvas>
+                        <div class="chart-specs">
+                            <div fxLayout="row" *ngFor="let item of doughnutChartLabelsHP3; let i = index;">
+                                <div class="color-wrapper">
+                                    <div class="color-ref" [ngStyle]="{background: backgroundColor[i]}"></div>
+                                </div>
+                                <div class="label-ref">
+                                    {{ item }} : {{doughnutChartDataHP3[i]}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="div-chart" fxLayout="column" fxLayoutAlign="center"
+                        *ngIf="(doughnutChartDataHP2[0] + doughnutChartDataHP2[1]) != 0">
+                        <h5 class="text-center">Par types d'établissements de médecins</h5>
+                        <canvas width="300" height="200" baseChart [plugins]="doughnutChartPlugin"
+                            [data]="doughnutChartDataHP2" [labels]="doughnutChartLabelsHP2" [options]="PieChartOptions"
+                            [chartType]="doughnutChartType"></canvas>
+                        <div class="chart-specs">
+                            <div fxLayout="row" *ngFor="let item of doughnutChartLabelsHP2; let i = index;">
+                                <div class="color-wrapper">
+                                    <div class="color-ref" [ngStyle]="{background: backgroundColor[i]}"></div>
+                                </div>
+                                <div class="label-ref">
+                                    {{ item }} : {{doughnutChartDataHP2[i]}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="div-chart" fxLayout="column" fxLayoutAlign="center"
+                        *ngIf="statistiques?.nbr_total_gammes_visites_non_planifiees != 0">
+                        <h5 class="text-center">Par gammes de médecins</h5>
+                        <canvas width="300" height="200" baseChart [plugins]="doughnutChartPlugin"
+                            [data]="doughnutChartDataHP4" [labels]="doughnutChartLabelsHP4" [options]="PieChartOptions"
+                            [chartType]="doughnutChartType" [colors]="pieChartColors"></canvas>
+                        <div class="chart-specs">
+                            <div fxLayout="row" *ngFor="let item of doughnutChartLabelsHP4; let i = index;">
+                                <div class="color-wrapper">
+                                    <div class="color-ref" [ngStyle]="{background: backgroundColor[i]}"></div>
+                                </div>
+                                <div class="label-ref">
+                                    {{ item }} : {{doughnutChartDataHP4[i]}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!chartTab" fxLayoutAlign="center center" class="mrgn-all-lg">
+                    <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+                    </mat-progress-spinner>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+
+    </mat-card>
+
+    <mat-card *ngIf="userItem?.role != 'ACH'">
+        <h4 fxLayoutAlign="start center" class="margin-none">
+            Planifications
+            ({{this.statistiques?.nbr_total_planifications}})
+        </h4>
+        <div *ngIf="chart" class="gene-card-content" fxLayout="row wrap" fxLayoutAlign="center start">
+            <div class="div-chart" fxLayout="column" fxLayoutAlign="center"
+                *ngIf="(doughnutChartDataPL1[0] + doughnutChartDataPL1[1]) != 0">
+                <h5 class="text-center">Total jours planifiées</h5>
+                <canvas width="300" height="200" baseChart [plugins]="doughnutChartPlugin" [data]="doughnutChartDataPL1"
+                    [labels]="doughnutChartLabelsPL1" [options]="PieChartOptions"
+                    [chartType]="doughnutChartType"></canvas>
+                <div class="chart-specs">
+                    <div fxLayout="row" *ngFor="let item of doughnutChartLabelsPL1; let i = index;">
+                        <div class="color-wrapper">
+                            <div class="color-ref" [ngStyle]="{background: backgroundColor[i]}"></div>
+                        </div>
+                        <div class="label-ref">
+                            {{ item }} : {{doughnutChartDataPL1[i]}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="div-chart" fxLayout="column" fxLayoutAlign="center" *ngIf="totalPlanifie != 0">
+                <h5 class="text-center">Total des rendez-vous planifiés</h5>
+                <canvas width="300" height="200" baseChart [plugins]="doughnutChartPlugin" [data]="doughnutChartDataPL4"
+                    [labels]="doughnutChartLabelsPL4" [options]="PieChartOptions" [chartType]="doughnutChartType"
+                    [colors]="pieChartColors"></canvas>
+                <div class="chart-specs">
+                    <div fxLayout="row" *ngFor="let item of doughnutChartLabelsPL4; let i = index;">
+                        <div class="color-wrapper">
+                            <div class="color-ref" [ngStyle]="{background: backgroundColor[i]}"></div>
+                        </div>
+                        <div class="label-ref">
+                            {{ item }} : {{doughnutChartDataPL4[i]}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!chart" fxLayoutAlign="center center" class="mrgn-all-lg">
+            <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+            </mat-progress-spinner>
+        </div>
+    </mat-card>
+
+    <mat-card *ngIf="userItem?.role != 'DELE' || userItem?.flag_medical != 'N'">
+        <h4 fxLayoutAlign="start center" class="margin-none">
+            Investissements
+            ({{this.statistiques?.nbr_total_investissements}})
+        </h4>
+        <div *ngIf="chart" class="gene-card-content" fxLayout="row wrap" fxLayoutAlign="center start">
+            <div class="div-chart" fxLayout="column" fxLayoutAlign="center"
+                *ngIf="this.statistiques?.nbr_total_investissements != 0">
+                <h5 class="text-center">Total investissements</h5>
+                <canvas width="300" height="200" baseChart [plugins]="doughnutChartPlugin" [data]="doughnutChartDataIN1"
+                    [labels]="doughnutChartLabelsIN1" [options]="PieChartOptions" [chartType]="doughnutChartType"
+                    [colors]="pieChartColors"></canvas>
+                <div class="chart-specs">
+                    <div fxLayout="row" *ngFor="let item of doughnutChartLabelsIN1; let i = index;">
+                        <div class="color-wrapper">
+                            <div class="color-ref" [ngStyle]="{background: backgroundColor[i]}"></div>
+                        </div>
+                        <div class="label-ref">
+                            {{ item }} : {{doughnutChartDataIN1[i]}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!chart" fxLayoutAlign="center center" class="mrgn-all-lg">
+            <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+            </mat-progress-spinner>
+        </div>
+    </mat-card>
+    <!-- <h3 class="text-center">
+        Ces KPIs ne sont pas complets. Ils vont être ajoutés au fur et à mesure.
+    </h3> -->
+</div>

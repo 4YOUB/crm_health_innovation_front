@@ -1,0 +1,46 @@
+<div class="health-login gene-session pad-y-xl">
+   <div fxLayout="row" fxLayoutAlign="center start">
+      <div fxLayout="column" fxFlex.xl="540px" fxFlex.lg="540px" fxFlex.md="540px" fxFlex.sm="540px" fxFlex.xs="100">
+         <mat-card class="health-login-wrapper">
+            <div>
+               <div fxLayout="column" fxLayoutAlign="center center mrgn-b-md">
+                  <div class="login-logo justify-content">
+                     <img src="assets/img/logo-health.png">
+                     <h5>Veuillez saisir vos informations d'utilisateur</h5>
+                  </div>
+               </div>
+               <form #form="ngForm" [formGroup]="loginForm" (ngSubmit)="login(form.value)">
+               <div fxLayout="column" fxLayoutAlign="start stretch">
+                  <mat-form-field appearance="outline" class="full-wid ">
+                     <mat-label>Identifiant<span *ngIf="!isSubmitted">*</span></mat-label>
+                     <mat-icon matPrefix class="mrgn-r-xs">verified_user</mat-icon>
+                     <input matInput type="text" name="email" [required]='isSubmitted' formControlName="email">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-wid ">
+                     <mat-label>Mot de passe <span *ngIf="!isSubmitted">*</span></mat-label>
+                     <mat-icon matPrefix class="mrgn-r-xs">lock</mat-icon>
+                     <input matInput [type]="hide ? 'password' : 'text'" name="password" [required]='isSubmitted'
+                        formControlName="password">
+                     <mat-error *ngIf="loginForm.get('password').hasError('required')">Veuillez saisir un mot de
+                        passe.</mat-error>
+                     <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                        [attr.aria-pressed]="hide" class="margin-none" type="button">
+                        <mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+                     </button>
+                  </mat-form-field>
+                  <!-- <div fxLayout="row" fxLayoutAlign="start center">
+                     <div fxLayout="column">
+                        <mat-checkbox class="remember-me">Remember Me</mat-checkbox>
+                     </div>
+                     <span fxFlex></span>
+                     <div><a [routerLink]="['/session/forgot-password']">Forgot Password?</a></div>
+                  </div> -->
+                  <button color="primary" mat-raised-button [disabled]="!form.valid">Se connecter</button>
+                  <!-- <p class="text-center">Don't have an account? <a [routerLink]="['/session/register']" class="primary-text">Click here to create one</a></p> -->
+               </div>
+               </form>
+            </div>
+         </mat-card>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,254 @@
+<div fxLayout="column">
+  <div class="mrgn-x-md" fxLayoutAlign="end center">
+    <mat-card-actions class="mat-pad-none margin-none">
+      <button color="accent" 
+      *ngIf="userItem.flag_export == 'O' && userItem.export_comptes == 'O'"
+      [disabled]="isExporting" mat-raised-button (click)="exportPartenaires()" class="mrgn-t-xs">
+        <mat-progress-spinner style="display:inline-block;margin-right:2px;" *ngIf="isExporting" color="primary" diameter="20" strokeWidth="3" mode="indeterminate">
+        </mat-progress-spinner>
+        <mat-icon *ngIf="!isExporting">download </mat-icon>
+        Exporter comptes
+      </button>
+      <button mat-raised-button color="primary" (click)="openDialogAjouterPartenaire()" class="mrgn-t-xs">
+        <mat-icon>add </mat-icon>
+        Ajouter compte
+      </button>
+    </mat-card-actions>
+  </div>
+  <mat-expansion-panel class="mrgn-all-md" id="mat-card-list-partenaire" hideToggle="true" #panel>
+    <mat-expansion-panel-header collapsedHeight="50px" expandedHeight="50px">
+      <mat-panel-title fxLayout="row" fxLayoutAlign="space-between center">
+        <h4 fxLayoutAlign="start center" class="margin-none">
+          <mat-icon class="">filter_alt
+          </mat-icon>
+          Filtrer
+        </h4>
+        <mat-icon>{{
+          panel.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+          }}</mat-icon>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="filter-dash">
+      <form [formGroup]="form" fxLayoutAlign="center">
+        <section class="example-section second-grid-checkbox ">
+          <mat-form-field appearance="outline">
+            <mat-label>Référence </mat-label>
+            <input matInput type="text" formControlName="id_partenaire">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Type compte </mat-label>
+            <mat-select (openedChange)="onChangeTypePartenaire()" formControlName="type_partenaire">
+              <mat-option [value]="null">--</mat-option>
+              <mat-option [value]="'PHAR'"> Pharmacie </mat-option>
+              <mat-option [value]="'MEDE'"> Médecin </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Nom compte </mat-label>
+            <input matInput type="text" formControlName="nom_partenaire">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Type établissemment </mat-label>
+            <mat-select formControlName="code_type_etablissement">
+              <mat-option [value]="null">--</mat-option>
+              <mat-optgroup *ngFor="let group of listeEtablissements" [label]="group.name">
+                <mat-option *ngFor="let item of group.data" [value]="item.code_codification">
+                  {{item.libelle_codification}}
+                </mat-option>
+              </mat-optgroup>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Potentiel </mat-label>
+            <mat-select formControlName="potentiel" multiple>
+              <mat-option [value]="'A+'"> A+ </mat-option>
+              <mat-option [value]="'A'"> A </mat-option>
+              <mat-option [value]="'B'"> B </mat-option>
+              <mat-option [value]="'C'"> C </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Spécialité </mat-label>
+            <mat-select formControlName="code_specialite" multiple>
+              <mat-option *ngFor="let item of listeSpecialites" [value]="item.code_codification">
+                {{item.libelle_codification}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_region"
+            [smartList]="listeRevis" nomInput="Région" (optionSelected)="selectVille($event)">
+          </ms-select-autocomplete-code>
+          <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_ville"
+            [smartList]="listeVilles" nomInput="Ville" (optionSelected)="selectSecteur($event)"
+            [disabled]="form.value.code_region ? false : true">
+          </ms-select-autocomplete-code>
+          <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_secteur"
+            [smartList]="listeSecteurs" nomInput="Secteur" [disabled]="form.value.code_ville ? false : true">
+          </ms-select-autocomplete-code>
+          <mat-form-field appearance="outline">
+            <mat-label>Statut </mat-label>
+            <mat-select formControlName="statut">
+              <mat-option [value]="'CREE'"> En attente </mat-option>
+              <mat-option [value]="'MIGR'" *ngIf="userItem.role != 'ADMI'"> Migré </mat-option>
+              <mat-option [value]="'VALI'"> Validé </mat-option>
+              <mat-option [value]="'REJE'" *ngIf="userItem.role == 'ADMI'"> Rejeté </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </section>
+      </form>
+      <div class="second-button" fxLayout="column" fxLayoutAlign="end center">
+        <button class="mrgn-b-sm " mat-button mat-raised-button type="button" color="Default" (click)="reset()">
+          Réinitialiser </button>
+        <button mat-button mat-raised-button (click)="filtrer()" type="button" color="primary">Rechercher</button>
+      </div>
+    </div>
+  </mat-expansion-panel>
+  <mat-card id="mat-card-list-partenaire">
+    <div class="flexbox full-wid">
+      <div class="row">
+        <div class="cell1 header">
+          Fiche
+        </div>
+        <div class="cell2 header" fxLayout="column">
+          Statut
+          <ms-tri-list [nom_tri]="'Référence'" [nom_order_by]="'id_partenaire'" [type_tri]="type_tri"
+          [order_by]="order_by" (optionTri)="optionTri($event)"></ms-tri-list>
+        </div>
+        <div class="cell3 header">
+          <!-- Type -->
+        </div>
+        <div class="cell4 header">
+          <ms-tri-list [nom_tri]="'Compte'" [nom_order_by]="'nom_partenaire'" [type_tri]="type_tri"
+            [order_by]="order_by" (optionTri)="optionTri($event)"></ms-tri-list>
+        </div>
+        <div class="cell5 header">
+          Potentiel
+        </div>
+        <div class="cell6 header">
+          Établissemment
+        </div>
+        <div class="cell7 header">
+          Nombre visites
+        </div>
+        <div class="cell8 header">
+          Téléphones
+        </div>
+        <div class="cell9 header">
+          Région <br>
+          Ville
+        </div>
+        <div class="cell10 header">
+          Secteur
+        </div>
+        <div class="cell11 header">
+          Visite
+        </div>
+        <div class="cell12 header">
+          Investissement
+        </div>
+      </div>
+      <div class="row card-row" *ngFor="let item of listePartenaires">
+        <div class="cell1 cell">
+          <div fxLayout="row" fxLayoutAlign="center">
+            <button mat-mini-fab mat-icon-button class="margin-none button-table" title="Fiche"
+              [routerLink]="['/partenaires/fiche/'+item.id_partenaire]" routerLinkActive="active-link" color="primary">
+              <mat-icon class="mat-icon-grey gene-text-lg">
+                visibility
+              </mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="cell2 cell">
+          <mat-chip-list class="statut">
+            <mat-chip *ngIf="item.code_statut_partenaire == 'CREE'" class="statutEnAttente"> En attente </mat-chip>
+            <mat-chip *ngIf="item.code_statut_partenaire == 'MIGR'" class="statutMigré"> Migré </mat-chip>
+            <mat-chip *ngIf="item.code_statut_partenaire == 'REJE'" class="statutRefuse"> Rejeté </mat-chip>
+            <mat-chip *ngIf="item.code_statut_partenaire == 'VALI'" class="statutValide"> Validé </mat-chip>
+          </mat-chip-list>
+          <h5 class="margin-none text-center">
+            {{ (item.code_type_partenaire == 'MEDE' ? 'M' : 'P') + item.id_partenaire || '-'}}
+          </h5>
+        </div>
+        <div class="cell3 cell">
+          <span class="type_partenaire_svg">
+            <mat-icon class="pharmacie" *ngIf="item.code_type_partenaire == 'PHAR'" svgIcon="pharmacie">
+            </mat-icon>
+            <mat-icon class="medecin" *ngIf="item.code_type_partenaire == 'MEDE'" svgIcon="medecin">
+            </mat-icon>
+          </span>
+        </div>
+        <div class="cell4 cell">
+          <h5 class="margin-none text-center type-webkit" [title]="item.nom_partenaire || '-'">{{item.nom_partenaire ||
+            '-'}}</h5>
+          <h5 *ngIf="item.code_type_partenaire == 'MEDE'" class="medecin margin-none mrgn-t-xs text-center reveq-webkit"
+            [title]="item.specialite || '-'">
+            {{item.specialite || '-'}} </h5>
+        </div>
+        <div class="cell5 cell">
+          <span class="potentiel margin-none text-center"
+            [ngStyle]="{'border':item.code_potentiel ?'1px solid':'',
+            'color': item.code_potentiel == 'A' || item?.code_potentiel == 'A+'?'#13be00': item.code_potentiel == 'B'? '#e5ce00': item.code_potentiel == 'C'? '#e10000':''}">
+            {{item.code_potentiel || '-'}}
+          </span>
+        </div>
+        <div class="cell6 cell">
+          <!-- <h5 class="text-center reveq-webkit" [title]="item.etablissement || '-'"
+            [ngClass]="{'margin-none': !item.etablissement}">
+            {{item.type_etablissement || '-'}}</h5> -->
+          <h5 class="margin-none text-center reveq-webkit" [title]="item.etablissement || '-'">{{item.etablissement ||
+            '-'}}</h5>
+        </div>
+        <div class="cell7 cell">
+          <h5 class="margin-none reveq-webkit text-center">{{item.nbr_visites_realisees}}</h5>
+        </div>
+        <div class="cell8 cell">
+          <h5 class="text-center reveq-webkit" [title]="item.tel1_partenaire || '-'">{{item.tel1_partenaire || '-'}}
+          </h5>
+          <h5 class="margin-none text-center reveq-webkit" [title]="item.tel2_partenaire || '-'">{{item.tel2_partenaire
+            || '-'}}</h5>
+        </div>
+        <div class="cell9 cell">
+          <h5 class="text-center reveq-webkit" [title]="item.region_partenaire || '-'">{{item.region_partenaire || '-'}}
+          </h5>
+          <h5 class="margin-none reveq-webkit text-center" [title]="item.ville_partenaire || '-'">
+            {{item.ville_partenaire || '-'}}</h5>
+        </div>
+        <div class="cell10 cell">
+          <h5 class="margin-none reveq-webkit text-center" [title]="item.secteur_partenaire || '-'">
+            {{item.secteur_partenaire || '-'}}</h5>
+        </div>
+        <div class="cell11 cell">
+          <button (click)="openDialogAjouterVisite(item.id_partenaire)" mat-mini-fab mat-icon-button
+            class="margin-none button-table" color="primary" [title]="'Ajouter une nouvelle visite hors planification'"
+            [disabled]="userItem.role == 'ADMI' || item.code_statut_partenaire != 'VALI'">
+            <mat-icon class="mat-icon-grey gene-text-lg">
+              add
+            </mat-icon>
+          </button>
+        </div>
+        <div class="cell12 cell">
+          <button mat-mini-fab mat-icon-button class="margin-none button-table" color="primary"
+            (click)="openDialogAjouterBusinessCase(item.id_partenaire)" [title]="'Ajouter un nouvel investissement'"
+            [disabled]="userItem.role == 'ADMI' || item.code_type_partenaire != 'MEDE' || item.code_statut_partenaire != 'VALI' || (userItem.role == 'DEL' && userItem.flag_medical == 'N')">
+            <mat-icon class="mat-icon-grey gene-text-lg">
+              add
+            </mat-icon>
+          </button>
+        </div>
+      </div>
+      <p *ngIf="listePartenaires?.length == 0 && !isLoading">
+        Aucun résultat trouvé .
+      </p>
+    </div>
+
+    <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+      <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+      </mat-progress-spinner>
+    </div>
+    <div>
+      <mat-divider></mat-divider>
+      <mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 15, 20]"
+        [length]="totalPartenaires" (page)="getNextPage($event)" showFirstLastButtons></mat-paginator>
+    </div>
+  </mat-card>
+</div>

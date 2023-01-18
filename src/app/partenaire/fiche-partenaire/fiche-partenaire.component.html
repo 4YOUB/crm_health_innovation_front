@@ -1,0 +1,230 @@
+<div fxLayout="row wrap" id="fiche-partenaire">
+    <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="27" fxFlex.lg="27" fxFlex.xl="27">
+        <mat-card>
+            <div fxLayout="row wrap" [fxLayoutAlign]="'space-between'">
+
+                <mat-form-field appearance="outline" fxFlex.gt-sm="48" fxFlex.gt-xs="48" fxFlex="100" fxFlex.gt-md="48">
+                    <mat-label>Identifiant </mat-label>
+                    <input matInput type="text" readonly
+                        [value]="(itemPartenaire.code_type_partenaire == 'MEDE' ? 'M' : 'PH') +itemPartenaire.id_partenaire || '-'">
+                </mat-form-field>
+
+                <div class="statut" fxFlex.gt-sm="48" fxFlex.gt-xs="48" fxFlex="100" fxFlex.gt-md="48"
+                [ngStyle]="{'grid-template-columns': userItem.role != 'ADMI' && itemPartenaire.code_statut_partenaire == 'VALI' ? 'auto' : ''}"
+                >
+                    <mat-chip-list style="display: none;"></mat-chip-list>
+                    <mat-chip *ngIf="itemPartenaire.code_statut_partenaire == 'CREE'" class="statutEnAttente">
+                        En attente
+                    </mat-chip>
+                    <mat-chip *ngIf="itemPartenaire.code_statut_partenaire == 'MIGR'" class="statutMigré">
+                        Migré
+                    </mat-chip>
+                    <mat-chip *ngIf="itemPartenaire.code_statut_partenaire == 'REJE'" class="statutRefuse">
+                        Rejeté
+                    </mat-chip>
+                    <mat-chip *ngIf="itemPartenaire.code_statut_partenaire == 'VALI'" class="statutValide">
+                        Validé
+                    </mat-chip>
+                    <button *ngIf="!(userItem.role != 'ADMI' && itemPartenaire.code_statut_partenaire == 'VALI')" 
+                    class="fl-r button-standardMenu mat-button" mat-button [matMenuTriggerFor]="menu">
+                        <i class="fa fa-circle  ng-tns-c8-3" style="font-size: 7px;margin-right: 2px;"></i>
+                        <i class="fa fa-circle  ng-tns-c8-3" style="font-size: 7px;margin-right: 2px;"></i>
+                        <i class="fa fa-circle  ng-tns-c8-3" style="font-size: 7px;margin-right: 0px;"></i>
+                    </button>
+                </div>
+
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="openDialogModifierPartenaire()">
+                        Modifier compte
+                    </button>
+                    <ng-container *ngIf="userItem.role == 'ADMI'">
+                        <button mat-menu-item (click)="actionPartenaire('DESA')"
+                            *ngIf="itemPartenaire.code_statut_partenaire == 'VALI' || itemPartenaire.code_statut_partenaire == 'CREE'">
+                            Rejeter compte
+                        </button>
+                        <button mat-menu-item (click)="actionPartenaire('ACTI')"
+                            *ngIf="itemPartenaire.code_statut_partenaire == 'CREE' || itemPartenaire.code_statut_partenaire == 'REJE'">
+                            Valider compte
+                        </button>
+                    </ng-container>
+                </mat-menu>
+
+                <div fxLayout="row" [fxLayoutAlign]="'center'" style="margin: 0px 4px 21px !important;" fxFlex="100">
+                    <span class="type_partenaire_svg mrgn-r-xs">
+                        <mat-icon class="pharmacie" *ngIf="itemPartenaire?.code_type_partenaire == 'PHAR'"
+                            svgIcon="pharmacie">
+                        </mat-icon>
+                        <mat-icon class="medecin" *ngIf="itemPartenaire?.code_type_partenaire == 'MEDE'"
+                            svgIcon="medecin">
+                        </mat-icon>
+                    </span>
+
+                    <span class="potentiel margin-none text-center"
+                        [ngStyle]="{'border':itemPartenaire?.code_potentiel ?'1px solid':'',
+                                    'color': itemPartenaire?.code_potentiel == 'A' || itemPartenaire?.code_potentiel == 'A+'?'#13be00': itemPartenaire?.code_potentiel == 'B'? '#e5ce00':itemPartenaire.code_potentiel == 'C'? '#e10000':''}">
+                        {{itemPartenaire?.code_potentiel || '-'}}
+                    </span>
+                </div>
+
+                <ng-container *ngIf="itemPartenaire?.code_type_partenaire == 'MEDE'">
+                    <mat-form-field appearance="outline" fxFlex="100">
+                        <mat-label> Type établissemment </mat-label>
+                        <input matInput type="text" readonly [value]="itemPartenaire.etablissement || '-'">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" fxFlex="100">
+                        <mat-label>Spécialité </mat-label>
+                        <input matInput type="text" readonly [value]="itemPartenaire.specialite || '-'">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" fxFlex="100">
+                        <mat-label>Gamme </mat-label>
+                        <input matInput type="text" readonly [value]="itemPartenaire.gamme || '-'">
+                    </mat-form-field>
+                </ng-container>
+
+                <!-- <mat-form-field appearance="outline" fxFlex="100">
+                    <mat-label>Potentiel </mat-label>
+                    <input matInput type="text" readonly [value]="itemPartenaire.code_potentiel || '-'">
+                </mat-form-field> -->
+
+                <mat-form-field appearance="outline" fxFlex="100">
+                    <mat-label>Date création </mat-label>
+                    <input matInput type="text" readonly
+                        [value]="(itemPartenaire.date_creation | date:'dd/MM/yyyy') || '-'">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex="100">
+                    <mat-label>Dernière visite </mat-label>
+                    <input matInput type="text" readonly
+                        [value]="(itemPartenaire.date_derniere_visite | date:'dd/MM/yyyy HH:mm') || '-'">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex="100">
+                    <mat-label>Prochaine visite </mat-label>
+                    <input matInput type="text" readonly
+                        [value]="(itemPartenaire.date_prochaine_visite | date:'dd/MM/yyyy HH:mm') || '-'">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex="100">
+                    <mat-label>Nombre de visites réalisées </mat-label>
+                    <input matInput type="text" readonly [value]="itemPartenaire.nbr_visite_planifiees">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex="100">
+                    <mat-label>Nombre de visites réalisées hors planification </mat-label>
+                    <input matInput type="text" readonly [value]="itemPartenaire.nbr_visite_non_planifiees">
+                </mat-form-field>
+
+                <ng-container *ngIf="itemPartenaire?.code_type_partenaire == 'MEDE'">
+                    <mat-form-field appearance="outline" fxFlex="100">
+                        <mat-label>Nombre d'investissements </mat-label>
+                        <input matInput type="text" readonly [value]="itemPartenaire.nbr_business_cases">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+        </mat-card>
+
+
+    </div>
+
+    <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="73" fxFlex.lg="73" fxFlex.xl="73">
+        <mat-card>
+            <div fxLayout="row wrap" [fxLayoutAlign]="'star center'" [fxLayoutGap]="'2%'" style="margin-right: -2%;">
+
+                <mat-form-field appearance="outline" fxFlex.gt-sm="31.33" fxFlex.gt-xs="31.33" fxFlex="100"
+                    fxFlex.gt-md="31.33">
+                    <mat-label>Compte </mat-label>
+                    <input matInput type="text" readonly
+                        [value]="itemPartenaire?.nom_partenaire + (itemPartenaire.prenom_partenaire ? (' ' +itemPartenaire.prenom_partenaire) : '')">
+                </mat-form-field>
+
+                <ng-container *ngIf="itemPartenaire?.code_type_partenaire == 'MEDE'; else elseTemplate">
+                    <mat-form-field appearance="outline" fxFlex.gt-sm="31.33" fxFlex.gt-xs="31.33" fxFlex="100"
+                        fxFlex.gt-md="31.33">
+                        <mat-label>Date naissance </mat-label>
+                        <input matInput type="text" readonly
+                            [value]="(itemPartenaire.date_naissance | date:'dd/MM/yyyy') || '-'">
+                    </mat-form-field>
+
+                    <div fxLayout="row wrap" [fxLayoutAlign]="'space-between'" fxFlex.gt-sm="31.33" fxFlex.gt-xs="31.33"
+                        fxFlex="100" fxFlex.gt-md="31.33">
+                        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100"
+                            fxFlex.gt-md="47">
+                            <mat-label>Téléphone 1 </mat-label>
+                            <input matInput type="text" readonly [value]="itemPartenaire.tel1_partenaire  || '-'">
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100"
+                            fxFlex.gt-md="47">
+                            <mat-label>Téléphone 2 </mat-label>
+                            <input matInput type="text" readonly [value]="itemPartenaire.tel2_partenaire || '-'">
+                        </mat-form-field>
+                    </div>
+                </ng-container>
+                <ng-template #elseTemplate>
+                    <mat-form-field appearance="outline" fxFlex.gt-sm="31.33" fxFlex.gt-xs="31.33" fxFlex="100"
+                        fxFlex.gt-md="31.33">
+                        <mat-label>Téléphone 1 </mat-label>
+                        <input matInput type="text" readonly [value]="itemPartenaire.tel1_partenaire  || '-'">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" fxFlex.gt-sm="31.33" fxFlex.gt-xs="31.33" fxFlex="100"
+                        fxFlex.gt-md="31.33">
+                        <mat-label>Téléphone 2 </mat-label>
+                        <input matInput type="text" readonly [value]="itemPartenaire.tel2_partenaire || '-'">
+                    </mat-form-field>
+                </ng-template>
+
+                <mat-form-field appearance="outline" fxFlex.gt-sm="31.33" fxFlex.gt-xs="31.33" fxFlex="100"
+                    fxFlex.gt-md="31.33">
+                    <mat-label>Email </mat-label>
+                    <input matInput type="text" readonly [value]="itemPartenaire.email_partenaire || '-'">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex.gt-sm="64.67" fxFlex.gt-xs="64.67" fxFlex="100"
+                    fxFlex.gt-md="64.67">
+                    <mat-label>Adresse </mat-label>
+                    <input matInput type="text" readonly [value]="itemPartenaire.adresse_partenaire || '-'">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex.gt-sm="31.33" fxFlex.gt-xs="31.33" fxFlex="100"
+                    fxFlex.gt-md="31.33">
+                    <mat-label>Région </mat-label>
+                    <input matInput type="text" readonly [value]="itemPartenaire.region_partenaire || '-'">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex.gt-sm="31.33" fxFlex.gt-xs="31.33" fxFlex="100"
+                    fxFlex.gt-md="31.33">
+                    <mat-label>Ville </mat-label>
+                    <input matInput type="text" readonly [value]="itemPartenaire.ville_partenaire || '-'">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex.gt-sm="31.33" fxFlex.gt-xs="31.33" fxFlex="100"
+                    fxFlex.gt-md="31.33">
+                    <mat-label>Secteur </mat-label>
+                    <input matInput type="text" readonly [value]="itemPartenaire.secteur_partenaire || '-'">
+                </mat-form-field>
+            </div>
+        </mat-card>
+        <mat-card>
+            <mat-tab-group>
+                <mat-tab label="Visites">
+                    <ms-liste-tab-visite [userItem]="userItem" (resetData)="resetData($event)"
+                        [idPartenaire]="idPartenaire" [statutPartenaire]="statutPartenaire"></ms-liste-tab-visite>
+                </mat-tab>
+                <mat-tab label="Investissements" *ngIf="itemPartenaire?.code_type_partenaire == 'MEDE'">
+                    <ms-liste-tab-business-case [userItem]="userItem" [idPartenaire]="idPartenaire" [statutPartenaire]="statutPartenaire">
+                    </ms-liste-tab-business-case>
+                </mat-tab>
+                <mat-tab label="Notes">
+                    <ms-liste-tab-note [userItem]="userItem" [idPartenaire]="idPartenaire"></ms-liste-tab-note>
+                </mat-tab>
+                <mat-tab label="Documents">
+                    <ms-liste-tab-document [userItem]="userItem" [idPartenaire]="idPartenaire"></ms-liste-tab-document>
+                </mat-tab>
+            </mat-tab-group>
+        </mat-card>
+    </div>
+
+</div>

@@ -1,0 +1,67 @@
+<div class="dialog-title">
+    <h2 mat-dialog-title> {{this.title}} {{this.title_type}}</h2>
+    <button (click)="dialogRef.close()" mat-icon-button class="btn-close">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<form *ngIf="!isLoading" [formGroup]="form" fxLayout="column" class="gene-form-wizard">
+    <div fxLayout="column" [fxLayoutAlign]="'star'" >
+        <ng-container *ngIf="type_parent">
+
+            <ng-container *ngIf="code_codification; else elseTemplate">
+                <mat-form-field appearance="outline" >
+                    <mat-label>Parent <span *ngIf="!isSubmitted">*</span></mat-label>
+                    <input matInput type="text" readonly [value]="item_codification?.libelle_parent">
+                </mat-form-field>
+            </ng-container>
+            <ng-template #elseTemplate>
+                <mat-form-field appearance="outline" >
+                    <mat-label>Parent <span *ngIf="!isSubmitted">*</span></mat-label>
+                    <mat-select [required]="isSubmitted" formControlName="code_parent"
+                        (openedChange)="openChange($event)">
+                        <div class="box-search-sticky">
+                            <div class="box-search">
+                                <input #searchInput type="text" class="pl-1"
+                                    (input)="filterCodificationt(searchInput.value)" placeholder="Chercher..." />
+                                <div class="box-search-icon" *ngIf="searchInput.value"
+                                    (click)="filterCodificationt(''); searchInput.value = ''">
+                                    <button mat-icon-button class="search-button">
+                                        <mat-icon class="mat-24" aria-label="Search icon">clear</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <cdk-virtual-scroll-viewport itemSize="35" [style.height.px]=5*35>
+                            <mat-option *cdkVirtualFor="let item of filterelisteCodificationt"
+                                [value]="item.code_codification" (click)="selectCodificationt(item)">
+                                {{ item.libelle_codification }}
+                            </mat-option>
+                        </cdk-virtual-scroll-viewport>
+                    </mat-select>
+                </mat-form-field>
+            </ng-template>
+
+        </ng-container>
+
+        <mat-form-field appearance="outline" >
+            <mat-label>Libellé <span *ngIf="!isSubmitted">*</span></mat-label>
+            <input matInput type="text" formControlName="libelle_codification" [required]='isSubmitted'>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" >
+            <mat-label>Ordre <span *ngIf="!isSubmitted">*</span></mat-label>
+            <input matInput type="text" mask="0*" maxlength="5" formControlName="ordre_codification" [required]='isSubmitted'>
+        </mat-form-field>
+
+    </div>
+
+    <mat-dialog-actions class="mrgn-b-xs pad-b-none" fxLayoutAlign="end">
+        <button type="button" mat-raised-button (click)="dialogRef.close()">Annuler</button>
+        <button type="submit" mat-raised-button (click)="save()" color="primary" class="label-form">
+            Enregistrer </button>
+    </mat-dialog-actions>
+</form>
+<div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+    <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+    </mat-progress-spinner>
+</div>

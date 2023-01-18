@@ -1,0 +1,156 @@
+<div fxLayout="column">
+    <mat-expansion-panel class="mrgn-all-md" id="mat-card-list-codif" hideToggle="true" #panel>
+        <mat-expansion-panel-header collapsedHeight="50px" expandedHeight="50px">
+            <mat-panel-title fxLayout="row" fxLayoutAlign="space-between center">
+                <h4 fxLayoutAlign="start center" class="margin-none">
+                    <mat-icon>filter_alt</mat-icon>
+                    Filtrer
+                </h4>
+                <mat-icon>
+                    {{ panel.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
+                </mat-icon>
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="filter-dash">
+            <form [formGroup]="form" fxLayoutAlign="center">
+                <section class="example-section second-grid-checkbox ">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Code </mat-label>
+                        <input matInput type="text" formControlName="code_codification">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Libellé</mat-label>
+                        <input matInput type="text" formControlName="libelle_codification">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Statut </mat-label>
+                        <mat-select formControlName="flag_actif">
+                            <mat-option [value]="null">--</mat-option>
+                            <mat-option [value]="'O'"> Activé </mat-option>
+                            <mat-option [value]="'N'"> Désactivé </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </section>
+            </form>
+            <div class="second-button" fxLayout="column" fxLayoutAlign="end center">
+                <button class="mrgn-b-sm " mat-button mat-raised-button type="button" color="Default" (click)="reset()">
+                    Réinitialiser </button>
+                <button mat-button mat-raised-button (click)="filtrer()" type="button"
+                    color="primary">Rechercher</button>
+            </div>
+        </div>
+    </mat-expansion-panel>
+    <div class="mrgn-x-md  add-partenaire-btn" fxLayoutAlign="end center">
+        <mat-card-actions class="mat-pad-none margin-none">
+            <button mat-raised-button color="primary" routerLinkActive="active-link" 
+            (click)="openDialogAjouterCodif('FEED','feedback')" class="mrgn-t-xs">
+                <mat-icon>add </mat-icon>
+                Ajouter feedback
+            </button>
+        </mat-card-actions>
+    </div>
+    <mat-card id="mat-card-list-codif">
+        <h4 fxLayoutAlign="start center" class="margin-none">
+            Liste feedback
+        </h4>
+        <div class="flexbox full-wid">
+            <div class="row">
+                <div class="cell1 header">
+                    <ms-tri-list [nom_tri]="'Code'" [nom_order_by]="'code_codification'"
+                        [type_tri]="type_triFeedback" [order_by]="order_byFeedback"
+                        (optionTri)="optionTriFeedback($event)"></ms-tri-list>
+                </div>
+                <div class="cell2 header">
+                    <ms-tri-list [nom_tri]="'Libellé'" [nom_order_by]="'libelle_codification'"
+                    [type_tri]="type_triFeedback" [order_by]="order_byFeedback"
+                    (optionTri)="optionTriFeedback($event)"></ms-tri-list>
+                </div>
+                <div class="cell3 header">
+                    <ms-tri-list [nom_tri]="'Ordre'" [nom_order_by]="'ordre_codification'"
+                    [type_tri]="type_triFeedback" [order_by]="order_byFeedback"
+                    (optionTri)="optionTriFeedback($event)"></ms-tri-list>
+                </div>
+                <div class="cell4 header">
+                    <ms-tri-list [nom_tri]="'Date création'" [nom_order_by]="'date_creation'"
+                    [type_tri]="type_triFeedback" [order_by]="order_byFeedback"
+                    (optionTri)="optionTriFeedback($event)"></ms-tri-list>
+                </div>
+                <div class="cell5 header">
+                    Statut
+                </div>
+                <div class="cell6 header">
+                    Activer <br>
+                    Désactiver
+                </div>
+                <div class="cell7 header">
+                    Modifier
+                </div>
+            </div>
+            <div class="row card-row" *ngFor="let item of listeFeedback">
+                <div class="cell1 cell">
+                    <h5 class="margin-none text-center reveq-webkit" [title]="item.code_codification || '-'">
+                        {{item.code_codification || '-'}} </h5>
+                </div>
+                <div class="cell2 cell">
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.libelle_codification || '-'">
+                        {{item.libelle_codification || '-'}}</h5>
+                </div>
+                <div class="cell3 cell">
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.ordre_codification">
+                        {{item.ordre_codification}}</h5>
+                </div>
+                <div class="cell4 cell">
+                    <h5 class="margin-none reveq-webkit text-center">
+                        {{(item.date_creation | date:'dd/MM/yyyy') || '-'}} </h5>
+                </div>
+                <div class="cell5 cell">
+                    <mat-chip-list class="statut">
+                        <mat-chip *ngIf="item.flag_actif == 'N'" class="statutRefuse"> Désactivé </mat-chip>
+                        <mat-chip *ngIf="item.flag_actif == 'O'" class="statutValide"> Activé </mat-chip>
+                    </mat-chip-list>
+                </div>
+                <div class="cell6 cell">
+                    <button *ngIf="item.flag_actif == 'N'" mat-mini-fab mat-icon-button color="primary"
+                        class="margin-none button-table" title="Activer" href="javascript:void(0)"
+                        (click)="actionCodif('VALI',item.type_codification,item.code_codification)">
+                        <mat-icon class="mat-icon-grey gene-text-lg">
+                            done
+                        </mat-icon>
+                    </button>
+                    <button *ngIf="item.flag_actif == 'O'" mat-mini-fab mat-icon-button color="primary"
+                        class="margin-none button-table" title="Désactiver" href="javascript:void(0)"
+                        (click)="actionCodif('REJE',item.type_codification,item.code_codification)">
+                        <mat-icon class="mat-icon-grey gene-text-lg">
+                            remove
+                        </mat-icon>
+                    </button>
+                </div>
+                <div class="cell7 cell">
+                    <div fxLayout="row" fxLayoutAlign="center">
+                        <button mat-mini-fab mat-icon-button color="primary"
+                            (click)="openDialogModifierCodif(item,'feedback')"
+                            class="margin-none button-table " title="Modifier" href="javascript:void(0)">
+                            <mat-icon class="mat-icon-grey gene-text-lg">
+                                edit
+                            </mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <p *ngIf="listeFeedback?.length == 0 && !isLoading">
+                Aucun résultat trouvé .
+            </p>
+        </div>
+
+        <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+            <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+            </mat-progress-spinner>
+        </div>
+        <div>
+            <mat-divider></mat-divider>
+            <mat-paginator [pageIndex]="pageIndexFeedback" [pageSize]="pageSizeFeedback" [pageSizeOptions]="[5, 10, 15, 20]"
+                [length]="totalFeedback" (page)="getNextPageFeedback($event)" showFirstLastButtons></mat-paginator>
+        </div>
+    </mat-card>
+
+</div>

@@ -1,0 +1,39 @@
+<div class="dialog-title">
+    <h2 mat-dialog-title> Produits</h2>
+    <button (click)="dialogRef.close()" mat-icon-button class="btn-close">
+        <!-- <i class="fas fa-times"></i> -->
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<div class="gene-form-wizard" id="card-list-tab-produit">
+    <div class="flexbox full-wid">
+        <div class="row">
+            <div class="cell1 header">
+                Gamme
+            </div>
+            <div class="cell2 header">
+                Produit
+            </div>
+            <div class="cell3 header">
+                Feedback
+            </div>
+        </div>
+        <div class="row card-row" *ngFor="let item of listeProduits">
+            <div class="cell1 cell">
+                <h5 class="margin-none reveq-webkit text-center" [title]="item.gamme || '-'">
+                    {{item.gamme || '-'}}</h5>
+            </div>
+            <div class="cell2 cell">
+                <h5 class="margin-none reveq-webkit text-center" [title]="item.produit || '-'">
+                    {{item.produit || '-'}}</h5>
+            </div>
+            <div class="cell3 cell">
+                <h5 class="margin-none reveq-webkit text-center" [title]="item.feedback || '-'">
+                    {{item.feedback || '-'}}</h5>
+            </div>
+        </div>
+        <p *ngIf="listeProduits?.length == 0 ">
+            Aucun résultat trouvé .
+        </p>
+    </div>
+</div>

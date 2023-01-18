@@ -1,0 +1,252 @@
+#mat-card-list-partenaire {
+  .matchip-tab {
+    width: 65px;
+    justify-content: center;
+  }
+
+  .click {
+    color: #4e73df;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  .click:hover {
+    color: #224abe;
+    text-decoration: underline;
+  }
+
+  .click:visited {
+    color: #3f51b5;
+  }
+
+  .click:link {
+    color: #1a0dab;
+  }
+
+  .second-grid-checkbox {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 250px));
+    grid-column-gap: 25px;
+    grid-row-gap: 20px;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 10px 15px;
+    max-width: 830px;
+  }
+
+  .second-button {
+    padding: 10px 15px;
+
+    ::ng-deep .mat-raised-button {
+      margin-right: 0 !important;
+      width: 125px;
+    }
+  }
+
+  .filter-dash {
+    // padding: 0px 15px 15px 15px;
+    display: grid;
+    grid-template-columns: auto 150px;
+    // align-items: center;
+    // justify-content: flex-start;
+    grid-column-gap: 10px;
+    // padding: 10px 15px;
+  }
+  
+  .flexbox {
+    // display: flex;
+    // flex-direction: column;
+    // align-items: center;
+    overflow: auto;
+
+    .row {
+      display: inline-flex;
+      // width: 100%;
+      min-width: -webkit-fill-available;
+    }
+
+    .card-row {
+      background: #f5f6f8;
+      border-radius: 10px;
+      margin: 10px 0;
+      // width: max-content;
+    }
+
+    .header {
+      font-size: 0.95rem;
+      text-align: center;
+      font-weight: bold;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .cell {
+      padding: 10px;
+      flex-direction: column;
+      box-sizing: border-box;
+      display: flex;
+      place-content: center;
+      align-items: center;
+    }
+
+    .cell1 {
+      width: 5%;
+      min-width: 70px;
+    }
+
+    .cell2 {
+      width: 7%;
+      min-width: 120px;
+    }
+
+    .cell3 {
+      width: 6%;
+      min-width: 70px;
+    }
+
+    .cell4 {
+      width: 13%;
+      min-width: 150px;
+    }
+
+    .cell5 {
+      width: 7%;
+      min-width: 80px;
+    }
+
+    .cell6 {
+      width: 12%;
+      min-width: 200px;
+    }
+
+    .cell7 {
+      width: 6%;
+      min-width: 80px;
+    }
+
+    .cell8 {
+      width: 10%;
+      min-width: 120px;
+    }
+
+    .cell9 {
+      width: 12%;
+      min-width: 200px;
+    }
+
+    .cell10 {
+      width: 10%;
+      min-width: 150px;
+    }
+
+    .cell11 {
+      width: 5%;
+      min-width: 70px;
+    }
+
+    .cell12 {
+      width: 7%;
+      min-width: 125px;
+    }
+  }
+
+  .button-table {
+    height: 40px;
+    width: 40px;
+
+    .mat-icon-grey {
+      color: white;
+      font-size: 20px !important;
+      line-height: 25px !important;
+      width: auto;
+      height: auto;
+    }
+  }
+
+  .reveq-webkit {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .type-webkit {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+
+  @media screen and (max-width: 845px) {
+    .second-grid-checkbox {
+      max-width: none;
+    }
+  }
+  // @media screen and (max-width: 1280px) {
+  //   .grid-fil {
+  //     grid-template-columns: auto !important;
+  //     padding-top: 5px;
+  //     grid-row-gap: 15px;
+  //   }
+  // }
+
+  // @media screen and (max-width: 600px) {
+  //   .filter-dash {
+  //     grid-template-columns: auto !important;
+  //     padding-top: 5px;
+  //     grid-row-gap: 15px;
+  //   }
+  // }
+
+  .table-responsive,
+  table.full-wid.mat-table {
+    transform: rotateX(180deg);
+  }
+
+  .statut ::ng-deep .mat-standard-chip {
+    border-radius: 5px;
+    // min-height: 32px;
+    // font-size: 12px;
+    font-weight: bold;
+    width: 105px;
+    justify-content: center;
+    min-height: 25px;
+    // font-size: 12px;
+  }
+
+  .statutEnAttente {
+      background-color: var(--statut-EnAttente-Partenaire-color);
+      color: white;
+  }
+
+  .statutMigré {
+    background-color: var(--statut-Migré-Partenaire-color);
+    color: white;
+  }
+
+  .statutRefuse {
+      background-color: var(--statut-Rejete-Partenaire-color);
+      color: white;
+  }
+
+  .statutValide {
+      background-color: var(--statut-Valide-Partenaire-color);
+      color: white;
+  }
+}
+
+// .mat-mini-fab {
+//   height: 2.8rem;
+//   width: 2.8rem;
+// }

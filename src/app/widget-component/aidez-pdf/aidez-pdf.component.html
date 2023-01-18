@@ -1,0 +1,11 @@
+<div fxLayout="column" fxLayoutAlign="center center">
+
+    <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+        <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+        </mat-progress-spinner>
+    </div>
+
+    <pdf-viewer [src]="'/assets/pdf/Guide_Application_CRM_Health.pdf'" style="width: 850px; height: 90vh"
+        [render-text]="true" [original-size]="false" (after-load-complete)="afterLoadComplete($event)"></pdf-viewer>
+
+</div>

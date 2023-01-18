@@ -1,0 +1,73 @@
+<div class="dialog-title" [ngStyle]="{'background-color': elements[0].colorStatut}">
+    <h2 mat-dialog-title>
+        {{
+        elementsType == 'visites' || elementsType == 'evenements' ?
+        elements[0].date + ' (' + elements[0].nom_utilisateur + ')' :
+        elements[0].date
+        }}
+    </h2>
+
+
+    <button (click)="dialogRef.close()" mat-icon-button class="btn-close">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content class="dialog-more-info-list">
+    <mat-list role="list" *ngIf="elementsType == 'delegues-v'">
+        <mat-list-item fxLayout="row" fxLayoutAlign="space-between" [title]="e.nom_utilisateur?.trim() + ' (' + e.nb_visites + ')'" role="listitem"
+            *ngFor="let e of elements" 
+            (click)="e.nb_visites == 1 ? 
+            openDialogFicheVisiteAgenda(e.visites[0].id) : 
+            openDialogMoreInfo(e.visites, 'visites')">
+            <div>
+                {{e.nom_utilisateur?.trim()}}
+            </div>
+            <strong>
+                ({{e.nb_visites}})
+            </strong>
+        </mat-list-item>
+    </mat-list>
+
+    <mat-list role="list" *ngIf="elementsType == 'visites'">
+        <mat-list-item [title]="e.nom_partenaire?.trim() + ' (' + e.hour + ')'" role="listitem"
+            *ngFor="let e of elements" (click)="openDialogFicheVisiteAgenda(e.id)">
+            <span mat-list-icon class="icon">
+                <mat-icon class="pharmacie" *ngIf="e.code_type_partenaire == 'PHAR'" svgIcon="pharmacie">
+                </mat-icon>
+                <mat-icon class="medecin" *ngIf="e.code_type_partenaire == 'MEDE'" svgIcon="medecin">
+                </mat-icon>
+            </span>
+            <div mat-line>
+                {{e.nom_partenaire?.trim()}}
+            </div>
+            <strong>
+                ({{e.hour}})
+            </strong>
+        </mat-list-item>
+    </mat-list>
+
+    <mat-list role="list" *ngIf="elementsType == 'delegues-e'">
+        <mat-list-item fxLayout="row" fxLayoutAlign="space-between" [title]="e.nom_utilisateur?.trim() + ' (' + e.nb_evenements + ')'" role="listitem"
+            *ngFor="let e of elements" 
+            (click)="e.nb_evenements == 1 ? 
+            openDialogFicheEvenementAgenda(e.evenements[0].id, e.evenements[0].date) : 
+            openDialogMoreInfo(e.evenements, 'evenements')">
+            <div>
+                {{e.nom_utilisateur?.trim()}}
+            </div>
+            <strong>
+                ({{e.nb_evenements}})
+            </strong>
+        </mat-list-item>
+    </mat-list>
+
+    <mat-list role="list" *ngIf="elementsType == 'evenements'">
+        <mat-list-item fxLayout="row" fxLayoutAlign="space-between" [title]="e.titre?.trim()" role="listitem"
+            *ngFor="let e of elements" (click)="openDialogFicheEvenementAgenda(e.id, e.date)">
+            <div>
+                {{e.titre?.trim()}}
+            </div>
+        </mat-list-item>
+    </mat-list>
+
+</mat-dialog-content>

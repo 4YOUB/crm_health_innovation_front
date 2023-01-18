@@ -1,0 +1,582 @@
+<div fxLayout="column">
+
+    <mat-card id="dates-carousel" (resized)="updateCarouselSize()">
+        <div fxLayoutAlign="center center">
+            <ngx-slick-carousel class="carousel" #slickCarousel="slick-carousel" [config]="slideConfig"
+                (afterChange)="carouselChange($event)">
+                <div ngxSlickItem *ngFor="let date of datesList" class="slide">
+                    <!-- <div class="top-date">
+                        {{ date | date: 'EEEE' }}
+                    </div>
+                    <div>
+                        {{ date | date: 'dd/MM' }}
+                    </div> -->
+                    <div class="long-date">
+                        {{ date | date: 'EEEE dd MMMM' }}
+                    </div>
+                    <div class="short-date">
+                        {{ date | date: 'dd/MM' }}
+                    </div>
+                </div>
+            </ngx-slick-carousel>
+        </div>
+    </mat-card>
+
+
+    <!-- <mat-card id="mat-card-list-planification">
+        <div fxLayoutAlign="center center">
+            <mat-chip-list>
+                <mat-chip *ngFor="let date of datesList">{{date}}</mat-chip>
+              </mat-chip-list>
+
+            <mat-paginator #datesPaginator [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [length]="totalDates" (page)="getNextPage($event)" showFirstLastButtons>
+            </mat-paginator>
+        </div>
+    </mat-card> -->
+
+    <!-- <mat-card id="mat-card-list-planification">
+        <div fxLayoutAlign="space-evenly center" class="second-button">
+            <h4 fxLayoutAlign="start center" class="margin-none mrgn-r-sm ">
+                Choisir la semaine de planification
+            </h4>
+            <mat-form-field appearance="outline" style="width: 300px;">
+                <mat-label>Semaine </mat-label>
+                <mat-select [formControl]="semaineControl">
+                    <mat-option *ngFor="let item of listeSemaines" (click)="selectSemaine()" [value]="item">
+                        Du {{item.date_debut | date:'dd/MM/yyyy'}} au {{item.date_fin | date:'dd/MM/yyyy'}}
+                        ({{item.num_semaine}})
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Tous les jours</mat-label>
+                <mat-select [formControl]="dateVisiteGlobalControl">
+                    <mat-option [value]="null">--</mat-option>
+                    <mat-option *ngFor="let item of listeDatesSemaine" [value]="item">
+                        {{item | date:'dd/MM/yyyy'}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <span class="circle_contain mrgn-l-sm">
+                <span *ngIf="userItem.flag_medical == 'O'">{{nbr_med_planifies}} M </span>
+                <span *ngIf="userItem.flag_pharmaceutique == 'O'">{{nbr_phrama_planifiees}} P </span>
+            </span>
+        </div>
+    </mat-card> -->
+    <!-- <mat-card id="mat-card-list-planification">
+        <h4 fxLayoutAlign="start center">
+            <mat-icon>filter_alt
+            </mat-icon>
+            Filtrer
+        </h4>
+        <form [formGroup]="form" class="filter-dash">
+            <div fxLayoutAlign="center">
+                <section class="example-section second-grid-checkbox ">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Référence </mat-label>
+                        <input matInput type="text" formControlName="id_partenaire" (keyup)="onKeyupRefNom()">
+                    </mat-form-field>
+                      <mat-form-field appearance="outline">
+                        <mat-label>Nom compte </mat-label>
+                        <input matInput type="text" formControlName="nom_partenaire" (keyup)="onKeyupRefNom()">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Type compte</mat-label>
+                        <mat-select (openedChange)="onChangeTypePartenaire()" formControlName="type_partenaire">
+                            <mat-option [value]="null">--</mat-option>
+                            <mat-option [value]="'PHAR'"> Pharmacie </mat-option>
+                            <mat-option [value]="'MEDE'"> Médecin </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Spécialité</mat-label>
+                        <mat-select formControlName="code_specialite" multiple>
+                            <mat-option *ngFor="let item of listeSpecialites" [value]="item.code_codification">
+                                {{item.libelle_codification}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Potentiel</mat-label>
+                        <mat-select formControlName="potentiel" multiple>
+                            <mat-option [value]="'A+'"> A+ </mat-option>
+                            <mat-option [value]="'A'"> A </mat-option>
+                            <mat-option [value]="'B'"> B </mat-option>
+                            <mat-option [value]="'C'"> C </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_region"
+                        [flag_obligatoire]="'O'" 
+                        [isRequiredOptional]="true" [smartList]="listeRevis" nomInput="Région"
+                        (optionSelected)="selectVille($event)">
+                    </ms-select-autocomplete-code>
+                    <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_ville"
+                        [flag_obligatoire]="'O'" 
+                        [smartList]="listeVilles" nomInput="Ville" [isRequiredOptional]="true"
+                        (optionSelected)="selectSecteur($event)" [disabled]="form.value.code_region ? false : true">
+                    </ms-select-autocomplete-code>
+                    <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_secteur"
+                        [smartList]="listeSecteurs" nomInput="Secteur"
+                        [disabled]="form.value.code_ville ? false : true">
+                    </ms-select-autocomplete-code>
+                </section>
+            </div>
+            <div class="second-button" fxLayout="row" fxLayoutAlign="end end">
+                <button mat-button mat-raised-button type="button" color="Default" (click)="reset()">
+                    Réinitialiser </button>
+                <button [disabled]="!isSearchable()" mat-button mat-raised-button (click)="filtrer()" type="submit"
+                    color="primary">Rechercher</button>
+            </div>
+        </form>
+    </mat-card> -->
+    <div fxLayout="row wrap">
+        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="50" fxFlex.lg="50" fxFlex.xl="50"
+            class="filtre-comptes-section">
+
+            <mat-card class="section-title">
+                <h3 fxLayoutAlign="center center">
+                    A planifier pour le {{datePlanification | date:'dd/MM/yyyy'}}
+                </h3>
+            </mat-card>
+
+            <mat-expansion-panel id="mat-card-list-planification" class="mrgn-all-md" hideToggle="true" #panel>
+                <mat-expansion-panel-header collapsedHeight="50px" expandedHeight="50px">
+                    <mat-panel-title fxLayout="row" fxLayoutAlign="space-between center">
+                        <h4 fxLayoutAlign="start center" class="margin-none">
+                            <mat-icon class="">filter_alt
+                            </mat-icon>
+                            Filtrer
+                        </h4>
+                        <mat-icon>{{
+                            panel.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+                            }}</mat-icon>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <form [formGroup]="form" class="filter-dash">
+                    <div fxLayoutAlign="center">
+                        <section class="example-section second-grid-checkbox ">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Référence </mat-label>
+                                <input matInput type="text" formControlName="id_partenaire" (keyup)="onKeyupRefNom()">
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Nom compte </mat-label>
+                                <input matInput type="text" formControlName="nom_partenaire" (keyup)="onKeyupRefNom()">
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Type compte</mat-label>
+                                <mat-select (openedChange)="onChangeTypePartenaire()" formControlName="type_partenaire">
+                                    <mat-option [value]="null">--</mat-option>
+                                    <mat-option [value]="'PHAR'"> Pharmacie </mat-option>
+                                    <mat-option [value]="'MEDE'"> Médecin </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Spécialité</mat-label>
+                                <mat-select formControlName="code_specialite" multiple>
+                                    <mat-option *ngFor="let item of listeSpecialites" [value]="item.code_codification">
+                                        {{item.libelle_codification}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Potentiel</mat-label>
+                                <mat-select formControlName="potentiel" multiple>
+                                    <mat-option [value]="'A+'"> A+ </mat-option>
+                                    <mat-option [value]="'A'"> A </mat-option>
+                                    <mat-option [value]="'B'"> B </mat-option>
+                                    <mat-option [value]="'C'"> C </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_region"
+                                [flag_obligatoire]="'O'" [isRequiredOptional]="true" [smartList]="listeRevis"
+                                nomInput="Région" (optionSelected)="selectVille($event)">
+                            </ms-select-autocomplete-code>
+                            <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_ville"
+                                [flag_obligatoire]="'O'" [smartList]="listeVilles" nomInput="Ville"
+                                [isRequiredOptional]="true" (optionSelected)="selectSecteur($event)"
+                                [disabled]="form.value.code_region ? false : true">
+                            </ms-select-autocomplete-code>
+                            <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_secteur"
+                                [smartList]="listeSecteurs" nomInput="Secteur"
+                                [disabled]="form.value.code_ville ? false : true">
+                            </ms-select-autocomplete-code>
+                        </section>
+                    </div>
+                    <div class="second-grid-checkbox" fxLayout="row" fxLayoutAlign="center center">
+                        <button mat-button mat-raised-button type="button" color="Default" (click)="reset()">
+                            Réinitialiser </button>
+                        <button [disabled]="!isSearchable()" mat-button mat-raised-button (click)="filtrer()"
+                            type="submit" color="primary">Rechercher</button>
+                    </div>
+                </form>
+            </mat-expansion-panel>
+
+            <!-- <mat-card id="mat-card-list-planification">
+                <h4 fxLayoutAlign="start center">
+                    <mat-icon>filter_alt
+                    </mat-icon>
+                    Filtrer
+                </h4>
+                <form [formGroup]="form" class="filter-dash">
+                    <div fxLayoutAlign="center">
+                        <section class="example-section second-grid-checkbox ">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Référence </mat-label>
+                                <input matInput type="text" formControlName="id_partenaire" (keyup)="onKeyupRefNom()">
+                            </mat-form-field>
+                              <mat-form-field appearance="outline">
+                                <mat-label>Nom compte </mat-label>
+                                <input matInput type="text" formControlName="nom_partenaire" (keyup)="onKeyupRefNom()">
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Type compte</mat-label>
+                                <mat-select (openedChange)="onChangeTypePartenaire()" formControlName="type_partenaire">
+                                    <mat-option [value]="null">--</mat-option>
+                                    <mat-option [value]="'PHAR'"> Pharmacie </mat-option>
+                                    <mat-option [value]="'MEDE'"> Médecin </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Spécialité</mat-label>
+                                <mat-select formControlName="code_specialite" multiple>
+                                    <mat-option *ngFor="let item of listeSpecialites" [value]="item.code_codification">
+                                        {{item.libelle_codification}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Potentiel</mat-label>
+                                <mat-select formControlName="potentiel" multiple>
+                                    <mat-option [value]="'A+'"> A+ </mat-option>
+                                    <mat-option [value]="'A'"> A </mat-option>
+                                    <mat-option [value]="'B'"> B </mat-option>
+                                    <mat-option [value]="'C'"> C </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_region"
+                                [flag_obligatoire]="'O'" 
+                                [isRequiredOptional]="true" [smartList]="listeRevis" nomInput="Région"
+                                (optionSelected)="selectVille($event)">
+                            </ms-select-autocomplete-code>
+                            <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_ville"
+                                [flag_obligatoire]="'O'" 
+                                [smartList]="listeVilles" nomInput="Ville" [isRequiredOptional]="true"
+                                (optionSelected)="selectSecteur($event)" [disabled]="form.value.code_region ? false : true">
+                            </ms-select-autocomplete-code>
+                            <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_secteur"
+                                [smartList]="listeSecteurs" nomInput="Secteur"
+                                [disabled]="form.value.code_ville ? false : true">
+                            </ms-select-autocomplete-code>
+                        </section>
+                    </div>
+                    <div class="second-button" fxLayout="row" fxLayoutAlign="center center">
+                        <button mat-button mat-raised-button type="button" color="Default" (click)="reset()">
+                            Réinitialiser </button>
+                        <button [disabled]="!isSearchable()" mat-button mat-raised-button (click)="filtrer()" type="submit"
+                            color="primary">Rechercher</button>
+                    </div>
+                </form>
+            </mat-card> -->
+
+
+            <mat-card id="mat-card-list-planification">
+                <h4 fxLayoutAlign="start center">
+                    Résultat de recherche
+                </h4>
+                <div class="flexbox full-wid partenaires-scroll-result" infiniteScroll [scrollWindow]="false"
+                    (scrolled)="onScrollPartenaires()">
+                    <div class="row">
+                        <div class="cell0 header">
+                            Fiche
+                        </div>
+                        <div class="cell1 header">
+                            <!-- Type -->
+                        </div>
+                        <div class="cell2 header">
+                            Compte
+                        </div>
+                        <!-- <div class="cell3 header">
+                            Potentiel
+                        </div> -->
+                        <div class="cell4 header">
+                            Dernière <br>
+                            visite
+                        </div>
+                        <!-- <div class="cell5 header">
+                            Planification
+                        </div> -->
+                        <div class="cell6 header">
+                            Ajouter planification
+                        </div>
+                    </div>
+                    <div class="row card-row" *ngFor="let item of listePlanificationPartenaire; trackBy: trackById">
+                        <div class="cell0 cell">
+                            <div fxLayout="row" fxLayoutAlign="center">
+                                <button mat-mini-fab mat-icon-button class="margin-none button-table button-fiche"
+                                    title="Fiche" [routerLink]="['/partenaires/fiche/'+item.id_partenaire]"
+                                    routerLinkActive="active-link" color="primary">
+                                    <mat-icon class="mat-icon-grey gene-text-lg">
+                                        visibility
+                                    </mat-icon>
+                                </button>
+                            </div>
+                            <span class="margin-none type-webkit text-center">
+                                {{ (item.code_type_partenaire == 'MEDE' ? 'M' : 'P') + item.id_partenaire || '-'}}
+                            </span>
+                        </div>
+                        <div class="cell1 cell">
+                            <span class="type_partenaire_svg">
+                                <mat-icon class="pharmacie" *ngIf="item.code_type_partenaire == 'PHAR'"
+                                    svgIcon="pharmacie">
+                                </mat-icon>
+                                <mat-icon class="medecin" *ngIf="item.code_type_partenaire == 'MEDE'" svgIcon="medecin">
+                                </mat-icon>
+                            </span>
+                            <span class="potentiel margin-none text-center"
+                                [ngStyle]="{'border':item.potentiel ?'1px solid':'',
+                                            'color': item.potentiel == 'A' || item?.potentiel == 'A+'?'#13be00': item.potentiel == 'B'? '#e5ce00':item.potentiel == 'C'? '#e10000':''}">
+                                {{item.potentiel || '-'}}
+                            </span>
+                        </div>
+                        <div class="cell2 cell">
+                            <h5 class="margin-none text-center type-webkit" [title]="item.nom_partenaire || '-'">
+                                {{item.nom_partenaire || '-'}}</h5>
+                            <h5 class="margin-none mrgn-t-xs text-center reveq-webkit"
+                                [title]="item.specialite_partenaire || '-'">
+                                {{item.specialite_partenaire || '-'}} </h5>
+                        </div>
+                        <!-- <div class="cell3 cell">
+                            <span class="potentiel margin-none text-center"
+                                [ngStyle]="{'border':item.potentiel ?'1px solid':'',
+                                            'color': item.potentiel == 'A' || item?.potentiel == 'A+'?'#13be00': item.potentiel == 'B'? '#e5ce00':item.potentiel == 'C'? '#e10000':''}">
+                                {{item.potentiel || '-'}}
+                            </span>
+                        </div> -->
+                        <div class="cell4 cell">
+                            <h5 class="margin-none text-center">{{(item.date_derniere_visite | date:'dd/MM/yyyy')||
+                                '-'}}</h5>
+                        </div>
+                        <!-- <div class="cell5 cell">
+                            <mat-form-field *ngIf="!dateVisiteGlobalControl.value" appearance="outline" style="width: 140px;">
+                                <mat-select placeholder="Choisir date" [(ngModel)]="item.date_visite">
+                                    <mat-option *ngFor="let item of listeDatesSemaine" [value]="item">
+                                        {{item | date:'dd/MM/yyyy'}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                        <mat-form-field appearance="outline" style="width: 140px;">
+                            <mat-select placeholder="Choisir heure" [(ngModel)]="item.heure_visite">
+                                <mat-option *ngFor="let hour of listHours" [value]="hour">
+                                {{hour}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        </div> -->
+                        <div class="cell6 cell">
+                            <!-- <div fxLayout="column" fxLayoutAlign="center"> -->
+                            <mat-form-field appearance="outline" style="width: 100px;">
+                                <mat-select placeholder="Heure" [(ngModel)]="item.heure_visite">
+                                    <mat-option *ngFor="let hour of listHours" [value]="hour">
+                                        {{hour}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <button mat-mini-fab mat-icon-button [disabled]="userItem.role == 'ADMI'"
+                                class="margin-none button-table button-add" title="Ajouter"
+                                (click)="ajouterPartenairePlanifiee(item)">
+                                <mat-icon class="mat-icon-grey gene-text-lg">
+                                    add
+                                </mat-icon>
+                            </button>
+                            <!-- </div> -->
+                        </div>
+                    </div>
+                    <p *ngIf="listePlanificationPartenaire?.length == 0 && !isLoading">
+                        Aucun résultat trouvé .
+                    </p>
+                </div>
+
+                <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+                    <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+                    </mat-progress-spinner>
+                </div>
+            </mat-card>
+
+            <div class="blocked-overlay" *ngIf="cantPlan" [@fadeInOut]>
+                <div class="overlay-content" fxLayout="column" fxLayoutAlign="center center">
+                    <mat-icon>
+                        block
+                    </mat-icon>
+                    <div class="overlay-text">
+                        Désolé vous ne pouvez pas planifier dans le passé !
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="50" fxFlex.lg="50" fxFlex.xl="50">
+            <mat-card class="section-title">
+                <h3 fxLayoutAlign="center center">
+                    Visites planifiés pour le {{datePlanification | date:'dd/MM/yyyy'}} ( {{visitesCount}} RDV )
+                </h3>
+            </mat-card>
+
+            <mat-card id="mat-card-list-planification">
+                <!-- <h3 fxLayoutAlign="start center">
+                    Comptes Planifiés
+                </h3> -->
+                <div class="flexbox full-wid" style="max-height:700px">
+                    <div class="row">
+                        <div class="cell6 header">
+                            Supprimer planification
+                        </div>
+                        <div class="cell5 header">
+                            <!-- Planification <br> -->
+                            Statut / CR
+                        </div>
+                        <div class="cell2 header">
+                            Compte
+                        </div>
+                        <div class="cell1 header">
+                            <!-- Type -->
+                        </div>
+                        <div class="cell0 header">
+                            Fiche
+                        </div>
+
+                        <!-- <div class="cell3 header">
+                            Potentiel
+                        </div> -->
+                        <!-- <div class="cell4 header">
+                            Ville <br>
+                            Secteur
+                        </div> -->
+                    </div>
+                    <div class="row card-row" [ngStyle]="{'height':item.code_statut_visite ? '':'40px'}"
+                        *ngFor="let item of listePlanifiesPartenaire">
+                        <div class="cell6 cell">
+                            <div class="heure-supp-btn">
+                                <mat-form-field appearance="outline" style="width: 100px;text-align: center;">
+                                    <input matInput type="text" placeholder="Heure" readonly style="font-size: 12px;"
+                                        [value]="(item.date_visite | date:'HH:mm') + ' - ' + (item.heure_fin_visite ? (('01/01/1000' + ' ' + item.heure_fin_visite) | date:'HH:mm') : '-')">
+                                </mat-form-field>
+                                <!-- <h5 class="text-center">{{(item.date_visite | date:'HH:mm')|| '-'}}</h5> -->
+                                <div fxLayout="row" fxLayoutAlign="center">
+                                    <button mat-mini-fab mat-icon-button *ngIf="item.code_statut_visite"
+                                        [disabled]="userItem.role == 'ADMI' || item.code_statut_visite != 'ENAT'"
+                                        class="margin-none button-remove button-table" title="Supprimer"
+                                        (click)="annulerPartenairePlanifiee(item)">
+                                        <mat-icon class="mat-icon-grey gene-text-lg">
+                                            close
+                                        </mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cell5 cell">
+                            <!-- <h5 class="text-center">{{(item.date_visite | date:'dd/MM/yyyy HH:mm')|| '-'}}
+                            </h5> -->
+                            <div class="status-button">
+                                <mat-chip-list class="statut">
+                                    <mat-chip *ngIf="item.code_statut_visite == 'ENAT'" class="statutEnAttente"> En
+                                        attente
+                                    </mat-chip>
+                                    <mat-chip *ngIf="item.code_statut_visite == 'REAL'" class="statutRealisee"> Réalisée
+                                    </mat-chip>
+                                    <mat-chip *ngIf="item.code_statut_visite == 'ABSE'" class="statutAbsent"> Absent
+                                    </mat-chip>
+                                    <mat-chip *ngIf="item.code_statut_visite == 'REPL'" class="statutReplanifiee">
+                                        Replanifiée </mat-chip>
+                                </mat-chip-list>
+                                <!-- <button mat-mini-fab mat-icon-button color="primary"
+                                title="Ajouter rapport"
+                                class="button-add-rapport button-table"
+                                >
+                                <mat-icon class="mat-icon-grey gene-text-lg">add </mat-icon>
+                                </button> -->
+                                <button mat-raised-button color="primary" class="button-add-rapport"
+                                    title="Ajouter rapport" *ngIf="item.code_statut_visite == 'ENAT'"
+                                    (click)="openDialogModifierVisite('rapport',item.id_visite, item.id_partenaire,item.id_planification)"
+                                    [disabled]="!canAddRapport(item.date_visite)">
+                                    <mat-icon>add </mat-icon>
+                                    <!-- rapport -->
+                                </button>
+
+                                <button mat-raised-button color="primary" class="button-mod-rapport"
+                                    title="Modifier rapport"
+                                    *ngIf="item.code_statut_visite &&  item.code_statut_visite != 'ENAT'"
+                                    (click)="openDialogModifierVisite('modifier',item.id_visite, item.id_partenaire,item.id_planification)"
+                                    [disabled]="!canModifyRapport(item.date_visite) || !item.id_visite">
+                                    <mat-icon>edit </mat-icon>
+                                    <!-- rapport -->
+                                </button>
+                            </div>
+                        </div>
+                        <div class="cell2 cell">
+                            <h5 *ngIf="item.code_statut_visite" class="margin-none text-center type-webkit"
+                                [title]="item.nom_partenaire || '-'">
+                                {{item.nom_partenaire || '-'}}</h5>
+                            <h5 *ngIf="item.code_statut_visite" class="margin-none mrgn-t-xs text-center reveq-webkit"
+                                [title]="item.specialite_partenaire || '-'">
+                                {{item.specialite_partenaire || '-'}} </h5>
+                        </div>
+                        <div class="cell1 cell">
+                            <span *ngIf="item.code_statut_visite" class="type_partenaire_svg">
+                                <mat-icon class="pharmacie" *ngIf="item.code_type_partenaire == 'PHAR'"
+                                    svgIcon="pharmacie">
+                                </mat-icon>
+                                <mat-icon class="medecin" *ngIf="item.code_type_partenaire == 'MEDE'" svgIcon="medecin">
+                                </mat-icon>
+                            </span>
+                            <span *ngIf="item.code_statut_visite" class="potentiel margin-none text-center"
+                                [ngStyle]="{'border':item.potentiel ?'1px solid':'',
+                                            'color': item.potentiel == 'A' || item?.potentiel == 'A+'?'#13be00': item.potentiel == 'B'? '#e5ce00':item.potentiel == 'C'? '#e10000':''}">
+                                {{item.potentiel || '-'}}
+                            </span>
+                        </div>
+                        <div class="cell0 cell">
+                            <div fxLayout="row" fxLayoutAlign="center">
+                                <button *ngIf="item.code_statut_visite" mat-mini-fab mat-icon-button
+                                    class="margin-none button-table button-fiche" title="Fiche"
+                                    [disabled]="!item.id_partenaire"
+                                    [routerLink]="['/partenaires/fiche/'+item.id_partenaire]"
+                                    routerLinkActive="active-link" color="primary">
+                                    <mat-icon class="mat-icon-grey gene-text-lg">
+                                        visibility
+                                    </mat-icon>
+                                </button>
+                            </div>
+                            <span *ngIf="item.id_partenaire">
+                                {{ (item.code_type_partenaire == 'MEDE' ? 'M' : 'P') + item.id_partenaire || '-'}}
+                            </span>
+                        </div>
+                        <!-- <div class="cell3 cell">
+                            <span class="potentiel margin-none text-center"
+                                [ngStyle]="{'border':item.potentiel ?'1px solid':'',
+                                            'color': item.potentiel == 'A' || item?.potentiel == 'A+'?'#13be00': item.potentiel == 'B'? '#e5ce00':item.potentiel == 'C'? '#e10000':''}">
+                                {{item.potentiel || '-'}}
+                            </span>
+                        </div> -->
+                        <!-- <div class="cell4 cell">
+                            <h5 class="text-center reveq-webkit" [title]="item.ville_partenaire || '-'">
+                                {{item.ville_partenaire || '-'}}</h5>
+                            <h5 class="margin-none reveq-webkit text-center" [title]="item.secteur_partenaire || '-'">
+                                {{item.secteur_partenaire || '-'}}</h5>
+                        </div> -->
+                    </div>
+                    <p *ngIf="listePlanifiesPartenaire?.length == 0 && !isLoadingPlanifies">
+                        Aucun résultat trouvé .
+                    </p>
+                </div>
+
+                <div *ngIf="isLoadingPlanifies" fxLayoutAlign="center center" class="mrgn-all-lg">
+                    <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+                    </mat-progress-spinner>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+
+</div>

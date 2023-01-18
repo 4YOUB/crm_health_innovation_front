@@ -1,0 +1,210 @@
+<div class="dialog-title">
+    <h2 mat-dialog-title> {{this.title}}</h2>
+    <button (click)="dialogRef.close()" mat-icon-button class="btn-close">
+        <!-- <i class="fas fa-times"></i> -->
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<form *ngIf="!isLoading" #ngForm="ngForm" (ngSubmit)="save(ngForm.value)" [formGroup]="form" fxLayout="column"
+    class="gene-form-wizard">
+    <!-- <mat-dialog-content> -->
+
+    <div fxLayout="row wrap" [fxLayoutAlign]="'star'" [fxLayoutGap]="'3%'" style="margin-right: -3%;">
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Nom <span *ngIf="!isSubmitted">*</span></mat-label>
+            <input matInput type="text" [required]='isSubmitted' formControlName="nom_utilisateur">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Prénom <span *ngIf="!isSubmitted">*</span></mat-label>
+            <input matInput type="text" [required]='isSubmitted' formControlName="prenom_utilisateur">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>E-mail <span *ngIf="!isSubmitted">*</span></mat-label>
+            <input matInput type="email" [required]='isSubmitted' formControlName="email">
+            <mat-error *ngIf="form.get('email').hasError('email')">
+                Vérifiez l’adresse email, son format n’est pas valide.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Téléphone <span *ngIf="!isSubmitted">*</span></mat-label>
+            <input matInput type="tel" mask="0*" maxlength="10" [required]='isSubmitted' formControlName="telephone">
+        </mat-form-field>
+
+        <!-- <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Rôle <span *ngIf="!isSubmitted">*</span></mat-label>
+            <mat-select formControlName="role" [required]='isSubmitted' (openedChange)="onChangeRole()">
+                <mat-option *ngFor="let item of roles" [value]="item">
+                    {{item}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field> -->
+
+        <mat-divider fxFlex="100" class="mrgn-b-md"></mat-divider>
+
+        <div class="selectSection" appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100"
+            fxFlex.gt-md="47">
+            <mat-label> Rôle : </mat-label>
+            <mat-radio-group formControlName="role" [required]='isSubmitted' (change)="onChangeRole()"
+                [ngClass]="{'required-mat-radio': isSubmitted && form.get('role').invalid}">
+                <mat-radio-button [disabled]="item == 'DIR'" class="mat-radio-button" *ngFor="let item of roles" [value]="item">
+                    {{item}}
+                </mat-radio-button>
+            </mat-radio-group>
+        </div>
+
+        <div fxLayout="column" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label> Activités : </mat-label>
+            <mat-checkbox class="checkbox-flag" formControlName="flag_pharmaceutique"
+                [ngClass]="{'required-mat-checkbox': isSubmitted && (!form.get('flag_medical').value && !form.get('flag_pharmaceutique').value)}">
+                Pharmaceutiques</mat-checkbox>
+            <mat-checkbox class="checkbox-flag" formControlName="flag_medical" style="margin-bottom: 15px;"
+                [ngClass]="{'required-mat-checkbox': isSubmitted && (!form.get('flag_medical').value && !form.get('flag_pharmaceutique').value)}"
+                (change)="onChangeGetResponsable()">
+                Médicales</mat-checkbox>
+        </div>
+
+        <div appearance="outline" fxLayout="column" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47" *ngIf="roleMulti.includes(form.controls['role'].value)">
+            <mat-form-field appearance="outline">
+                <mat-label>Région <span *ngIf="!isSubmitted">*</span></mat-label>
+                <mat-select formControlName="regions" multiple [required]='isSubmitted'>
+                    <mat-option (click)="onChangeGetResponsable()" *ngFor="let item of listeRevis"
+                        [value]="item.code_codification">
+                        {{item.libelle_codification}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="gammesMedical" appearance="outline">
+                <mat-label>Gamme <span *ngIf="!isSubmitted">*</span></mat-label>
+                <mat-select formControlName="gammes" multiple [required]='isSubmitted'>
+                    <mat-option (click)="onChangeGetResponsable()" *ngFor="let item of listeGammes"
+                        [value]="item.code_codification">
+                        {{item.libelle_codification}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            
+            <mat-form-field *ngIf="form.controls['role'].value != 'DRG' && gammesRegions" appearance="outline">
+                <mat-label>Responsable <span *ngIf="!isSubmitted">*</span></mat-label>
+                <mat-select formControlName="id_responsable" [required]='isSubmitted'>
+                    <mat-option *ngFor="let item of listeResponsables" [value]="item.id_utilisateur">
+                        {{item.nom_utilisateur}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <!-- <div appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47"></div> -->
+
+        <mat-divider fxFlex="100" class="mrgn-b-md"></mat-divider>
+
+        <section class="permissions" fxLayout="column" fxFlex="100">
+            <mat-label> Permissions : </mat-label>
+            <div fxLayout="row wrap" fxFlex="100" class="clt">
+                <div *ngFor="let perm of listPermissions" 
+                fxFlex.gt-sm="50" fxFlex.gt-xs="50" fxFlex="100" fxFlex.gt-md="50">
+                    <mat-checkbox class="checkbox-flag" [formControlName]="perm.controlName"
+                    (change)="onPermissionChange()">
+                        {{perm.name}}
+                    </mat-checkbox>
+                    <span class="sub-perms" *ngIf="form.controls[perm.controlName]?.value">
+                        <ul style="list-style-type: none;margin:-8px 0 10px 0;">
+                        <li *ngFor="let subPerm of perm.subPerms">
+                            <mat-checkbox [formControlName]="subPerm.controlName">
+                            {{subPerm.name}}
+                            </mat-checkbox>
+                        </li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <mat-divider fxFlex="100" class="mrgn-b-md"></mat-divider>
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Login <span *ngIf="!isSubmitted">*</span></mat-label>
+            <input matInput type="text" [required]='isSubmitted' formControlName="login">
+        </mat-form-field>
+
+        <div appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47"></div>
+
+        <div fxLayout="row wrap" [fxLayoutAlign]="'star center'" [fxLayoutGap]="'3%'" style="margin-right: -3%;"
+            fxFlex="100">
+            <div fxFlex="100" *ngIf="mode == 'modifier'">
+                <mat-checkbox style="margin-bottom: 25px;" formControlName="flag_password">
+                    Modifier le mot de passe</mat-checkbox>
+            </div>
+            <ng-container *ngIf="form.controls.flag_password.value">
+
+                <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                    <mat-label>Mot de passe <span *ngIf="!isSubmitted">*</span></mat-label>
+                    <input matInput [type]="hide ? 'password' : 'text'" name="password" [required]='isSubmitted'
+                        formControlName="password" (click)="markAllAsTouched()">
+                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                        [attr.aria-pressed]="hide" class="margin-none" type="button">
+                        <mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+                    </button>
+                    <mat-error *ngIf="form.controls.password.hasError('required')">
+                        Veuillez saisir un mot de passe
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                    <mat-label>Confirmer le mot de passe <span *ngIf="!isSubmitted">*</span></mat-label>
+                    <input matInput [type]="hide ? 'password' : 'text'" name="password-confirm" [required]='isSubmitted'
+                        formControlName="passwordConfirm">
+                    <mat-error *ngIf="form.get('passwordConfirm').invalid">
+                        Les mots de passe ne correspondent pas. Essayez à nouveau.
+                    </mat-error>
+                </mat-form-field>
+
+                <div class="styles_rules_mdp mrgn-b-sm" *ngIf="show_rules_mdp || form.controls.password.dirty"
+                    [hidden]="(form.controls.password.value ? form.controls.password.value.length : 0 )  >= 8 && numberCharacters(form.controls.password.value) && caseCharacters(form.controls.password.value)"
+                    fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+                    <div class="styles_rule_mdp"><span [ngClass]="{ 'icon-ok' :  (form.controls.password.value ? form.controls.password.value.length : 0 )  >= 8,
+                    'icon' :  8 > (form.controls.password.value ? form.controls.password.value.length : 0 ) }"><svg
+                                data-name="Calque 1" viewBox="0 0 24 24" width="1em" height="1em">
+                                <path
+                                    d="M23.58 3.42a1.42 1.42 0 00-2 0L7.41 17.55l-5-5a1.43 1.43 0 00-2 2l6 6a1.42 1.42 0 002 0L23.58 5.44a1.42 1.42 0 000-2.02z">
+                                </path>
+                            </svg></span><span class="styles_rule_mdp_text">8 caractères au minimum</span></div>
+                    <div class="styles_rule_mdp"><span [ngClass]="{ 'icon-ok' : caseCharacters(form.controls.password.value),
+                    'icon' : !caseCharacters(form.controls.password.value)}"><svg data-name="Calque 1"
+                                viewBox="0 0 24 24" width="1em" height="1em">
+                                <path
+                                    d="M23.58 3.42a1.42 1.42 0 00-2 0L7.41 17.55l-5-5a1.43 1.43 0 00-2 2l6 6a1.42 1.42 0 002 0L23.58 5.44a1.42 1.42 0 000-2.02z">
+                                </path>
+                            </svg></span><span class="styles_rule_mdp_text">1 lettre au minimum</span>
+                    </div>
+                    <div class="styles_rule_mdp"><span [ngClass]="{ 'icon-ok' : numberCharacters(form.controls.password.value),
+                    'icon' : !numberCharacters(form.controls.password.value)}"><svg data-name="Calque 1"
+                                viewBox="0 0 24 24" width="1em" height="1em">
+                                <path
+                                    d="M23.58 3.42a1.42 1.42 0 00-2 0L7.41 17.55l-5-5a1.43 1.43 0 00-2 2l6 6a1.42 1.42 0 002 0L23.58 5.44a1.42 1.42 0 000-2.02z">
+                                </path>
+                            </svg></span><span class="styles_rule_mdp_text">1 chiffre au minimum</span>
+                    </div>
+                </div>
+
+            </ng-container>
+        </div>
+
+    </div>
+
+
+    <!-- </mat-dialog-content> -->
+    <mat-dialog-actions class="mrgn-b-xs pad-b-none" fxLayoutAlign="end">
+        <button type="button" mat-raised-button (click)="dialogRef.close()">Annuler</button>
+        <button type="submit" mat-raised-button color="primary" class="label-form">
+            Enregistrer </button>
+    </mat-dialog-actions>
+</form>
+<div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+    <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+    </mat-progress-spinner>
+</div>

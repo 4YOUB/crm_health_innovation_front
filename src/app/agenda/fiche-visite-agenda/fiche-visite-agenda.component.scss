@@ -1,0 +1,240 @@
+.dialog-title {
+  position: relative;
+
+  .statut_visite ::ng-deep .mat-standard-chip {
+    margin-left: 15px;
+  }
+  .statutEnAttente {
+    background-color: var(--statut-EnAttente-color);
+    color: white;
+  }
+
+  .statutRealisee {
+    background-color: var(--statut-Realisee-color);
+    color: white;
+  }
+
+  .statutAbsent {
+    background-color: var(--statut-Absent-color);
+    color: white;
+  }
+
+  .statutReplanifiee {
+    background-color: var(--statut-Replanifiee-color);
+    color: white;
+  }
+}
+
+.btn-close {
+  outline: none;
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-close:hover {
+  color: var(--princ-adr-color);
+}
+.information_visite{
+  width: 100%;
+  margin-top:10px !important
+}
+.gene-form-wizard {
+  margin-top: 5px;
+  #card-list-tab-produit {
+    margin-top: 10px;
+    .flexbox {
+      // display: flex;
+      // flex-direction: column;
+      // align-items: center;
+      overflow: auto;
+
+      .row {
+        display: inline-flex;
+        // width: 100%;
+        align-items: center;
+        min-width: -webkit-fill-available;
+      }
+
+      .card-row {
+        background: #ffffff;
+        border-radius: 10px;
+        margin: 5px 0;
+        // width: max-content;
+      }
+
+      .header {
+        font-size: 0.95rem;
+        text-align: center;
+        font-weight: bold;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .cell {
+        padding: 10px;
+        flex-direction: column;
+        box-sizing: border-box;
+        display: flex;
+        place-content: center;
+        align-items: center;
+      }
+
+      // .cell1 {
+      //     width: 22%;
+      //     min-width: 130px;
+      // }
+
+      .cell2 {
+        width: 60%;
+        min-width: 170px;
+      }
+
+      .cell3 {
+        width: 40%;
+        min-width: 130px;
+      }
+    }
+    .button-table {
+      height: 40px;
+      width: 40px;
+
+      .mat-icon-grey {
+          color: white;
+          font-size: 20px !important;
+          line-height: 25px !important;
+          width: auto;
+          height: auto;
+      }
+  }
+    .reveq-webkit {
+      white-space: normal;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .type-webkit {
+      white-space: normal;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    ::ng-deep .mat-form-field-wrapper {
+      padding-bottom: 0 !important;
+    }
+
+    @media screen and (max-width: 845px) {
+      .second-grid-checkbox {
+        max-width: none;
+      }
+    }
+  }
+
+  //   .statut_visite ::ng-deep .mat-standard-chip {
+  //     border-radius: 5px;
+  //     // min-height: 32px;
+  //     // font-size: 12px;
+  //     font-weight: bold;
+  //     // width: 105px;
+  //     justify-content: center;
+  //     min-height: 40px;
+  //     margin: 0 4px;
+  //     width: 100%;
+  //     margin-top: 8px;
+  //     // font-size: 12px;
+  //   }
+
+  //   .statutEnAttente {
+  //     background-color: var(--statut-EnAttente-color);
+  //     color: white;
+  //   }
+
+  //   .statutRealisee {
+  //     background-color: var(--statut-Realisee-color);
+  //     color: white;
+  //   }
+
+  //   .statutAbsent {
+  //     background-color: var(--statut-Absent-color);
+  //     color: white;
+  //   }
+
+  //   .statutReplanifiee {
+  //     background-color: var(--statut-Replanifiee-color);
+  //     color: white;
+  //   }
+
+  #description {
+    margin-right: 3%;
+    margin-top: 20px;
+    ::ng-deep .mat-form-field-flex {
+      align-items: start !important;
+      height: auto;
+
+      .mat-form-field-prefix {
+        top: 20px !important;
+      }
+    }
+  }
+}
+.card-row {
+  background: #f5f6f8;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  padding: 10px;
+  width: 100%;
+  margin-right:20px;
+  // width: max-content;
+}
+.commantaire{
+  margin-right: 0 !important;
+}
+.button-add-rapport {
+  margin: 0;
+  margin-left: 2px;
+  // margin-top: 5px;
+  // position: relative;
+  // bottom: -14px;
+  padding: 0px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 25px;
+  width: 30px;
+  min-width: 28px;
+  .mat-icon {
+      font-size: 18px;
+      margin: -5px;
+  }
+}
+
+.button-mod-rapport {
+  background-color: white;
+  color: var(--health-primary-color);
+  margin: 0;
+  margin-left: 2px;
+  // margin-top: 5px;
+  // position: relative;
+  // bottom: -14px;
+  padding: 0px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 25px;
+  width: 30px;
+  min-width: 28px;
+  .mat-icon {
+      font-size: 16px;
+      margin: -5px;
+  }
+}

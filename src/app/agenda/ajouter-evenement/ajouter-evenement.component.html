@@ -1,0 +1,111 @@
+<div class="dialog-title">
+    <h2 mat-dialog-title>
+        <mat-icon>event</mat-icon>
+        <div 
+        style="display: inline-block;width: 5px;">
+        </div>
+        {{typeEvenement == 'pro' ? 'Événement Professionnel' : 'Événement Personnel'}}
+    </h2>
+    <button (click)="dialogRef.close()" mat-icon-button class="btn-close">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+
+    <form *ngIf="!isLoading" [formGroup]="form" fxLayout="column" class="gene-form-wizard">
+
+        <div fxLayout="row wrap" [fxLayoutAlign]="'star center'" [fxLayoutGap]="'3%'" style="margin-right: -3%;">
+
+            <mat-form-field class="type-event" appearance="fill" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100"
+                fxFlex.gt-md="100">
+                <mat-label>Type Événement</mat-label>
+                <mat-chip-list #chipList aria-label="Type Événement" formControlName="code_evenement"
+                    fxLayout="row wrap" fxLayoutAlign="center center">
+                    <mat-chip color="primary" #chip="matChip" 
+                    *ngFor="let type of (typeEvenement != 'pro' ? listTypesEvenement : listTypesEvenementPro)"
+                        [selected]="type.code_codification == form.controls.code_evenement.value?.code_codification"
+                        (click)="typeEventSelected($event, type)" [value]="type">
+                        {{type.libelle_codification}}
+                    </mat-chip>
+                </mat-chip-list>
+            </mat-form-field>
+
+            <mat-form-field class="date-event" appearance="fill" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100"
+                fxFlex.gt-md="100">
+                <mat-icon matSuffix>schedule</mat-icon>
+                <mat-label>Période Événement</mat-label>
+                <div class="date-input" fxLayout="row" [fxLayoutAlign]="'center center'" fxFlex.gt-sm="100"
+                    fxFlex.gt-xs="100" fxFlex="100" fxFlex.gt-md="100">
+
+
+                    <mat-form-field appearance="none" class="date">
+                        <input #eventStartDateInput (click)="pickerStart.open()" matInput [matDatepicker]="pickerStart"
+                            formControlName="date_deb_evenement">
+                        <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerStart></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field class="hour"
+                        *ngIf="listNotAllDay.includes(form.controls.code_evenement.value?.libelle_codification)"
+                        appearance="none">
+                        <mat-select formControlName="hour_deb_evenement">
+                            <mat-option *ngFor="let hour of listHours" [value]="hour">
+                                {{hour}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <div class="date-sep"></div>
+
+                    <mat-form-field class="hour"
+                        *ngIf="listNotAllDay.includes(form.controls.code_evenement.value?.libelle_codification)"
+                        appearance="none">
+                        <mat-select formControlName="hour_fin_evenement">
+                            <mat-option *ngFor="let hour of listHours" [value]="hour">
+                                {{hour}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="none" class="date">
+                        <input #eventEndDateInput (click)="pickerEnd.open()" matInput [matDatepicker]="pickerEnd"
+                            formControlName="date_fin_evenement">
+                        <mat-datepicker-toggle matSuffix [for]="pickerEnd">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #pickerEnd></mat-datepicker>
+                    </mat-form-field>
+
+
+                </div>
+
+            </mat-form-field>
+
+            <mat-form-field class="titre-event"
+            *ngIf="typeEvenement == 'pro'"
+            appearance="fill" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxFlex.gt-md="100">
+            <input matInput matInput type="text" formControlName="lieu" autocomplete="off" autofocus
+                placeholder="Ajouter Un Lieu Ici">
+            </mat-form-field>
+
+            <mat-form-field
+            class="titre-event"
+            appearance="fill" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxFlex.gt-md="100">
+            <textarea matInput matInput type="text" formControlName="commentaire" 
+            autocomplete="off" autofocus
+            placeholder="Ajouter Un Commentaire Ici"></textarea>
+            </mat-form-field>
+
+        </div>
+
+    </form>
+    <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+        <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+        </mat-progress-spinner>
+    </div>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions class="mrgn-b-xs pad-b-none" fxLayoutAlign="end">
+    <button type="button" mat-flat-button (click)="dialogRef.close()">Annuler</button>
+    <button type="submit" mat-flat-button (click)="save()" color="primary" class="label-form">
+        {{mode == 'modifier' ? 'Modifier' : 'Ajouter'}} </button>
+</mat-dialog-actions>

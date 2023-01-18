@@ -1,0 +1,116 @@
+<div id="card-list-tab-visite">
+    <div class="mrgn-all-md" fxLayoutAlign="end center">
+        <button mat-raised-button color="primary" [disabled]="userItem.role == 'ADMI' || statutPartenaire != 'VALI'"
+            (click)="openDialogAjouterVisite()" class="mrgn-t-xs">
+            <mat-icon>add </mat-icon>
+            Ajouter une nouvelle visite hors planification
+        </button>
+    </div>
+    <div class="flexbox full-wid">
+        <div class="row">
+            <div class="cell0 header">
+                Fiche
+            </div>
+            <div class="cell2 header">
+                Date visite
+            </div>
+            <div class="cell2 header">
+                Heure visite
+            </div>
+            <div class="cell3 header">
+                Visiteur
+            </div>
+            <div class="cell4 header">
+                Accompagnée
+            </div>
+            <div class="cell5 header">
+                Statut
+            </div>
+            <div class="cell6 header">
+                Produit(s)
+            </div>
+            <div class="cell1 header">
+            </div>
+        </div>
+        <div class="row card-row" *ngFor="let item of listeVisites">
+            <div class="cell0 cell">
+                <div fxLayout="row" fxLayoutAlign="center">
+                    <button mat-mini-fab mat-icon-button color="primary" class="margin-none button-table"
+                        (click)="openDialogFicheVisite(item.id_visite)" title="Fiche" href="javascript:void(0)">
+                        <mat-icon class="mat-icon-grey gene-text-lg">
+                            visibility
+                        </mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="cell2 cell">
+                <h5 class="margin-none reveq-webkit text-center" 
+                [readonly]="item.code_type_visite!='HOPL'">{{item.date_visite | date:'dd/MM/yyyy'}}
+                </h5>
+            </div>
+            <div class="cell2 cell">
+                <h5 class="margin-none reveq-webkit text-center" 
+                [readonly]="item.code_type_visite!='HOPL'">{{(item.date_visite | date:'HH:mm') + ' - ' + (item.heure_fin_visite ? (('01/01/1000' + ' ' + item.heure_fin_visite) | date:'HH:mm') : '-')}}
+                </h5>
+            </div>
+            <div class="cell3 cell">
+                <h5 class="margin-none reveq-webkit text-center" [title]="item.nom_utilisateur || '-'">
+                    {{item.nom_utilisateur || '-'}}</h5>
+            </div>
+            <div class="cell4 cell">
+                <h5 class="margin-none reveq-webkit text-center" [title]="item.accompagnant || '-'">
+                    {{item.accompagnant || '-'}}</h5>
+            </div>
+            <div class="cell5 cell">
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <mat-chip-list class="statut">
+                        <mat-chip *ngIf="item.code_statut_visite == 'ENAT'" class="statutEnAttente"> En attente
+                        </mat-chip>
+                        <mat-chip *ngIf="item.code_statut_visite == 'REAL'" class="statutRealisee"> Réalisée
+                        </mat-chip>
+                        <mat-chip *ngIf="item.code_statut_visite == 'ABSE'" class="statutAbsent"> Absent </mat-chip>
+                        <mat-chip *ngIf="item.code_statut_visite == 'REPL'" class="statutReplanifiee">
+                            Replanifiée </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+            <div class="cell6 cell">
+                <h5 class="margin-none reveq-webkit text-center">
+                    <ng-container *ngIf="item.produits?.length; else elseTemplate">
+                        <!-- <a class="click reveq-webkit" (click)="openDialogProduits(item.produits)"> -->
+                            {{ item.produits?.length }} Produit(s)
+                        <!-- </a> -->
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                        -
+                    </ng-template>
+                </h5>
+            </div>
+            <div class="cell1 cell">
+                <div fxLayout="row" fxLayoutAlign="center">
+                    <button mat-mini-fab mat-icon-button color="primary" [disabled]="userItem.role == 'ADMI'"
+                    (click)="openDialogModifierVisite('modifier',item.id_visite,item.id_planification)"
+                        [disabled]="item.code_statut_visite == 'ENAT' || userItem.id_utilisateur != item.id_utilisateur" class="margin-none button-table"
+                        class="margin-none button-table" title="Modifier" href="javascript:void(0)">
+                        <mat-icon class="mat-icon-grey gene-text-lg">
+                            edit
+                        </mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <p *ngIf="listeVisites?.length == 0 && !isLoading">
+            Aucun résultat trouvé .
+        </p>
+    </div>
+
+    <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+        <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+        </mat-progress-spinner>
+    </div>
+    <div>
+        <mat-divider></mat-divider>
+        <mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 15, 20]" [length]="totalVisites"
+            (page)="getNextPage($event)" showFirstLastButtons></mat-paginator>
+    </div>
+</div>

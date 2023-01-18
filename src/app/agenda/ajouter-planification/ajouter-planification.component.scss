@@ -1,0 +1,166 @@
+.dialog-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #aa182d;
+    padding: 10px 20px;
+    color: white;
+    > h2 {
+      font-size: large;
+      margin: 0;
+      mat-icon {
+        position: relative;
+        top: 6px;
+      }
+    }
+  }
+  .mat-dialog-content {
+    margin: 10px 0 0 0;
+    padding: 10px;
+    padding: 0 !important;
+    overflow-x: hidden;
+  }
+  
+  .mat-dialog-actions {
+    margin: 10px 20px;
+    min-height: auto;
+    padding: 0 !important;
+  }
+  
+  :host ::ng-deep .titre-event {
+    .mat-form-field-flex {
+      background-color: transparent !important;
+    }
+    margin-right: 3%;
+  }
+  
+  :host ::ng-deep .type-event {
+    .mat-form-field-underline {
+      display: none !important;
+    }
+    .mat-chip-selected {
+      background-color: var(--health-primary-color) !important;
+      &:focus {
+        background-color: var(--health-primary-color) !important;
+      }
+      &::before {
+        background-color: var(--health-primary-color) !important;
+      }
+      &::after {
+        background-color: var(--health-primary-color) !important;
+      }
+    }
+    .mat-form-field-flex {
+      background-color: transparent !important;
+    }
+    .mat-form-field-wrapper {
+      padding-bottom: 0 !important;
+    }
+    .mat-chip-list-wrapper {
+      justify-content: center;
+    }
+  }
+  
+  :host ::ng-deep .date-event {
+    margin-right: 3%;
+    .mat-form-field-underline {
+      display: none !important;
+    }
+    .mat-form-field-flex {
+      padding: 0;
+      background-color: transparent !important;
+    }
+    .mat-form-field-suffix {
+      right: 12px;
+      top: -3px;
+    }
+    .mat-form-field-label-wrapper {
+      overflow: visible;
+      label {
+        position: relative;
+        left: 14px;
+      }
+    }
+    .mat-form-field-infix {
+      padding: 0 !important;
+    }
+    .mat-form-field-wrapper {
+      padding-bottom: 0 !important;
+    }
+    .date-input {
+      // background-color: chartreuse;
+      margin-top: 5px;
+      margin-right: 15px;
+      .mat-form-field-flex {
+        background-color: transparent !important;
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.123) !important;
+          transition: 0.2s;
+        }
+        .mat-select,
+        input {
+          height: 30px;
+          margin: 3px;
+          cursor: pointer;
+        }
+      }
+      .mat-select-arrow-wrapper {
+        // display: none !important;
+        visibility: hidden;
+      }
+      .mat-select-value {
+        position: relative;
+        left: 8px;
+      }
+      .mat-form-field {
+        background-color: transparent !important;
+      }
+      .mat-form-field-wrapper {
+        padding: 0;
+      }
+      .mat-form-field-infix {
+        border-top: none !important;
+        padding: 0 !important;
+      }
+      .mat-icon-button {
+        display: none !important;
+      }
+      .mat-select-value-text {
+        line-height: 2 !important;
+      }
+      .date {
+        width: 90px;
+        margin: 5px 0;
+      }
+      .hour {
+        width: 60px;
+        margin: 5px 0;
+      }
+      .date-sep {
+        background-color: var(--health-primary-color) !important;
+        width: 8px;
+        height: 3px;
+        margin: 5px;
+        border-radius: 8px;
+      }
+    }
+  }
+  .card-row {
+    background: #f5f6f8;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+    // width: max-content;
+  }
+  .informationVisite{
+    display: block !important;
+    margin-right:3% !important;
+    .inputs{
+      display: flex;
+      width:100;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap !important
+    }
+  }
+  

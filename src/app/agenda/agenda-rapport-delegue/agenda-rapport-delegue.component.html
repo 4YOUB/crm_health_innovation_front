@@ -1,0 +1,347 @@
+<!-- <div class="top-section" fxLayout="row wrap">
+    <div *ngIf="userItem.role != 'DEL'" fxFlex="100" fxLayout="row wrap">
+        <div
+        fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="50" fxFlex.lg="50" fxFlex.xl="50"
+        >
+            <mat-card
+            >
+                <h4 fxLayoutAlign="start center" class="margin-none">
+                    Agenda
+                </h4>
+                <div class="agenda-filters" fxLayout="row" fxLayoutAlign="start center">
+                    <section class="types-section" appearance="outline">
+                        <mat-radio-group [(ngModel)]="typeAgenda" (change)="onTypeAgendaChange()">
+                            <mat-radio-button class="mat-radio-button" *ngFor="let type of listTypesAgenda" [value]="type">
+                                {{type}}
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </section>
+                    <section class="form-section" *ngIf="typeAgenda == 'Un délégué de mon équipe'">
+                        <form [formGroup]="form">
+                            <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.id_utilisateur"
+                                [smartList]="listeUtilisateurs" nomInput="Délégué" [showEmptyValue]="false">
+                            </ms-select-autocomplete-code>
+                        </form>
+                    </section>
+                </div>
+            </mat-card>
+
+        </div>
+        <div
+        fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="50" fxFlex.lg="50" fxFlex.xl="50"
+        >
+            <mat-card
+            >
+                <h4 fxLayoutAlign="start center" class="margin-none">
+                    Rapport
+                </h4>
+                <div class="agenda-filters" fxLayout="row" fxLayoutAlign="start center">
+                    <section class="types-section" appearance="outline">
+                        <mat-radio-group [(ngModel)]="typeAgenda" (change)="onTypeAgendaChange()">
+                            <mat-radio-button class="mat-radio-button" *ngFor="let rapport of listRapportAgenda" [value]="rapport">
+                                {{rapport}}
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </section>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div> -->
+
+<div class="mrgn-x-md" fxLayoutAlign="start center">
+    <mat-card-actions class="mat-pad-none margin-none">
+        <!-- <button mat-raised-button color="primary" [disabled]="typeAgenda == 'Rapport équipe'"
+            (click)="openDialogButtonHandler()" class="mrgn-t-xs">
+            <mat-icon>add </mat-icon>
+            Ajouter événement
+        </button> -->
+
+        <section class="form-section">
+            <form [formGroup]="form">
+                <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.id_utilisateur"
+                    [smartList]="listeUtilisateurs" nomInput="Délégué" [showEmptyValue]="false">
+                </ms-select-autocomplete-code>
+            </form>
+        </section>
+    </mat-card-actions>
+</div>
+
+<div class="bottom-section">
+    <!-- <mat-radio-group [(ngModel)]="filtreStatus" (change)="onFiltreStatusChange()"> -->
+    <div fxLayout="row wrap">
+        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
+            <mat-card>
+                <div fxLayout="row" class="filtre-status" fxLayoutAlign="start center">
+                    <mat-checkbox [(ngModel)]="filtreP" (change)="onFiltreStatusChange('v')"></mat-checkbox>
+                    <h4 fxLayoutAlign="start center" style="white-space: nowrap;">
+                        Visites planifiées
+                    </h4>
+
+                    <!-- <button mat-raised-button color="primary"
+                class="add-button"
+                [routerLink]="['/planifications']" 
+                [queryParams]="{date_planif:dateParam}"
+                >
+                    <mat-icon>add </mat-icon>
+                </button> -->
+                </div>
+            </mat-card>
+        </div>
+        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
+            <mat-card>
+                <div fxLayout="row" class="filtre-status" fxLayoutAlign="start center">
+                    <!-- <mat-radio-button class="mat-radio-button" 
+                value="NP"
+                *ngIf="typeAgenda == 'Mon équipe'">
+                
+                </mat-radio-button> -->
+                    <mat-checkbox [(ngModel)]="filtreNP" (change)="onFiltreStatusChange('v')"></mat-checkbox>
+
+                    <h4 fxLayoutAlign="start center" style="white-space: nowrap;">
+                        Visites non planifiées
+                    </h4>
+
+                    <!-- <button mat-raised-button color="primary"
+                class="add-button"
+                (click)="openDialogAjouterVisite()">
+                    <mat-icon>add </mat-icon>
+                </button> -->
+                </div>
+            </mat-card>
+        </div>
+        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
+            <mat-card>
+                <div fxLayout="row" class="filtre-status" fxLayoutAlign="start center">
+                    <!-- <mat-radio-button class="mat-radio-button" 
+                    value="E"
+                    *ngIf="typeAgenda == 'Mon équipe'">
+                    
+                    </mat-radio-button> -->
+                    <mat-checkbox [(ngModel)]="filtreE" (change)="onFiltreStatusChange('e')"></mat-checkbox>
+
+                    <h4 fxLayoutAlign="start center" style="white-space: nowrap;">
+                        Événements Personnels
+                    </h4>
+
+                    <!-- <button mat-raised-button color="primary"
+                    class="add-button"
+                    (click)="openDialogAjouterEvenement()">
+                        <mat-icon>add </mat-icon>
+                    </button> -->
+                </div>
+            </mat-card>
+        </div>
+        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
+            <mat-card>
+                <div fxLayout="row" class="filtre-status" fxLayoutAlign="start center">
+                    <!-- <mat-radio-button class="mat-radio-button" 
+                    value="EP"
+                    *ngIf="typeAgenda == 'Mon équipe'">
+                    
+                    </mat-radio-button> -->
+                    <mat-checkbox [(ngModel)]="filtreEP" (change)="onFiltreStatusChange('e')"></mat-checkbox>
+
+                    <h4 fxLayoutAlign="start center" style="white-space: nowrap;">
+                        Événements Professionnels
+                    </h4>
+
+                    <!-- <button mat-raised-button color="primary"
+                    class="add-button"
+                    (click)="openDialogAjouterEvenement('pro')">
+                        <mat-icon>add </mat-icon>
+                    </button> -->
+                </div>
+            </mat-card>
+        </div>
+    </div>
+    <!-- </mat-radio-group> -->
+</div>
+
+<mat-card id="mat-card-agenda" (resized)="updateCalendarSize()">
+    <div #spinner *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+        <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+        </mat-progress-spinner>
+    </div>
+    <span [hidden]="isLoading">
+        <!-- <mat-form-field appearance="fill">
+            <mat-label>Grouper Par Heure</mat-label>
+            <mat-select [(value)]="HoursFilter" (valueChange)="initCalendarPerso()">
+                <mat-option *ngFor="let option of HoursOptions" [value]="option">{{ option.split(':')[0]+'H' }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field> -->
+        <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+    </span>
+</mat-card>
+
+<div class="bottom-section">
+    <!-- <mat-radio-group [(ngModel)]="filtreStatus" (change)="onFiltreStatusChange()"> -->
+    <div fxLayout="row wrap">
+        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
+            <mat-card>
+                <div fxLayout="row" class="filtre-status" fxLayoutAlign="start start">
+                    <h4 fxLayoutAlign="start center">
+                        Visites planifiées
+                    </h4>
+                </div>
+                <section class="colors-info-section" fxLayout="column">
+                    <div fxLayout="row wrap">
+                        <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="color" [ngStyle]="{'background-color': listStatusColors?.ENAT}"></div>
+                            <div class="status">Planifiée</div>
+                        </div>
+                        <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="color" [ngStyle]="{'background-color': listStatusColors?.REAL}"></div>
+                            <div class="status">Réalisée</div>
+                        </div>
+                        <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="color" [ngStyle]="{'background-color': listStatusColors?.ABSE}"></div>
+                            <div class="status">Absent</div>
+                        </div>
+                        <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="color" [ngStyle]="{'background-color': listStatusColors?.REPL}"></div>
+                            <div class="status">Replanifiée</div>
+                        </div>
+                    </div>
+                    <!-- <div fxLayout="row">
+                    <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="color" [ngStyle]="{'background-color': listStatusColors['ENAT']}"></div>
+                        <div class="status">Planifiée</div>
+                    </div>
+                    <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="color" [ngStyle]="{'background-color': listStatusColors['REAL']}"></div>
+                        <div class="status">Réalisée</div>
+                    </div>
+                </div>
+                <div fxLayout="row">
+                    <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="color" [ngStyle]="{'background-color': listStatusColors['ABSE']}"></div>
+                        <div class="status">Absent</div>
+                    </div>
+                    <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="color" [ngStyle]="{'background-color': listStatusColors['REPL']}"></div>
+                        <div class="status">Replanifiée</div>
+                    </div>
+                </div> -->
+                </section>
+            </mat-card>
+        </div>
+        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
+            <mat-card>
+                <div fxLayout="row" class="filtre-status" fxLayoutAlign="start start">
+
+                    <h4 fxLayoutAlign="start center">
+                        Visites non planifiées
+                    </h4>
+                </div>
+                <section class="colors-info-section" fxLayout="column">
+                    <div fxLayout="row wrap">
+                        <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="color" [ngStyle]="{'background-color': listStatusColors?.CSVNP?.REAL}">
+                            </div>
+                            <div class="status">Réalisée</div>
+                        </div>
+                        <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="color" [ngStyle]="{'background-color': listStatusColors?.CSVNP?.ABSE}">
+                            </div>
+                            <div class="status">Absent</div>
+                        </div>
+                    </div>
+                </section>
+            </mat-card>
+        </div>
+        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
+            <mat-card>
+                <div fxLayout="row" class="filtre-status" fxLayoutAlign="start start">
+                    <h4 fxLayoutAlign="start center">
+                        Événements Personnels
+                    </h4>
+                </div>
+                <section class="colors-info-section" fxLayout="column">
+                    <div fxLayout="row wrap">
+                        <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="color" [ngStyle]="{'background-color': listStatusColors?.EABS}"></div>
+                            <div class="status">Absence</div>
+                        </div>
+                        <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="color" [ngStyle]="{'background-color': listStatusColors?.CONG}"></div>
+                            <div class="status">Congé</div>
+                        </div>
+                        <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="color" [ngStyle]="{'background-color': listStatusColors?.MALD}"></div>
+                            <div class="status">Maladie</div>
+                        </div>
+                    </div>
+                    <!-- <div fxLayout="row">
+                    <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="color" [ngStyle]="{'background-color': listStatusColors['EABS']}"></div>
+                        <div class="status">Absence</div>
+                    </div>
+                    <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="color" [ngStyle]="{'background-color': listStatusColors['CONG']}"></div>
+                        <div class="status">Congé</div>
+                    </div>
+                </div>
+                <div fxLayout="row">
+                    <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="color" [ngStyle]="{'background-color': listStatusColors['MALD']}"></div>
+                        <div class="status">Maladie</div>
+                    </div>
+                </div> -->
+                </section>
+            </mat-card>
+        </div>
+        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="25" fxFlex.lg="25" fxFlex.xl="25">
+            <mat-card>
+                <div fxLayout="row" class="filtre-status" fxLayoutAlign="start start">
+                    <h4 fxLayoutAlign="start center">
+                        Événements Professionnels
+                    </h4>
+                </div>
+                <section class="colors-info-section" fxLayout="column">
+                    <!-- <div fxLayout="row">
+                    <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="color" [ngStyle]="{'background-color': listStatusColors['FORM']}"></div>
+                        <div class="status">Formation</div>
+                    </div>
+                    <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="color" [ngStyle]="{'background-color': listStatusColors['REIN']}"></div>
+                        <div class="status">Réunion Interne</div>
+                    </div>
+                </div>
+                <div fxLayout="row">
+                    <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="color" [ngStyle]="{'background-color': listStatusColors['SMNR']}"></div>
+                        <div class="status">Séminaire</div>
+                    </div>
+                    <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="color" [ngStyle]="{'background-color': listStatusColors['CNGR']}"></div>
+                        <div class="status">Congrès</div>
+                    </div>
+                </div> -->
+
+                    <div fxLayout="row wrap">
+                        <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="color" [ngStyle]="{'background-color': listStatusColors?.FORM}"></div>
+                            <div class="status">Formation</div>
+                        </div>
+                        <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="color" [ngStyle]="{'background-color': listStatusColors?.REIN}"></div>
+                            <div class="status">Réunion Interne</div>
+                        </div>
+                        <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="color" [ngStyle]="{'background-color': listStatusColors?.SMNR}"></div>
+                            <div class="status">Séminaire</div>
+                        </div>
+                        <div class="color-info" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="color" [ngStyle]="{'background-color': listStatusColors?.CNGR}"></div>
+                            <div class="status">Congrès</div>
+                        </div>
+                    </div>
+                </section>
+            </mat-card>
+        </div>
+    </div>
+    <!-- </mat-radio-group> -->
+</div>

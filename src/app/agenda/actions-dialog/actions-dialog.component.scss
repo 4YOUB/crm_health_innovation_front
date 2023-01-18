@@ -1,0 +1,92 @@
+.dialog-title {
+  position: relative;
+  padding: 10px 15px;
+  h2 {
+    margin: 0;
+    text-overflow: ellipsis;
+    max-width: 430px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+.mat-action{
+  display: flex !important;
+    flex-wrap: wrap !important;
+    row-gap: 10px !important;
+    column-gap: 20px !important;
+    margin: auto !important;
+    flex-direction:row !important;
+    button{
+      background: white;
+                color: black;
+                border: 1px solid black;
+    }
+}
+.mat-dialog-content {
+  margin: 0;
+  padding: 10px;
+}
+
+.btn-close {
+  outline: none;
+  position: absolute;
+  top: -1px;
+  right: -2px;
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-close:hover {
+  color: var(--princ-adr-color);
+}
+
+:host ::ng-deep .actions-dialog-content {
+  padding: 5px 0 !important;
+  mat-card-Actions {
+    width: 100%;
+    button {
+      height: 130px;
+    display: flex;
+    padding: 10px;
+    border-radius: 0;
+    box-shadow: none;
+    width: 48%;
+      margin: 0 !important;
+       .mat-button-wrapper {
+         display: flex;
+    width: 100%;
+    gap: 5px;
+    margin-top: 10px;
+    white-space: break-spaces;
+        // span {
+        //   margin-left: 3px;
+        // }
+        h4{
+          margin: 0;
+        }
+        mat-icon{
+          height: 30px;
+    width: 40px;
+    background: var(--health-primary-color);
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+        }
+        div{
+          width: 100%;
+          display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    span{
+      line-height: 25px;
+      text-align: start;
+    }
+        }
+      }
+    }
+  }
+}

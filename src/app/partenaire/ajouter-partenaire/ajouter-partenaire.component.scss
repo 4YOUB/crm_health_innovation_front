@@ -1,0 +1,18 @@
+.dialog-title {
+    position: relative;
+  }
+  .btn-close {
+    outline: none;
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .btn-close:hover {
+    color: var(--princ-adr-color);
+  }
+  

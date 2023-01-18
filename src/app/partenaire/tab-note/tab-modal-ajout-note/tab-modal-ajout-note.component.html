@@ -1,0 +1,21 @@
+<div class="dialog-title">
+    <h2 mat-dialog-title> Ajouter une note</h2>
+    <button (click)="dialogRef.close()" mat-icon-button class="btn-close">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<form [formGroup]="form" fxLayout="column" class="gene-form-wizard">
+    <div fxLayout="column" [fxLayoutAlign]="'star'">
+        <mat-form-field appearance="outline" id="commentaire">
+            <mat-label>Commentaire <span *ngIf="!isSubmitted">*</span></mat-label>
+            <textarea matInput type="text" maxlength="500" 
+            style="resize: none; height: 150px; width : 700px" rows="10" cols="50" formControlName="commentaire"
+            [required]='isSubmitted'></textarea>
+        </mat-form-field>
+    </div>
+    <mat-dialog-actions class="mrgn-b-xs pad-b-none" fxLayoutAlign="end">
+        <button type="button" mat-raised-button (click)="dialogRef.close()">Annuler</button>
+        <button type="submit" mat-raised-button (click)="save()" color="primary" class="label-form">
+            Enregistrer </button>
+    </mat-dialog-actions>
+</form>

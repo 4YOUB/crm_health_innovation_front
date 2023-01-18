@@ -1,0 +1,70 @@
+.dialog-title {
+  position: relative;
+  padding: 10px 15px;
+  color: black;
+  min-height: 50px;
+  margin-left: 15px;
+  h2 {
+    margin: 0;
+    margin-left: 10px;
+    text-overflow: ellipsis;
+    max-width: 430px;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: large;
+  }
+}
+
+.name-container {
+  text-overflow: ellipsis;
+  max-width: 430px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.mat-dialog-content {
+  margin: 0;
+  padding: 10px;
+}
+
+.action-btns {
+  height: 30px;
+  margin-right: -4px;
+}
+
+section {
+  padding: 0px 20px 10px 20px;
+}
+
+.titre-evenement {
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: x-large;
+}
+.type-evenement {
+  font-size: small;
+  display: inline-block;
+  color: white;
+  padding: 0px 8px;
+  border-radius: 15px;
+  height: 18px;
+  margin: 0;
+}
+
+.date-evenement {
+  margin-left: 10px;
+}
+
+.lieu-evenement {
+  margin: 15px 0;
+  .text { 
+    margin-left: 10px;
+  }
+}
+
+.comment-evenement {
+  margin: 15px 0;
+  .text {
+    margin-left: 10px;
+  }
+}

@@ -1,0 +1,124 @@
+<div fxLayout="column">
+    <mat-card id="mat-card-liste-partenaires-planifies">
+        <div fxLayoutAlign="space-evenly center" class="second-button">
+            <h4 fxLayoutAlign="start center" class="margin-none mrgn-r-sm ">
+                Semaine de planificaion
+            </h4>
+            <mat-form-field appearance="outline" style="width: 300px;">
+                <mat-label>Semaine </mat-label>
+                <input matInput type="text"
+                    value="Du {{sem_actuelle?.date_debut | date:'dd/MM/yyyy'}} au {{sem_actuelle?.date_fin | date:'dd/MM/yyyy'}}"
+                    readonly>
+
+            </mat-form-field>
+            <mat-form-field appearance="outline" style="width: 300px;">
+                <mat-label>Visiteur </mat-label>
+                <input matInput type="text" value="{{nom_utilisateur || '-'}}" readonly>
+
+            </mat-form-field>
+            <span class="circle_contain mrgn-l-sm">
+                <span>{{nbr_med_planifies}} M </span>
+                <span>{{nbr_phrama_planifiees}} PH </span>
+            </span>
+        </div>
+    </mat-card>
+    <mat-card id="mat-card-liste-partenaires-planifies">
+        <div class="flexbox full-wid">
+            <div class="row">
+                <div class="cell1 header">
+                    Visite
+                </div>
+                <div class="cell2 header">
+                    
+                </div>
+                <div class="cell3 header">
+                    Compte
+                </div>
+                <div class="cell4 header">
+                    Potentiel
+                </div>
+                <div class="cell5 header">
+                    Ville<br>
+                    Secteur
+                </div>
+                <div class="cell6 header">
+                    Date planification
+                </div>
+                <div class="cell7 header">
+                    Accompagnée
+                </div>
+                <div class="cell8 header">
+                    Statut
+                </div>
+            </div>
+            <div class="row card-row" *ngFor="let item of listePartenairesPlanifies">
+                <div class="cell1 cell">
+                    <div fxLayout="row" fxLayoutAlign="center">
+                        <button mat-mini-fab mat-icon-button color="primary" class="margin-none button-table"
+                            (click)="openDialogFicheVisite(item.id_visite)" title="Fiche" href="javascript:void(0)">
+                            <mat-icon class="mat-icon-grey gene-text-lg">
+                                visibility
+                            </mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="cell2 cell">
+                    <span class="type_partenaire_svg">
+                        <mat-icon class="pharmacie" *ngIf="item.code_type_partenaire == 'PHAR'" svgIcon="pharmacie">
+                        </mat-icon>
+                        <mat-icon class="medecin" *ngIf="item.code_type_partenaire == 'MEDE'" svgIcon="medecin">
+                        </mat-icon>
+                    </span>
+                </div>
+                <div class="cell3 cell">
+                    <h5 class="margin-none text-center type-webkit" [title]="item.nom_partenaire || '-'">
+                        {{item.nom_partenaire || '-'}}</h5>
+                    <h5 *ngIf="item.code_type_partenaire == 'MEDE'"
+                        class="medecin margin-none mrgn-t-xs text-center reveq-webkit" [title]="item.specialite_partenaire || '-'">
+                        {{item.specialite_partenaire || '-'}} </h5>
+                </div>
+                <div class="cell4 cell">
+                    <span class="potentiel margin-none text-center"
+                        [ngStyle]="{'border':item.potentiel ?'1px solid':'',
+                                    'color': item.potentiel == 'A' || item?.potentiel == 'A+'?'#13be00': item.potentiel == 'B'? '#e5ce00':item.potentiel == 'C'? '#e10000':''}">
+                        {{item.potentiel || '-'}}
+                    </span>
+                </div>
+                <div class="cell5 cell">
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.ville_partenaire || '-'">
+                        {{item.ville_partenaire || '-'}}</h5>
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.secteur_partenaire || '-'">
+                        {{item.secteur_partenaire || '-'}}</h5>
+                </div>
+                <div class="cell6 cell">
+                    <h5 class="text-center reveq-webkit" [title]="item.date_visite || '-'">
+                        {{(item.date_visite | date:'dd/MM/yyyy') || '-'}}
+                    </h5>
+                </div>
+                <div class="cell7 cell">
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.accompagnant || '-'">
+                        {{item.accompagnant || '-'}}</h5>
+                </div>
+                <div class="cell8 cell">
+                    <mat-chip-list class="statut">
+                        <mat-chip *ngIf="item.code_statut_visite == 'ENAT'" class="statutEnAttente"> En attente
+                        </mat-chip>
+                        <mat-chip *ngIf="item.code_statut_visite == 'REAL'" class="statutRealisee"> Réalisée
+                        </mat-chip>
+                        <mat-chip *ngIf="item.code_statut_visite == 'ABSE'" class="statutAbsent"> Absent </mat-chip>
+                        <mat-chip *ngIf="item.code_statut_visite == 'REPL'" class="statutReplanifiee">
+                            Replanifiée </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+            <p *ngIf="listePartenairesPlanifies?.length == 0 && !isLoading">
+                Aucun résultat trouvé .
+            </p>
+        </div>
+
+        <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+            <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+            </mat-progress-spinner>
+        </div>
+    </mat-card>
+</div>

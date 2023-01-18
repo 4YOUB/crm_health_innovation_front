@@ -1,0 +1,190 @@
+.dialog-title {
+    position: relative;
+}
+
+.btn-close {
+    outline: none;
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-close:hover {
+    color: var(--princ-adr-color);
+}
+
+#description {
+    ::ng-deep .mat-form-field-flex {
+        align-items: start !important;
+        height: auto;
+
+        .mat-form-field-prefix {
+            top: 20px !important;
+        }
+    }
+}
+
+.ajouterPhoto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px dashed grey;
+    background-color: #fafafa;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+
+    .labelPhoto {
+        font-size: 20px;
+        font-family: rubik;
+        margin: 0;
+        color: rgba(112, 112, 112, 0.5);
+    }
+
+    input {
+        display: none;
+    }
+
+    .iconPhoto {
+        width: 105px;
+        margin: 0;
+        color: rgba(112, 112, 112, 0.5);
+    }
+}
+
+.photoFile {
+    height: 200px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    ;
+    border-radius: 10px;
+    min-width: 230px;
+    padding: 0;
+    background-color: #fafafa;
+    position: relative;
+    overflow: auto;
+
+    .svg_circle {
+        z-index: 1;
+        max-height: 100%;
+        max-width: 100%;
+        position: absolute;
+        background: #0000007d;
+        height: 100%;
+        width: 100%;
+    }
+
+    .progress {
+        z-index: 2;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: white;
+        position: absolute;
+    }
+
+    .icon_drive_file {
+        position: relative;
+
+        svg {
+            width: 70px;
+            height: 70px;
+        }
+
+        .extension {
+            position: absolute;
+            bottom: 20px;
+            right: 0px;
+            background: white;
+            padding: 3px;
+            line-height: 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 700;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+        }
+    }
+
+
+    img {
+        // border-radius: 10px;
+        // // max-height: 180px;
+        // z-index: 0;
+        // position: absolute;
+        // // max-width: 230px;
+        z-index: 0;
+        max-height: 100%;
+        max-width: 100%;
+        position: absolute;
+    }
+
+    .deletePhoto {
+        // height: 100%;
+        // background-color: transparent;
+        // margin-left: auto;
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 7px;
+        z-index: 1;
+    }
+
+    .deletePhoto button {
+        background-color: red;
+        border: none;
+        color: white;
+        width: 30px;
+        cursor: pointer;
+        height: 30px;
+        border-radius: 15px;
+        font-size: 18px;
+        font-weight: 700;
+        font-family: Comic sans ms;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.statutEnAttente {
+    background-color: var(--statut-EnAttente-BC-color);
+    color: white;
+}
+
+.statutRealise {
+    background-color: var(--statut-Realise-BC-color);
+    color: white;
+}
+
+.statutRefuse {
+    background-color: var(--statut-Refuse-BC-color);
+    color: white;
+}
+
+.statutValide {
+    background-color: var(--statut-Valide-BC-color);
+    color: white;
+}
+
+.statut ::ng-deep .mat-standard-chip {
+    border-radius: 5px;
+    // min-height: 32px;
+    // font-size: 12px;
+    font-weight: bold;
+    // width: 105px;
+    justify-content: center;
+    min-height: 40px;
+    margin: 0 4px;
+    width: 100%;
+    margin-top: 8px;
+    // font-size: 12px;
+}

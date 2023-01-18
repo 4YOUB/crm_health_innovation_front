@@ -1,0 +1,120 @@
+<div class="dialog-title">
+    <h2 mat-dialog-title> Fiche Visite</h2>
+    <button (click)="dialogRef.close()" mat-icon-button class="btn-close">
+        <!-- <i class="fas fa-times"></i> -->
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<div *ngIf="!isLoading" fxLayout="column" class="gene-form-wizard">
+    <!-- <mat-dialog-content> -->
+
+    <div fxLayout="row wrap" [fxLayoutAlign]="'star'" [fxLayoutGap]="'3%'" style="margin-right: -3%;">
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Délégué </mat-label>
+            <input matInput type="text" readonly [value]="itemVisite.nom_utilisateur || '-'">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Nom compte </mat-label>
+            <input matInput type="text" readonly [value]="itemVisite.nom_partenaire || '-'">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Potentiel </mat-label>
+            <input matInput type="text" readonly [value]="itemVisite.code_potentiel || '-'">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Type visite </mat-label>
+            <input matInput type="text" readonly [value]="itemVisite.type_visite || '-'">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Date Visite </mat-label>
+            <input matInput type="text" readonly [value]="(itemVisite.date_visite| date:'dd/MM/yyyy') || '-'">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Heure Début Visite </mat-label>
+            <input matInput type="text" readonly [value]="(itemVisite.date_visite| date:'HH:mm') || '-'">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Heure Fin Visite </mat-label>
+            <input matInput type="text" readonly
+                [value]="(itemVisite.heure_fin_visite ? (('01/01/1000' + ' ' + itemVisite.heure_fin_visite) | date:'HH:mm') : '-')">
+        </mat-form-field>
+
+        <mat-chip-list class="statut_visite" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-chip *ngIf="itemVisite.code_statut_visite == 'ENAT'" class="statutEnAttente"> En attente
+            </mat-chip>
+            <mat-chip *ngIf="itemVisite.code_statut_visite == 'REAL'" class="statutRealisee"> Réalisée
+            </mat-chip>
+            <mat-chip *ngIf="itemVisite.code_statut_visite == 'ABSE'" class="statutAbsent"> Absent </mat-chip>
+            <mat-chip *ngIf="itemVisite.code_statut_visite == 'REPL'" class="statutReplanifiee">
+                Replanifiée </mat-chip>
+        </mat-chip-list>
+
+        <mat-form-field *ngIf="itemVisite.code_statut_visite == 'REPL'" appearance="outline" fxFlex.gt-sm="47"
+            fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Date Replanification</mat-label>
+            <input matInput type="text" readonly
+                [value]="(itemVisite.date_replanification | date:'dd/MM/yyyy HH:mm') || '-'">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="itemVisite.flag_accompagnee == 'O'" appearance="outline" fxFlex.gt-sm="47"
+            fxFlex.gt-xs="47" fxFlex="100" fxFlex.gt-md="47">
+            <mat-label>Visiteur Accompagnée</mat-label>
+            <input matInput type="text" readonly [value]="itemVisite.accompagnant || '-'">
+        </mat-form-field>
+
+        <mat-form-field id="description" *ngIf="itemVisite.code_statut_visite == 'ABSE'" appearance="outline"
+            fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxFlex.gt-md="100">
+            <mat-label>Commentaire </mat-label>
+            <textarea matInput type="text" readonly [value]="itemVisite.commentaire || '-'"
+                style="resize: none; height: auto;" rows="5" cols="50">
+            </textarea>
+        </mat-form-field>
+
+    </div>
+    <div *ngIf="itemVisite.code_statut_visite == 'REAL'" id="card-list-tab-produit">
+        <h4 fxLayoutAlign="start center">
+            Les Produits Présentés
+        </h4>
+        <div class="flexbox full-wid">
+            <div class="row">
+                <!-- <div class="cell1 header">
+                    Gamme
+                </div> -->
+                <div class="cell2 header">
+                    Produit
+                </div>
+                <div class="cell3 header">
+                    Feedback
+                </div>
+            </div>
+            <div class="row card-row" *ngFor="let item of listeProduits">
+                <!-- <div class="cell1 cell">
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.gamme || '-'">
+                        {{item.gamme || '-'}}</h5>
+                </div> -->
+                <div class="cell2 cell">
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.produit || '-'">
+                        {{item.produit || '-'}}</h5>
+                </div>
+                <div class="cell3 cell">
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.feedback || '-'">
+                        {{item.feedback || '-'}}</h5>
+                </div>
+            </div>
+            <p *ngIf="listeProduits?.length == 0 ">
+                Aucun résultat trouvé .
+            </p>
+        </div>
+    </div>
+
+</div>
+<div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+    <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+    </mat-progress-spinner>
+</div>

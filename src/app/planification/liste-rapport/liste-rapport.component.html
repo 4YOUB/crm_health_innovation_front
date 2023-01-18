@@ -1,0 +1,153 @@
+<div fxLayout="column">
+    <div class="mrgn-x-md" fxLayoutAlign="end center">
+        <mat-card-actions class="mat-pad-none margin-none">
+            <button color="accent" 
+            *ngIf="userItem.flag_export == 'O' && userItem.export_rapports_planification == 'O'"
+            [disabled]="isExporting" mat-raised-button (click)="exportRapports()" class="mrgn-t-xs">
+                <mat-progress-spinner style="display:inline-block;margin-right:2px;" *ngIf="isExporting" color="primary" diameter="20" strokeWidth="3" mode="indeterminate">
+                </mat-progress-spinner>
+                <mat-icon *ngIf="!isExporting">download </mat-icon>
+                Exporter rapports
+            </button>
+        </mat-card-actions>
+    </div>
+    <mat-card id="mat-card-list-rapport">
+        <h4 fxLayoutAlign="start center">
+            <mat-icon class="">filter_alt
+            </mat-icon>
+            Filtrer
+        </h4>
+        <div class="filter-dash">
+            <form [formGroup]="form" fxLayoutAlign="center">
+                <section class="example-section " fxLayout="row" fxLayoutGap="70px">
+                    <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Semaine </mat-label>
+                        <input matInput type="text" readonly
+                            value="Du {{date_debut | date:'dd/MM/yyyy'}} au {{date_fin | date:'dd/MM/yyyy'}} ({{num_semaine}})">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Journée </mat-label>
+                        <mat-select formControlName="date_jour">
+                            <mat-option [value]="null">--</mat-option>
+                            <mat-option *ngFor="let item of listeDatesSemaine" [value]="item">
+                                {{item | date:'dd/MM/yyyy'}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </section>
+            </form>
+            <div class="second-button" fxLayout="column" fxLayoutAlign="end center">
+                <button class="mrgn-b-sm " mat-button mat-raised-button type="button" color="Default" (click)="reset()">
+                    Réinitialiser </button>
+                <button mat-button mat-raised-button (click)="filtrer()" type="button"
+                    color="primary">Rechercher</button>
+            </div>
+        </div>
+    </mat-card>
+    <mat-card id="mat-card-list-rapport">
+        <div class="flexbox full-wid">
+            <div class="row">
+                <div class="cell1 header">
+                    Modifier
+                </div>
+                <div class="cell2 header">
+
+                </div>
+                <div class="cell3 header">
+                    <ms-tri-list [nom_tri]="'Compte'" [nom_order_by]="'nom_partenaire'" [type_tri]="type_tri"
+                        [order_by]="order_by" (optionTri)="optionTri($event)"></ms-tri-list>
+                </div>
+                <div class="cell4 header">
+                    Potentiel
+                </div>
+                <div class="cell5 header">
+                    Ville
+                </div>
+                <div class="cell6 header">
+                    <ms-tri-list [nom_tri]="'Date planification'" [nom_order_by]="'date_visite'" [type_tri]="type_tri"
+                        [order_by]="order_by" (optionTri)="optionTri($event)"></ms-tri-list>
+                </div>
+                <div class="cell7 header">
+                    Statut
+                </div>
+            </div>
+            <div class="row card-row" *ngFor="let item of listeRapports">
+                <div class="cell1 cell">
+                    <div fxLayout="row" fxLayoutAlign="center">
+                        <button mat-mini-fab mat-icon-button color="primary"
+                            (click)="openDialogModifierVisite('modifier',item.id_visite, item.id_partenaire,item.id_planification)"
+                            [disabled]="item.code_statut_visite == 'ENAT' || userItem.id_utilisateur != item.id_utilisateur
+                            || isDateVisiteOutRange(item.date_visite)"
+                            class="margin-none button-table" title="Modifier" href="javascript:void(0)">
+                            <mat-icon class="mat-icon-grey gene-text-lg">
+                                edit
+                            </mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="cell2 cell">
+                    <span class="type_partenaire_svg">
+                        <mat-icon class="pharmacie" *ngIf="item.code_type_partenaire == 'PHAR'" svgIcon="pharmacie">
+                        </mat-icon>
+                        <mat-icon class="medecin" *ngIf="item.code_type_partenaire == 'MEDE'" svgIcon="medecin">
+                        </mat-icon>
+                    </span>
+                </div>
+                <div class="cell3 cell">
+                    <h5 class="margin-none text-center type-webkit" [title]="item.nom_partenaire || '-'">
+                        {{item.nom_partenaire || '-'}}</h5>
+                    <h5 *ngIf="item.code_type_partenaire == 'MEDE'"
+                        class="medecin margin-none mrgn-t-xs text-center reveq-webkit" [title]="item.specialite || '-'">
+                        {{item.specialite || '-'}} </h5>
+                </div>
+                <div class="cell4 cell">
+                    <span class="potentiel margin-none text-center"
+                        [ngStyle]="{'border':item.code_potentiel ?'1px solid':'',
+                                    'color': item.code_potentiel == 'A' || item?.code_potentiel == 'A+'?'#13be00': item.code_potentiel == 'B'? '#e5ce00':item.code_potentiel == 'C'? '#e10000':''}">
+                        {{item.code_potentiel || '-'}}
+                    </span>
+                </div>
+                <div class="cell5 cell">
+                    <h5 class="margin-none text-center type-webkit" [title]="item.ville_partenaire || '-'">
+                        {{item.ville_partenaire || '-'}}</h5>
+                    <h5 class="margin-none text-center type-webkit" [title]="item.secteur_partenaire || '-'">
+                        {{item.secteur_partenaire || '-'}}</h5>
+                </div>
+                <div class="cell6 cell">
+                    <h5 class="margin-none reveq-webkit text-center">{{item.date_visite | date:'dd/MM/yyyy HH:mm'}}
+                    </h5>
+                </div>
+                <div class="cell7 cell">
+                    <mat-chip-list class="statut">
+                        <mat-card-actions *ngIf="item.code_statut_visite == 'ENAT'" class="mat-pad-none margin-none">
+                            <button (click)="openDialogAjouterRapport(item)" mat-raised-button color="primary"
+                                [disabled]="isDateVisiteOutRange(item.date_visite)" class="margin-none"
+                                style="padding: 0 8px 0 4px;">
+                                <mat-icon>add </mat-icon>
+                                Ajouter rapport
+                            </button>
+                        </mat-card-actions>
+                        <mat-chip *ngIf="item.code_statut_visite == 'REAL'" class="statutRealisee"> Réalisée
+                        </mat-chip>
+                        <mat-chip *ngIf="item.code_statut_visite == 'ABSE'" class="statutAbsent"> Absent </mat-chip>
+                        <mat-chip *ngIf="item.code_statut_visite == 'REPL'" class="statutReplanifiee"> Replanifiée
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+            <p *ngIf="listeRapports?.length == 0 && !isLoading">
+                Aucun résultat trouvé .
+            </p>
+        </div>
+
+        <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+            <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+            </mat-progress-spinner>
+        </div>
+        <div>
+            <mat-divider></mat-divider>
+            <mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 15, 20]"
+                [length]="totalRapports" (page)="getNextPage($event)" showFirstLastButtons></mat-paginator>
+        </div>
+    </mat-card>
+</div>

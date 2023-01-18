@@ -1,0 +1,240 @@
+<div fxLayout="column" id="mat-card-list-utilisateur">
+    <div class="mrgn-x-md" fxLayoutAlign="end center">
+        <mat-card-actions class="mat-pad-none margin-none">
+            <button mat-raised-button color="primary" (click)="openDialogAjouterUtilisateur()"
+                [disabled]="userItem.role != 'ADMI'" class="mrgn-t-xs">
+                <mat-icon>add </mat-icon>
+                Ajouter utilisateur
+            </button>
+        </mat-card-actions>
+    </div>
+    <mat-expansion-panel class="mrgn-all-md" hideToggle="true" #panel>
+        <mat-expansion-panel-header collapsedHeight="50px" expandedHeight="50px">
+            <mat-panel-title fxLayout="row" fxLayoutAlign="space-between center">
+                <h4 fxLayoutAlign="start center" class="margin-none">
+                    <mat-icon class="">filter_alt
+                    </mat-icon>
+                    Filtrer
+                </h4>
+                <mat-icon>{{
+                    panel.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+                    }}</mat-icon>
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="filter-dash">
+            <form [formGroup]="form" fxLayoutAlign="center">
+                <section class="example-section second-grid-checkbox ">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Nom </mat-label>
+                        <input matInput type="text" formControlName="nom_utilisateur">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>E-mail </mat-label>
+                        <input matInput type="text" formControlName="email">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Téléphone </mat-label>
+                        <input matInput type="tel" mask="0*" maxlength="10" formControlName="telephone">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Rôle </mat-label>
+                        <mat-select formControlName="role">
+                            <mat-option [value]="null">--</mat-option>
+                            <mat-option *ngFor="let item of roles" [value]="item">
+                                {{item}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_gamme"
+                        [smartList]="listeGammes" nomInput="Gamme">
+                    </ms-select-autocomplete-code>
+                    <ms-select-autocomplete-code ngDefaultControl [formControl]="form.controls.code_region"
+                        [smartList]="listeRevis" nomInput="Région">
+                    </ms-select-autocomplete-code>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Statut </mat-label>
+                        <mat-select formControlName="code_statut_utilisateur">
+                            <mat-option [value]="null">--</mat-option>
+                            <mat-option [value]="'ACTI'"> Activé </mat-option>
+                            <mat-option [value]="'DESA'"> Désactivé </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </section>
+            </form>
+            <div class="second-button" fxLayout="column" fxLayoutAlign="end center">
+                <button class="mrgn-b-sm " mat-button mat-raised-button type="button" color="Default" (click)="reset()">
+                    Réinitialiser </button>
+                <button mat-button mat-raised-button (click)="filtrer()" type="button"
+                    color="primary">Rechercher</button>
+            </div>
+        </div>
+    </mat-expansion-panel>
+    <mat-card>
+        <div class="flexbox full-wid">
+            <div class="row">
+                <div class="cell1 header" fxLayout="column">
+                    <ms-tri-list [nom_tri]="'Nom'" [nom_order_by]="'nom_utilisateur'" [type_tri]="type_tri"
+                        [order_by]="order_by" (optionTri)="optionTri($event)"></ms-tri-list>
+                    Login
+                </div>
+                <div class="cell2 header">
+                    <ms-tri-list [nom_tri]="'Rôle'" [nom_order_by]="'role'" [type_tri]="type_tri" [order_by]="order_by"
+                        (optionTri)="optionTri($event)"></ms-tri-list>
+                </div>
+                <div class="cell5 header">
+                    Pharmaceutique <br>
+                    Medical
+                </div>
+                <div class="cell3 header">
+                    Responsable
+                </div>
+                <div class="cell4 header">
+                    Email <br>
+                    Téléphone
+                </div>
+                <div class="cell6 header">
+                    Région <br>
+                    Gamme
+                </div>
+                <div class="cell7 header">
+                    <ms-tri-list [nom_tri]="'Date Création'" [nom_order_by]="'date_creation'" [type_tri]="type_tri"
+                        [order_by]="order_by" (optionTri)="optionTri($event)"></ms-tri-list>
+                </div>
+                <div class="cell8 header">
+                    Statut
+                </div>
+                <div class="cell9 header">
+                    Historique
+                </div>
+                <div class="cell11 header">
+                    Activer <br>
+                    Désactiver
+                </div>
+                <div class="cell10 header">
+                    Modifier
+                </div>
+            </div>
+            <div class="row card-row" *ngFor="let item of listeUtilisateurs">
+                <div class="cell1 cell">
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.nom_complet || '-'">
+                        {{item.nom_complet || '-'}}</h5>
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.login || '-'">
+                        {{
+                        item.login == null ? "-" : (item.login.length > 10
+                        ? item.login.slice(0, 10).concat("...")
+                        : item.login)
+                        }}
+                    </h5>
+                </div>
+                <div class="cell2 cell">
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.role || '-'">
+                        {{item.role || '-'}}</h5>
+                </div>
+                <div class="cell5 cell" style="align-items: flex-start;">
+                    <mat-checkbox class="checkbox-accompagnee" [checked]="item.flag_pharmaceutique == 'O'" disabled>
+                        Pharmaceutique</mat-checkbox>
+                    <mat-checkbox class="checkbox-accompagnee" [checked]="item.flag_medical == 'O'" disabled>
+                        Medical</mat-checkbox>
+                </div>
+                <div class="cell3 cell">
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.nom_responsable || '-'">
+                        {{item.nom_responsable || '-'}}</h5>
+                </div>
+                <div class="cell4 cell">
+                    <h5 class="text-center reveq-webkit" [title]="item.email || '-'">
+                        {{
+                        item.email == null ? "-" : (item.email.length > 12
+                        ? item.email.slice(0, 12).concat("...")
+                        : item.email)
+                        }}
+                    </h5>
+                    <h5 class="margin-none reveq-webkit text-center" [title]="item.telephone || '-'">
+                        {{item.telephone || '-'}}</h5>
+                </div>
+                <div class="cell6 cell">
+                    <h5 class="margin-none reveq-webkit text-center">
+                        <ng-container *ngIf="item.regions?.length; else elseTemplate">
+                            <a class="click reveq-webkit"
+                                (click)="openDialog(item.regions,'REGI',item.nom_utilisateur)">
+                                {{ item.regions?.length }} Région(s)
+                            </a>
+                        </ng-container>
+                        <ng-template #elseTemplate>
+                            -
+                        </ng-template>
+                    </h5>
+                    <h5 class="margin-none reveq-webkit text-center">
+                        <ng-container *ngIf="item.gammes?.length; else elseTemplate">
+                            <a class="click reveq-webkit" (click)="openDialog(item.gammes,'GAMM',item.nom_utilisateur)">
+                                {{ item.gammes?.length }} Gamme(s)
+                            </a>
+                        </ng-container>
+                        <ng-template #elseTemplate>
+                            -
+                        </ng-template>
+                    </h5>
+                </div>
+                <div class="cell7 cell">
+                    <h5 class="margin-none reveq-webkit text-center">
+                        {{item.date_creation | date:'dd/MM/yyyy'}}
+                    </h5>
+                </div>
+                <div class="cell8 cell">
+                    <mat-chip-list class="statut">
+                        <mat-chip *ngIf="item.code_statut_utilisateur == 'ACTI'" class="statutValide"> Activé
+                        </mat-chip>
+                        <mat-chip *ngIf="item.code_statut_utilisateur == 'DESA'" class="statutRefuse"> Désactivé
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+                <div class="cell9 cell">
+                    <button mat-mini-fab mat-icon-button color="primary" class="margin-none button-table"
+                        title="Historique" (click)="openDialogHistorique(item.id_utilisateur,item.nom_complet)">
+                        <mat-icon class="mat-icon-grey gene-text-lg">
+                            schedule
+                        </mat-icon>
+                    </button>
+                </div>
+                <div class="cell11 cell">
+                    <button *ngIf="item.code_statut_utilisateur == 'ACTI'"
+                        [disabled]="userItem.role != 'ADMI' || userItem.id_utilisateur == item.id_utilisateur || item.role == 'DIR'"
+                        mat-mini-fab mat-icon-button color="primary" class="margin-none button-table" title="Désactiver"
+                        href="javascript:void(0)" (click)="actionUtilisateur('DESA',item.id_utilisateur)">
+                        <mat-icon class="mat-icon-grey gene-text-lg">
+                            remove
+                        </mat-icon>
+                    </button>
+                    <button *ngIf="item.code_statut_utilisateur == 'DESA'" [disabled]="userItem.role != 'ADMI' || item.role == 'DIR'"
+                        mat-mini-fab mat-icon-button color="primary" class="margin-none button-table" title="Activer"
+                        href="javascript:void(0)" (click)="actionUtilisateur('ACTI',item.id_utilisateur)">
+                        <mat-icon class="mat-icon-grey gene-text-lg">
+                            done
+                        </mat-icon>
+                    </button>
+                </div>
+                <div class="cell10 cell">
+                    <button mat-mini-fab mat-icon-button color="primary"
+                        (click)="openDialogModifierUtilisateur('modifier',item.id_utilisateur, item)"
+                        class="margin-none button-table" title="Modifier" href="javascript:void(0)">
+                        <mat-icon class="mat-icon-grey gene-text-lg">
+                            edit
+                        </mat-icon>
+                    </button>
+                </div>
+            </div>
+            <p *ngIf="listeUtilisateurs?.length == 0 && !isLoading">
+                Aucun résultat trouvé .
+            </p>
+        </div>
+
+        <div *ngIf="isLoading" fxLayoutAlign="center center" class="mrgn-all-lg">
+            <mat-progress-spinner color="primary" strokeWidth="5" mode="indeterminate">
+            </mat-progress-spinner>
+        </div>
+        <div>
+            <mat-divider></mat-divider>
+            <mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 15, 20]"
+                [length]="totalUtilisateurs" (page)="getNextPage($event)" showFirstLastButtons></mat-paginator>
+        </div>
+    </mat-card>
+</div>
